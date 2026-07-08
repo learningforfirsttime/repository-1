@@ -90,8 +90,8 @@
     "  float w = 0.5 + 0.5 * sin(t * 0.05 * u_motion + q.x * 1.4 + q.y * 0.8 + n * 2.2);",
     "  vec3 tintA = vec3(1.015, 0.985, 0.975);", // blush
     "  vec3 tintB = vec3(0.975, 0.99, 1.015);",  // ice
-    "  vec3 c = vec3(0.93, 0.925, 0.915) * mix(tintA, tintB, w);",
-    "  c += (n - 0.5) * 0.045;",
+    "  vec3 c = vec3(0.965, 0.958, 0.948) * mix(tintA, tintB, w);",
+    "  c += (n - 0.5) * 0.05;",
     "  return c;",
     "}",
 
@@ -121,7 +121,8 @@
     "vec3 room6(vec2 q, float t){",
     "  vec3 c = vec3(0.027, 0.025, 0.034);",
     "  vec2 d = q - vec2(0.0, -0.35);",
-    "  c += vec3(0.45, 0.10, 0.30) * exp(-dot(d, d) * 2.2) * (0.11 + 0.05 * sin(t * 0.4) * u_motion);",
+    "  c += vec3(0.5, 0.11, 0.33) * exp(-dot(d, d) * 2.0) * (0.17 + 0.06 * sin(t * 0.4) * u_motion);",
+    "  c += vec3(0.06, 0.03, 0.09) * fbm(q * 1.4 + t * 0.01 * u_motion) * 0.6;",
     "  return c;",
     "}",
 
@@ -165,7 +166,11 @@
     "  int i1 = int(min(floor(fi) + 1.0, 6.0));",
     "  float f = smoothstep(0.22, 0.78, fract(fi));",
 
-    "  vec3 c = mix(fieldFor(i0, qw, u_time), fieldFor(i1, qw, u_time), f);",
+    /* gamma-correct dissolve (light adds, never grays out) + corridor dim */
+    "  vec3 ca = fieldFor(i0, qw, u_time);",
+    "  vec3 cb = fieldFor(i1, qw, u_time);",
+    "  vec3 c = sqrt(mix(ca * ca, cb * cb, f));",
+    "  c *= 1.0 - 0.20 * sin(3.14159 * f);",
     "  vec3 alt = mix(altFor(i0), altFor(i1), f);",
 
     /* the lens reveals a second hue, lifts the field, and rims softly */
@@ -177,7 +182,7 @@
 
     /* vignette */
     "  vec2 vq = (uv - 0.5) * vec2(mix(1.0, asp, 0.55), 1.0);",
-    "  c *= 1.0 - 0.42 * smoothstep(0.22, 0.85, dot(vq, vq));",
+    "  c *= 1.0 - 0.34 * smoothstep(0.24, 0.9, dot(vq, vq));",
 
     /* film grain + dither (kills banding on the vast gradients) */
     "  float g = hash(gl_FragCoord.xy + fract(u_time * 0.37) * 61.7);",
@@ -300,6 +305,12 @@
       lastLabel = n;
       roomNum.textContent = STOPS[n][0];
       roomName.textContent = STOPS[n][1];
+      if (motionOK && roomName.animate) {
+        roomName.parentElement.animate(
+          [{ opacity: 0.15 }, { opacity: 1 }],
+          { duration: 700, easing: "cubic-bezier(0.22, 1, 0.36, 1)" }
+        );
+      }
     }
     /* dark chrome while inside the near-white Room III */
     var light = idxShown > 2.55 && idxShown < 3.45;
@@ -324,9 +335,13 @@
   var scope = document.getElementById("hum-scope");
   var sctx = scope ? scope.getContext("2d") : null;
 
+  var humSwell = 0; /* the hum swells while the visitor moves through the building */
+
   function drawHum(t) {
     if (!sctx) return;
     var w = scope.width, h = scope.height;
+    humSwell *= 0.94;
+    var amp = 1 + Math.min(humSwell, 2.4);
     sctx.clearRect(0, 0, w, h);
     sctx.strokeStyle = document.body.classList.contains("light-field")
       ? "rgba(23,20,26,0.55)" : "rgba(242,239,233,0.45)";
@@ -337,8 +352,8 @@
       var env = Math.sin(p * Math.PI);
       var y = h / 2;
       if (motionOK) {
-        y += Math.sin(p * 26.0 + t * 3.3) * env * 2.6
-           + Math.sin(p * 61.0 - t * 5.1) * env * 1.1;
+        y += Math.sin(p * 26.0 + t * 3.3) * env * 2.4 * amp
+           + Math.sin(p * 61.0 - t * 5.1) * env * 1.0 * amp;
       }
       if (x === 0) sctx.moveTo(x, y); else sctx.lineTo(x, y);
     }
@@ -429,8 +444,11 @@
 
   /* ---------------------------------------------------------- input */
 
+  var lastScrollY = window.scrollY;
   window.addEventListener("scroll", function () {
     idxTarget = computeIdx();
+    humSwell += Math.min(Math.abs(window.scrollY - lastScrollY) * 0.004, 0.5);
+    lastScrollY = window.scrollY;
     renderOnce();
   }, { passive: true });
 

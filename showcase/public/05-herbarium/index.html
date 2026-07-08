@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOLIUM · A Living Herbarium of Computed Flora</title>
+<meta name="description" content="FOLIUM — a living herbarium of computed flora. Seven algorithmic specimens grown live on their plates, and a propagation plate for sowing your own.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23F4EDDA'/%3E%3Cpath d='M32 54V20' stroke='%233A4430' stroke-width='3' stroke-linecap='round' fill='none'/%3E%3Cpath d='M32 42C21 42 15 35 14 25c10-1 17 5 18 17z' fill='%236B7A4B'/%3E%3Cpath d='M32 32c11 0 17-7 18-17-10-1-17 5-18 17z' fill='%23566743'/%3E%3Ccircle cx='32' cy='15' r='4.5' fill='%239E3A26'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/eb-garamond.css">
+<link rel="stylesheet" href="/fonts/instrument-serif.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip" href="#plates">Skip to the plates</a>
+
+<div class="topbar" aria-hidden="true">
+  <span>The Folium Society</span>
+  <span>Instituted MMXXVI · Plates I–VII</span>
+</div>
+
+<header class="hero" id="top">
+  <div class="hero-text">
+    <svg class="fleuron" viewBox="0 0 160 16" aria-hidden="true">
+      <path d="M0 8 H58 M102 8 H160" stroke="currentColor" stroke-width="1" opacity=".5"/>
+      <path d="M76 8 L80 3.6 L84 8 L80 12.4 Z" fill="currentColor" opacity=".85"/>
+      <path d="M72 8 C 63 3.4, 50 4, 40 8 C 50 11.4, 63 12, 72 8 Z" fill="currentColor" opacity=".7"/>
+      <path d="M88 8 C 97 3.4, 110 4, 120 8 C 110 11.4, 97 12, 88 8 Z" fill="currentColor" opacity=".7"/>
+    </svg>
+    <p class="soc-line">The Folium Society · for the study of computed flora</p>
+    <h1 class="masthead">FOLIUM</h1>
+    <p class="masthead-sub">Fasciculus I · MMXXVI</p>
+    <p class="epigraph">A living herbarium, wherein every specimen is grown — not drawn — by its own small grammar of stem, leaf &amp; flower.</p>
+    <nav class="index-line" aria-label="Contents">
+      <a href="#foreword">Foreword</a><span aria-hidden="true"> · </span>
+      <a href="#plates">The Plates</a><span aria-hidden="true"> · </span>
+      <a href="#method">On the Method</a><span aria-hidden="true"> · </span>
+      <a href="#seminal">Propagation</a>
+    </nav>
+  </div>
+
+  <figure class="plate plate-hero" id="tab-1" data-species="fern" data-seed="4117" data-ms="4600">
+    <div class="sheet">
+      <svg class="paper" aria-hidden="true"></svg>
+      <span class="tab-no" aria-hidden="true">Tab. I.</span>
+      <svg class="plant sp-fern" viewBox="0 0 480 560" role="img" aria-label="Generated botanical figure of Pluminella arcuata, a fern with arching fronds"></svg>
+      <div class="stamp" style="--sr:-5deg" aria-hidden="true">Herb. Folium<br>acc. fol-0114</div>
+      <div class="label">
+        <p class="label-soc">Herbarium Societatis Folii</p>
+        <p class="label-name"><em>Pluminella arcuata</em> <span class="auth">Fn.</span></p>
+        <p class="label-fam">Filices algorithmicae</p>
+        <p class="label-line">Loc. — shade of the long wall, Fernshaw Beck, Westmoor</p>
+        <p class="label-line">Leg. E. Marchmont · 14.iii.MMXXVI · <span class="no">№ 0114</span></p>
+      </div>
+      <p class="det">det. C. Anthropica, MMXXVI</p>
+      <svg class="seal" data-seal viewBox="0 0 72 72" aria-hidden="true"></svg>
+    </div>
+    <figcaption class="plate-cap"><span class="cap-tab">Tabula I</span> — the frontispiece fern; unrolls from the crown outward, eldest fronds first. <span class="cap-meta">seed 4117 · <span data-parts>—</span> parts</span></figcaption>
+  </figure>
+</header>
+
+<main id="main">
+
+  <section class="prose reveal" id="foreword" aria-labelledby="foreword-h">
+    <h2 id="foreword-h" class="sec-head">Foreword</h2>
+    <p class="lede">The Folium Society exists because of a suspicion, voiced one wet November evening and never successfully put down: that a plant is not a shape but a rule. A hedge-botanist presses what the season gives; we press the season itself. Each specimen in this fascicle is a small grammar — an instruction for stems, a habit for leaves, a patience for flowers — and what you see on the plate is that grammar caught in the act of being obeyed.</p>
+    <p>Nothing here was drawn. When a plate comes into view its specimen grows for you, as it first grew for us, vein by vein and strictly in order: roots, stem, leaf, and flower last, since flowers must be earned. Should you doubt a plant, hold its seed number; sow it again on the propagation plate at the end of this fascicle and it will return, leaf for leaf, to argue its own case.</p>
+    <p class="signature">E. Marchmont, <span class="sig-role">Keeper of the Plates</span><br><span class="sig-place">Given at the Society’s rooms, Candlemas MMXXVI</span></p>
+  </section>
+
+  <section id="plates" aria-labelledby="plates-h">
+    <h2 id="plates-h" class="sec-head reveal">The Plates</h2>
+    <p class="sec-note reveal">Six further gatherings, pressed in the order they were walked to. Each grows as it enters your view; each is exactly reproducible from its seed.</p>
+
+    <div class="plate-grid">
+
+      <figure class="plate span-7" id="tab-2" data-species="grass" data-seed="9021" data-ms="3800">
+        <div class="sheet">
+          <svg class="paper" aria-hidden="true"></svg>
+          <span class="tab-no" aria-hidden="true">Tab. II.</span>
+          <svg class="plant sp-grass" viewBox="0 0 420 560" role="img" aria-label="Generated botanical figure of Aurivena pendula, a pendulous oat-grass"></svg>
+          <div class="stamp" style="--sr:4deg" aria-hidden="true">Herb. Folium<br>acc. fol-0143</div>
+          <div class="label">
+            <p class="label-soc">Herbarium Societatis Folii</p>
+            <p class="label-name"><em>Aurivena pendula</em> <span class="auth">Hartw.</span></p>
+            <p class="label-fam">Gramina machinalia</p>
+            <p class="label-line">Loc. — dry meadow above Marlbeck Fen, East Reach</p>
+            <p class="label-line">Leg. A. Ferrow · 02.vi.MMXXVI · <span class="no">№ 0143</span></p>
+          </div>
+          <p class="det">det. C. Anthropica, MMXXVI</p>
+        </div>
+        <figcaption class="plate-cap"><span class="cap-tab">Tabula II</span> — a pendulous oat-grass; the panicle nods under seed it never set. <span class="cap-meta">seed 9021 · <span data-parts>—</span> parts</span></figcaption>
+      </figure>
+
+      <figure class="plate span-5" id="tab-3" data-species="daisy" data-seed="2718" data-ms="3800" data-delay="220">
+        <div class="sheet">
+          <svg class="paper" aria-hidden="true"></svg>
+          <span class="tab-no" aria-hidden="true">Tab. III.</span>
+          <svg class="plant sp-daisy" viewBox="0 0 420 560" role="img" aria-label="Generated botanical figure of Asterulia campestris, a flowering starwort"></svg>
+          <div class="stamp" style="--sr:-6deg; --sx: auto; " aria-hidden="true">Herb. Folium<br>acc. fol-0158</div>
+          <div class="label">
+            <p class="label-soc">Herbarium Societatis Folii</p>
+            <p class="label-name"><em>Asterulia campestris</em> <span class="auth">Claud.</span></p>
+            <p class="label-fam">Compositae fictae</p>
+            <p class="label-line">Loc. — field margin at Whitlow Grange, by the second gate</p>
+            <p class="label-line">Leg. M. Quill · 19.v.MMXXVI · <span class="no">№ 0158</span></p>
+          </div>
+        </div>
+        <figcaption class="plate-cap"><span class="cap-tab">Tabula III</span> — field starwort; petals open in spiral order, as they were numbered. <span class="cap-meta">seed 2718 · <span data-parts>—</span> parts</span></figcaption>
+      </figure>
+
+      <figure class="plate span-5" id="tab-4" data-species="umbel" data-seed="1414" data-ms="3800">
+        <div class="sheet">
+          <svg class="paper" aria-hidden="true"></svg>
+          <span class="tab-no" aria-hidden="true">Tab. IV.</span>
+          <svg class="plant sp-umbel" viewBox="0 0 420 560" role="img" aria-label="Generated botanical figure of Umbellina cerifera, a wax umbellifer"></svg>
+          <div class="stamp" style="--sr:5deg" aria-hidden="true">Herb. Folium<br>acc. fol-0171</div>
+          <div class="label">
+            <p class="label-soc">Herbarium Societatis Folii</p>
+            <p class="label-name"><em>Umbellina cerifera</em> <span class="auth">E.Whit.</span></p>
+            <p class="label-fam">Umbellatae parametricae</p>
+            <p class="label-line">Loc. — chalk shoulder over Wyrmsdale, facing the sea</p>
+            <p class="label-line">Leg. E. Marchmont · 30.vi.MMXXVI · <span class="no">№ 0171</span></p>
+          </div>
+          <svg class="seal" data-seal viewBox="0 0 72 72" aria-hidden="true"></svg>
+        </div>
+        <figcaption class="plate-cap"><span class="cap-tab">Tabula IV</span> — wax umbellifer; ten rays, each ending in its own small firmament. <span class="cap-meta">seed 1414 · <span data-parts>—</span> parts</span></figcaption>
+      </figure>
+
+      <figure class="plate span-7" id="tab-5" data-species="bell" data-seed="5301" data-ms="3800" data-delay="220">
+        <div class="sheet">
+          <svg class="paper" aria-hidden="true"></svg>
+          <span class="tab-no" aria-hidden="true">Tab. V.</span>
+          <svg class="plant sp-bell" viewBox="0 0 420 560" role="img" aria-label="Generated botanical figure of Tintinnia declinata, a bellflower with hanging bells"></svg>
+          <div class="stamp" style="--sr:-4deg" aria-hidden="true">Herb. Folium<br>acc. fol-0186</div>
+          <div class="label">
+            <p class="label-soc">Herbarium Societatis Folii</p>
+            <p class="label-name"><em>Tintinnia declinata</em> <span class="auth">Voss</span></p>
+            <p class="label-fam">Campanulatae seriatae</p>
+            <p class="label-line">Loc. — Hollow Combe, under the hazel coppice</p>
+            <p class="label-line">Leg. S. Harrow · 11.vii.MMXXVI · <span class="no">№ 0186</span></p>
+          </div>
+          <p class="det">det. C. Anthropica, MMXXVI</p>
+        </div>
+        <figcaption class="plate-cap"><span class="cap-tab">Tabula V</span> — declining bellflower; the bells hang a long while before they dare to open. <span class="cap-meta">seed 5301 · <span data-parts>—</span> parts</span></figcaption>
+      </figure>
+
+      <figure class="plate span-6" id="tab-6" data-species="vine" data-seed="8088" data-ms="3800">
+        <div class="sheet">
+          <svg class="paper" aria-hidden="true"></svg>
+          <span class="tab-no" aria-hidden="true">Tab. VI.</span>
+          <svg class="plant sp-vine" viewBox="0 0 460 560" role="img" aria-label="Generated botanical figure of Spiralix convolvens, a twining vine with heart-shaped leaves"></svg>
+          <div class="stamp" style="--sr:6deg" aria-hidden="true">Herb. Folium<br>acc. fol-0202</div>
+          <div class="label">
+            <p class="label-soc">Herbarium Societatis Folii</p>
+            <p class="label-name"><em>Spiralix convolvens</em> <span class="auth">M.Reed</span></p>
+            <p class="label-fam">Volubiles recursivae</p>
+            <p class="label-line">Loc. — old fence line, Gorsey Lane allotments</p>
+            <p class="label-line">Leg. A. Ferrow · 24.vii.MMXXVI · <span class="no">№ 0202</span></p>
+          </div>
+          <p class="det">det. C. Anthropica, MMXXVI</p>
+        </div>
+        <figcaption class="plate-cap"><span class="cap-tab">Tabula VI</span> — a twining false-bindweed; climbs a support that is not rendered. <span class="cap-meta">seed 8088 · <span data-parts>—</span> parts</span></figcaption>
+      </figure>
+
+      <figure class="plate span-6" id="tab-7" data-species="allium" data-seed="3141" data-ms="3800" data-delay="220">
+        <div class="sheet">
+          <svg class="paper" aria-hidden="true"></svg>
+          <span class="tab-no" aria-hidden="true">Tab. VII.</span>
+          <svg class="plant sp-allium" viewBox="0 0 420 560" role="img" aria-label="Generated botanical figure of Globulura stellifera, a globe-leek with a spherical seed head"></svg>
+          <div class="stamp" style="--sr:-7deg" aria-hidden="true">Herb. Folium<br>acc. fol-0219</div>
+          <div class="label">
+            <p class="label-soc">Herbarium Societatis Folii</p>
+            <p class="label-name"><em>Globulura stellifera</em> <span class="auth">Fn.</span></p>
+            <p class="label-fam">Liliaceae computatae</p>
+            <p class="label-line">Loc. — kitchen garden of the Society’s rooms, gone to seed</p>
+            <p class="label-line">Leg. M. Quill · 08.viii.MMXXVI · <span class="no">№ 0219</span></p>
+          </div>
+          <svg class="seal" data-seal viewBox="0 0 72 72" aria-hidden="true"></svg>
+        </div>
+        <figcaption class="plate-cap"><span class="cap-tab">Tabula VII</span> — starred globe-leek; one strict sphere at the end of a long argument. <span class="cap-meta">seed 3141 · <span data-parts>—</span> parts</span></figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <section class="prose reveal" id="method" aria-labelledby="method-h">
+    <h2 id="method-h" class="sec-head">On the Gathering of These Specimens</h2>
+    <p>Our collectors do not walk hedgerows. They walk <em>parameter space</em> — that endless, unfenced country where every coordinate is a possible plant. An expedition begins with a bearing (you would call it a seed number) and proceeds by strict rule: so much curl to a frond, so many degrees between one leaf and the next, flowers only when the stem has earned them. The collector’s whole art is in choosing where to stop walking.</p>
+    <p>The country is larger than any flora yet written. Ninety-nine thousand bearings lie within reach of the plate below, and every one of them grows a plant that has always been there, waiting to be walked to. We have gathered seven. The rest we leave to you, with the Society’s compliments and a trowel.</p>
+  </section>
+
+  <section id="seminal" aria-labelledby="seminal-h">
+    <h2 id="seminal-h" class="sec-head reveal">Tabula Seminalis · The Propagation Plate</h2>
+    <p class="sec-note reveal">Sow a seed and watch its accession grow. Every seed yields one plant and one plant only — the number is the plant’s true name. A reroll is a new accession.</p>
+
+    <figure class="plate plate-sow reveal" id="tab-sow">
+      <div class="sheet">
+        <svg class="paper" aria-hidden="true"></svg>
+        <span class="tab-no" aria-hidden="true">Tab. sem.</span>
+        <svg class="plant" id="sow-plant" viewBox="0 0 420 560" role="img" aria-label="Freshly sown generated specimen"></svg>
+        <div class="stamp" style="--sr:-5deg" aria-hidden="true">Herb. Folium<br>acc. <span id="sow-acc">fol-s-00000</span></div>
+        <div class="label">
+          <p class="label-soc">Herbarium Societatis Folii</p>
+          <p class="label-name" id="sow-name"><em>—</em></p>
+          <p class="label-fam" id="sow-fam">—</p>
+          <p class="label-line" id="sow-loc">Loc. — parameter space</p>
+          <p class="label-line">Leg. <em>ipse lector</em> · seed <button type="button" class="seed-btn" id="sow-seed" title="Grow this very seed again">00000</button></p>
+        </div>
+        <p class="det">det. C. Anthropica, MMXXVI</p>
+        <svg class="seal" data-seal viewBox="0 0 72 72" aria-hidden="true"></svg>
+      </div>
+      <figcaption class="plate-cap" id="sow-cap"><span class="cap-tab">Tabula seminalis</span> — <span id="sow-vern">awaiting its first sowing.</span> <span class="cap-meta"><span data-parts>—</span> parts</span></figcaption>
+    </figure>
+
+    <div class="sow-controls reveal">
+      <button type="button" class="btn" id="sow-btn">Sow a new seed</button>
+      <p class="sow-hint">Click the seed number on the label to grow the same plant again, leaf for leaf.</p>
+      <div class="chips" id="sow-history" aria-label="Previous accessions"></div>
+    </div>
+    <p id="sow-status" class="visually-hidden" role="status"></p>
+  </section>
+
+  <section class="prose reveal" id="colophon" aria-labelledby="colophon-h">
+    <h2 id="colophon-h" class="sec-head">Fasciculus II Is in the Ground</h2>
+    <p>The Society issues its fascicles as the algorithm flowers, which is to say: on no schedule a printer would tolerate. The second gathering — mosses, seeded thistles, and a water-plant that insists on growing downward — is already pressed into parameter space and waiting to be walked to.</p>
+    <p class="cta-row">
+      <button type="button" class="btn" id="req-btn">Request Fasciculus II</button>
+      <span class="req-reply" id="req-reply" role="status"></span>
+    </p>
+    <p class="colophon-note">Set in EB Garamond &amp; Instrument Serif. Every figure on these plates is grown in your browser as vector geometry at the moment you arrive — nothing is an image, and no two visits press the plates in quite the same breeze.</p>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <svg class="fleuron" viewBox="0 0 160 16" aria-hidden="true">
+    <path d="M0 8 H58 M102 8 H160" stroke="currentColor" stroke-width="1" opacity=".5"/>
+    <path d="M76 8 L80 3.6 L84 8 L80 12.4 Z" fill="currentColor" opacity=".85"/>
+    <path d="M72 8 C 63 3.4, 50 4, 40 8 C 50 11.4, 63 12, 72 8 Z" fill="currentColor" opacity=".7"/>
+    <path d="M88 8 C 97 3.4, 110 4, 120 8 C 110 11.4, 97 12, 88 8 Z" fill="currentColor" opacity=".7"/>
+  </svg>
+  <p class="foot-soc">FOLIUM · The Folium Society, instituted MMXXVI · <em>crescit in machina</em></p>
+  <p class="foot-credit">Designed &amp; built in code by Claude · <a href="/">Gallery</a> · <a href="/guide/">How this was made</a></p>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

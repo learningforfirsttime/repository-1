@@ -71,27 +71,28 @@ void main(){
   float f = fbm(sp + 3.0 * r);
 
   /* plume: swaying column rising from the neck */
-  float sway = (fbm3(vec2(h * 1.8 - t * 0.17, t * 0.11)) - 0.5) * (0.15 + h * 0.85);
-  float x = p.x - sway * smoothstep(0.0, 0.35, h);
-  float w = 0.05 + h * 0.42 + f * 0.12;
+  float sway = (fbm3(vec2(h * 1.8 - t * 0.17, t * 0.11)) - 0.5) * (0.12 + h * 0.8);
+  float x = p.x - sway * smoothstep(0.0, 0.3, h);
+  float wf = mix(0.5, 1.0, clamp(aspect, 0.0, 1.0)); /* keep the plume slender on narrow screens */
+  float w = (0.028 + h * 0.4 + f * 0.1) * wf;
   float column = exp(-(x * x) / (2.0 * w * w + 1e-4));
-  float vert = smoothstep(-0.02, 0.14, h) * (1.0 - smoothstep(0.55, 1.4, h));
-  float density = column * vert * smoothstep(0.22, 0.9, f + 0.22 * column);
+  float vert = smoothstep(-0.008, 0.05, h) * (1.0 - smoothstep(0.55, 1.4, h));
+  float density = column * vert * smoothstep(0.3, 0.95, f + 0.2 * column);
 
   /* ambient haze so the dark never sits flat */
-  float haze = fbm3(uv * vec2(aspect, 1.0) * 1.7 + vec2(0.0, -t * 0.03)) * 0.085;
+  float haze = fbm3(uv * vec2(aspect, 1.0) * 1.7 + vec2(0.0, -t * 0.03)) * 0.07;
 
   vec3 col = vec3(0.043, 0.043, 0.051);           /* #0B0B0D */
-  col += vec3(0.72, 0.72, 0.78) * density * 0.85; /* silver smoke */
+  col += vec3(0.72, 0.72, 0.78) * density * 0.8;  /* silver smoke */
   col += vec3(0.44, 0.44, 0.50) * haze;
 
-  /* iridescent sheen — thin-film hues where the visitor is */
+  /* iridescent sheen — a thin-film tint lent by the visitor's presence */
   vec2 pp = vec2((uv.x - uPointer.x) * aspect, uv.y - uPointer.y);
-  float field = exp(-dot(pp, pp) * 13.0) * uSheen;
-  vec3 irid = 0.5 + 0.5 * cos(6.28318 * (f * 1.7 + h * 0.6) + vec3(0.0, 2.1, 4.2) + t * 0.16);
-  irid *= vec3(0.62, 0.55, 0.72);
-  col += density * field * irid * 1.05;
-  col += haze * field * irid * 1.4;
+  float field = exp(-dot(pp, pp) * 15.0) * uSheen;
+  vec3 irid = 0.5 + 0.5 * cos(6.28318 * (f * 1.9 + h * 0.7) + vec3(0.0, 2.1, 4.2) + t * 0.16);
+  col += density * field * (irid - 0.5) * 0.6;   /* hue shift inside the smoke */
+  col += density * field * irid * 0.22;          /* faint lift */
+  col += haze * field * (irid - 0.5) * 2.6;      /* whisper of colour in the haze */
 
   /* soft in-shader vignette */
   float vig = smoothstep(1.3, 0.35, length((uv - 0.5) * vec2(aspect, 1.0)));
@@ -156,7 +157,7 @@ function initSmoke(){
     const hr = canvas.getBoundingClientRect();
     if(fr.width === 0 || hr.width === 0){ gl.uniform2f(U.uSource, 0.5, 0.42); return; }
     const sx = fr.left + (150 / 300) * fr.width - hr.left;
-    const sy = fr.top + (166 / 640) * fr.height - hr.top;
+    const sy = fr.top + (156 / 640) * fr.height - hr.top;
     gl.uniform2f(U.uSource, sx / hr.width, 1 - sy / hr.height);
   }
 
@@ -247,9 +248,9 @@ function initSmoke(){
 /* ······················································ accord wisps */
 
 const WISP_STYLES = {
-  ember: { tint:[227,201,143], count:70,  base:-Math.PI/2, amp:0.9,  k1:0.045, k2:0.02,  speed:26, len:5,  alpha:0.10, spark:true  },
-  iris:  { tint:[224,166,210], count:54,  base:-Math.PI/2, amp:0.42, k1:0.016, k2:0.011, speed:18, len:9,  alpha:0.085, spark:false },
-  tea:   { tint:[143,224,220], count:64,  base:-Math.PI/2, amp:1.45, k1:0.03,  k2:0.024, speed:20, len:6,  alpha:0.09, spark:false }
+  ember: { tint:[227,201,143], count:110, base:-Math.PI/2, amp:0.95, k1:0.045, k2:0.02,  speed:30, len:6,  alpha:0.2,  spark:true  },
+  iris:  { tint:[224,166,210], count:80,  base:-Math.PI/2, amp:0.5,  k1:0.016, k2:0.011, speed:22, len:11, alpha:0.17, spark:false },
+  tea:   { tint:[143,224,220], count:96,  base:-Math.PI/2, amp:1.6,  k1:0.03,  k2:0.024, speed:24, len:7,  alpha:0.18, spark:false }
 };
 
 function initWisps(){
@@ -300,9 +301,10 @@ function initWisps(){
     function step(dt){
       t += dt;
       tint += (tintTarget - tint) * Math.min(1, dt * 3);
-      ctx.fillStyle = 'rgba(16,16,19,0.085)';
+      ctx.fillStyle = 'rgba(16,16,19,0.05)';
       ctx.fillRect(0, 0, W, H);
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1.2;
+      ctx.lineCap = 'round';
       const [tr, tg, tb] = style.tint;
       for(const p of parts){
         const a = angle(p.x, p.y, t, p.ph);

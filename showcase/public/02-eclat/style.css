@@ -66,16 +66,16 @@ a{ color:var(--pearl); text-decoration:none; }
 }
 
 /* scroll hairline */
-.progress{ position:fixed; top:0; left:0; right:0; height:2px; z-index:90; pointer-events:none; }
+.progress{ position:fixed; top:0; left:0; right:0; height:1px; z-index:90; pointer-events:none; }
 .progress-bar{
   position:absolute; inset:0;
-  background:linear-gradient(90deg, rgba(233,231,226,0), rgba(233,231,226,.42));
+  background:linear-gradient(90deg, rgba(233,231,226,0), rgba(233,231,226,.26));
   transform-origin:0 50%; transform:scaleX(0);
 }
 .progress-bead{
-  position:absolute; top:0; left:-14px; width:14px; height:2px;
+  position:absolute; top:0; left:-12px; width:12px; height:1px;
   background:linear-gradient(90deg, var(--irid-c), var(--irid-m), var(--irid-g));
-  opacity:.85; filter:blur(.2px);
+  opacity:.7;
 }
 
 /* ····· fixed header ····· */
@@ -140,8 +140,8 @@ a{ color:var(--pearl); text-decoration:none; }
 }
 
 #flacon{
-  position:absolute; left:50%; bottom:6vh;
-  height:min(60vh, 76vw); width:auto;
+  position:absolute; left:50%; bottom:5vh;
+  height:min(62vh, 78vw); width:auto;
   transform:translateX(-50%);
   color:var(--pearl);
   filter:drop-shadow(0 0 26px rgba(233,231,226,.05));
@@ -165,16 +165,16 @@ a{ color:var(--pearl); text-decoration:none; }
 #flacon text{
   fill:var(--pearl); stroke:none; text-anchor:middle;
 }
-.etch-name{ font-family:var(--f-display); font-size:23px; letter-spacing:6px; }
+.etch-name{ font-family:var(--f-display); font-size:24px; letter-spacing:6px; }
 .etch-no{ font-family:var(--f-display); font-size:15px; letter-spacing:3px; }
-.etch-city{ font-family:var(--f-ui); font-weight:400; font-size:7.5px; letter-spacing:2.6px; opacity:.85; }
+.etch-city{ font-family:var(--f-ui); font-weight:400; font-size:8px; letter-spacing:2.6px; opacity:.85; }
 .js #flacon .etching text{ opacity:0; animation:etch 1.6s var(--ease) 2s forwards; }
 @keyframes etch{ to{ opacity:.9; } }
 
 #flacon .stopper{ animation:bob 7.5s ease-in-out infinite; }
 @keyframes bob{
   0%,100%{ transform:translateY(0); }
-  50%{ transform:translateY(-7px); }
+  50%{ transform:translateY(-5px); }
 }
 
 .hero-poem{
@@ -484,7 +484,7 @@ section{ position:relative; }
 @media (max-width: 620px){
   .site-head nav .head-link:not(:last-child){ display:none; }
   .wordmark{ letter-spacing:.12em; text-indent:.12em; }
-  #flacon{ height:min(52vh, 88vw); bottom:9vh; }
+  #flacon{ height:min(54vh, 92vw); bottom:8.5vh; }
   .hero-poem{ max-width:12em; font-size:1rem; bottom:5.2rem; }
   .hero-hint{ display:none; }
   .hero-cue{ bottom:1.1rem; }

@@ -636,14 +636,14 @@
 
   /* --- ascent bubbles --- */
 
-  let ascending = false, ascendT0 = 0, ascendFrom = 0;
+  let ascending = false, ascendT0 = 0, ascendFrom = 0, bubbleAcc = 0;
   const ASCEND_MS = 4600;
 
   function stepRiseBubbles(dt, p) {
     if (ascending && dt > 0) {
-      const n = dt * (6 + 90 * p);
-      for (let i = 0; i < n; i++) {
-        if (Math.random() > n % 1 && i === Math.floor(n)) break;
+      bubbleAcc += dt * (6 + 90 * p); // spawn rate accelerates with the ascent
+      while (bubbleAcc >= 1) {
+        bubbleAcc -= 1;
         riseBubbles.push({
           x: Math.random() * vw, y: vh + 20,
           sp: 260 + Math.random() * 300 + 900 * p,
@@ -750,8 +750,8 @@
 
   /* ---------------- input ---------------- */
 
-  window.addEventListener("pointerdown", (e) => {
-    if (e.button !== undefined && e.button !== 0) return;
+  // "click" (not pointerdown) so touch-scroll flicks don't fire pings
+  window.addEventListener("click", (e) => {
     if (e.target.closest("a, button")) return;
     addPing(e.clientX, e.clientY);
   });

@@ -82,7 +82,7 @@
 
   /* ---------------- populations ---------------- */
 
-  let bubbles = [], fishes = [], jellies = [], snow = [], hidden = [];
+  let bubbles = [], fishes = [], farFish = [], jellies = [], snow = [], hidden = [];
   let flashes = [], pings = [], riseBubbles = [];
 
   function populate() {
@@ -102,14 +102,27 @@
     // fish school — static "composed" arrangement doubles as the reduced-motion pose
     fishes = [];
     const [m0, m1] = bands.meso;
-    const bandC = m0 + (m1 - m0) * 0.42;
-    for (let i = 0; i < 34; i++) {
-      const row = Math.floor(i / 9), col = i % 9;
+    const bandC = m0 + (m1 - m0) * 0.45;
+    for (let i = 0; i < 44; i++) {
+      const row = Math.floor(i / 11), col = i % 11;
       fishes.push({
-        x: vw * 0.16 + col * (vw * 0.075) + (r() - 0.5) * 46,
-        y: bandC + row * 54 + (r() - 0.5) * 60,
+        x: vw * 0.06 + col * (vw * 0.085) + (r() - 0.5) * 50,
+        y: bandC + row * 58 + (r() - 0.5) * 66,
         vx: 34 + r() * 10, vy: (r() - 0.5) * 6,
-        s: 9 + r() * 8,
+        s: 10 + r() * 9,
+      });
+    }
+
+    // a farther, dimmer layer of the school — cheap depth
+    farFish = [];
+    for (let i = 0; i < 14; i++) {
+      farFish.push({
+        fx: r(),
+        y: m0 + (0.2 + r() * 0.6) * (m1 - m0),
+        s: 22 + r() * 16,
+        sp: 5 + r() * 9,
+        dir: r() > 0.35 ? 1 : -1,
+        ph: r() * 6.28,
       });
     }
 
@@ -154,7 +167,8 @@
     const holder = document.getElementById("depthlines");
     holder.innerHTML = "";
     holder.style.height = docH + "px";
-    for (let d = 1000; d <= 10000; d += 1000) {
+    // stop at 8,000 m — below that the instruments go quiet for the floor scene
+    for (let d = 1000; d <= 8000; d += 1000) {
       const y = docYAtDepth(d);
       const line = document.createElement("i");
       line.className = "dl";
@@ -210,8 +224,9 @@
       document.body.classList.toggle("lit", d < 420);
       gDot.style.top = clamp(scrollY / maxScroll, 0, 1) * 100 + "%";
 
-      if (!pingedEver && !hintOn && d > 950) { hintOn = true; hint.classList.add("show"); }
-      if (hintOn && !pingedEver && d < 420) { hintOn = false; hint.classList.remove("show"); }
+      const wantHint = !pingedEver && d > 950 && d < 9400; // hide near the floor
+      if (wantHint && !hintOn) { hintOn = true; hint.classList.add("show"); }
+      if (!wantHint && hintOn) { hintOn = false; hint.classList.remove("show"); }
     }
   }
 
@@ -244,21 +259,48 @@
     if (fade <= 0) return;
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
-    for (let i = 0; i < 7; i++) {
-      const bx = ((i + 0.5) / 7) * vw + Math.sin(i * 3.7) * 40;
-      const ang = (i - 3) * 0.1 + Math.sin(t * 0.13 + i * 1.7) * 0.055;
-      const w = 46 + (i % 3) * 34;
+    const n = Math.max(3, Math.round(vw / 260));
+    for (let i = 0; i < n; i++) {
+      const bx = ((i + 0.5) / n) * vw + Math.sin(i * 3.7) * 40;
+      const ang = (i - n / 2) * 0.09 + Math.sin(t * 0.13 + i * 1.7) * 0.055;
+      const w = 42 + (i % 3) * 30;
+      const a = fade * (0.07 + 0.04 * Math.sin(t * 0.21 + i * 2.6));
       ctx.save();
       ctx.translate(bx, -60 - scrollY * 0.72);
       ctx.rotate(ang);
       const lg = ctx.createLinearGradient(0, 0, 0, vh * 1.5);
-      const a = fade * (0.10 + 0.05 * Math.sin(t * 0.21 + i * 2.6));
-      lg.addColorStop(0, `rgba(235,252,255,${a})`);
+      lg.addColorStop(0, `rgba(235,252,255,${Math.max(0, a)})`);
+      lg.addColorStop(0.72, `rgba(235,252,255,${Math.max(0, a) * 0.3})`);
       lg.addColorStop(1, "rgba(235,252,255,0)");
       ctx.fillStyle = lg;
-      ctx.fillRect(-w / 2, 0, w, vh * 1.5);
+      // tapered beam, double pass for a soft core
+      ctx.beginPath();
+      ctx.moveTo(-w / 2, 0); ctx.lineTo(w / 2, 0);
+      ctx.lineTo(w * 1.15, vh * 1.5); ctx.lineTo(-w * 1.15, vh * 1.5);
+      ctx.closePath(); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(-w / 5, 0); ctx.lineTo(w / 5, 0);
+      ctx.lineTo(w * 0.5, vh * 1.5); ctx.lineTo(-w * 0.5, vh * 1.5);
+      ctx.closePath(); ctx.fill();
       ctx.restore();
     }
+    ctx.restore();
+  }
+
+  function drawSun(t) {
+    const fade = clamp(1 - depthAtDoc(scrollY) / 300, 0, 1);
+    if (fade <= 0) return;
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    const cx = vw * 0.5 + Math.sin(t * 0.05) * 30;
+    const cy = -140 - scrollY * 0.72;
+    const R = Math.max(vw, vh) * 0.62;
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+    g.addColorStop(0, `rgba(255,250,232,${0.2 * fade})`);
+    g.addColorStop(0.4, `rgba(245,252,255,${0.07 * fade})`);
+    g.addColorStop(1, "rgba(245,252,255,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, vw, vh);
     ctx.restore();
   }
 
@@ -320,7 +362,9 @@
 
   function stepFish(dt) {
     const [m0, m1] = bands.meso;
-    const cy = m0 + (m1 - m0) * 0.42, half = (m1 - m0) * 0.22;
+    // let the school rest (and stay composed) when nobody can see it
+    if (scrollY + vh < m0 - 1400 || scrollY > m1 + 1400) return;
+    const cy = m0 + (m1 - m0) * 0.45, half = (m1 - m0) * 0.22;
     for (let i = 0; i < fishes.length; i++) {
       const f = fishes[i];
       let ax = 0, ay = 0, cxx = 0, cyy = 0, avx = 0, avy = 0, n = 0;
@@ -350,6 +394,35 @@
     }
   }
 
+  function fishBody(s) {
+    ctx.beginPath();
+    ctx.moveTo(s, 0);
+    ctx.quadraticCurveTo(s * 0.25, -s * 0.36, -s * 0.55, -s * 0.1);
+    ctx.lineTo(-s * 0.95, -s * 0.32);
+    ctx.lineTo(-s * 0.72, 0);
+    ctx.lineTo(-s * 0.95, s * 0.32);
+    ctx.lineTo(-s * 0.55, s * 0.1);
+    ctx.quadraticCurveTo(s * 0.25, s * 0.36, s, 0);
+    ctx.fill();
+  }
+
+  function drawFarFish(t) {
+    const [m0, m1] = bands.meso;
+    for (const f of farFish) {
+      const sy = f.y - scrollY;
+      if (sy < -60 || sy > vh + 60) continue;
+      const drift = RM ? 0 : t * f.sp * f.dir;
+      const sx = mod(f.fx * (vw + 240) + drift, vw + 240) - 120;
+      const edge = clamp((f.y - m0) / 300, 0, 1) * clamp((m1 - f.y) / 300, 0, 1);
+      ctx.save();
+      ctx.translate(sx, sy + (RM ? 0 : Math.sin(t * 0.5 + f.ph) * 10));
+      ctx.scale(f.dir, 1);
+      ctx.fillStyle = `rgba(9,30,45,${0.4 * (0.3 + 0.7 * edge)})`;
+      fishBody(f.s);
+      ctx.restore();
+    }
+  }
+
   function drawFish() {
     const [m0, m1] = bands.meso;
     for (const f of fishes) {
@@ -359,17 +432,8 @@
       ctx.save();
       ctx.translate(f.x, sy);
       ctx.rotate(Math.atan2(f.vy, f.vx));
-      const s = f.s;
-      ctx.fillStyle = `rgba(5,16,26,${0.75 * (0.35 + 0.65 * edge)})`;
-      ctx.beginPath();
-      ctx.moveTo(s, 0);
-      ctx.quadraticCurveTo(s * 0.25, -s * 0.36, -s * 0.55, -s * 0.1);
-      ctx.lineTo(-s * 0.95, -s * 0.32);
-      ctx.lineTo(-s * 0.72, 0);
-      ctx.lineTo(-s * 0.95, s * 0.32);
-      ctx.lineTo(-s * 0.55, s * 0.1);
-      ctx.quadraticCurveTo(s * 0.25, s * 0.36, s, 0);
-      ctx.fill();
+      ctx.fillStyle = `rgba(4,13,22,${0.92 * (0.4 + 0.6 * edge)})`;
+      fishBody(f.s);
       ctx.restore();
     }
   }
@@ -389,12 +453,19 @@
       const hgt = s * (0.95 + 0.4 * pul);
       ctx.save();
       ctx.translate(sx, sy);
-      // glow
+      ctx.rotate(RM ? 0 : Math.sin(t * 0.33 + j.ph) * 0.12);
+      // outer glow
       const rg = ctx.createRadialGradient(0, -hgt * 0.3, 2, 0, -hgt * 0.3, s * 2.4);
-      rg.addColorStop(0, "rgba(150,214,255,0.14)");
+      rg.addColorStop(0, "rgba(150,214,255,0.15)");
       rg.addColorStop(1, "rgba(150,214,255,0)");
       ctx.fillStyle = rg;
       ctx.fillRect(-s * 2.4, -hgt * 0.3 - s * 2.4, s * 4.8, s * 4.8);
+      // bioluminescent core under the apex
+      const cg = ctx.createRadialGradient(0, -hgt * 0.62, 0, 0, -hgt * 0.62, s * 0.55);
+      cg.addColorStop(0, `rgba(196,240,255,${0.28 + 0.2 * pul})`);
+      cg.addColorStop(1, "rgba(196,240,255,0)");
+      ctx.fillStyle = cg;
+      ctx.fillRect(-s * 0.55, -hgt * 0.62 - s * 0.55, s * 1.1, s * 1.1);
       // bell
       ctx.beginPath();
       ctx.moveTo(-wid, 0);
@@ -402,23 +473,44 @@
       ctx.quadraticCurveTo(wid * 0.5, -s * 0.18, 0, -s * 0.1);
       ctx.quadraticCurveTo(-wid * 0.5, -s * 0.18, -wid, 0);
       const bg = ctx.createLinearGradient(0, -hgt, 0, 0);
-      bg.addColorStop(0, "rgba(168,224,255,0.20)");
-      bg.addColorStop(1, "rgba(168,224,255,0.045)");
+      bg.addColorStop(0, "rgba(168,224,255,0.22)");
+      bg.addColorStop(1, "rgba(168,224,255,0.05)");
       ctx.fillStyle = bg;
       ctx.fill();
-      ctx.strokeStyle = "rgba(178,230,255,0.38)";
+      ctx.strokeStyle = "rgba(178,230,255,0.4)";
       ctx.lineWidth = 1;
       ctx.stroke();
-      // tentacles
+      // rim scallops
+      ctx.strokeStyle = "rgba(178,230,255,0.2)";
+      ctx.beginPath();
+      for (let k = 0; k <= 4; k++) {
+        const rx = -wid + (k / 4) * wid * 2;
+        k === 0 ? ctx.moveTo(rx, 0) : ctx.quadraticCurveTo(rx - wid * 0.25, s * 0.14, rx, 0);
+      }
+      ctx.stroke();
+      // tentacles — S-curved, trailing
       ctx.lineWidth = 0.8;
-      for (let k = 0; k < 6; k++) {
-        const tx = -wid * 0.8 + (k / 5) * wid * 1.6;
-        const sway = Math.sin(t * 1.9 + j.ph + k * 1.3) * s * 0.28;
-        const len = s * (1.5 + (k % 3) * 0.5) * (1 - 0.25 * pul);
-        ctx.strokeStyle = `rgba(168,224,255,${0.24 - k * 0.014})`;
+      for (let k = 0; k < 7; k++) {
+        const tx = -wid * 0.82 + (k / 6) * wid * 1.64;
+        const sw1 = Math.sin(t * 1.9 + j.ph + k * 1.3) * s * 0.3;
+        const sw2 = Math.sin(t * 1.4 - j.ph + k * 0.9) * s * 0.42;
+        const len = s * (1.6 + (k % 3) * 0.55) * (1 - 0.22 * pul);
+        ctx.strokeStyle = `rgba(168,224,255,${0.26 - k * 0.015})`;
         ctx.beginPath();
         ctx.moveTo(tx, -s * 0.06);
-        ctx.quadraticCurveTo(tx + sway, len * 0.55, tx + sway * 1.7, len);
+        ctx.bezierCurveTo(tx + sw1, len * 0.4, tx - sw2 * 0.6, len * 0.72, tx + sw2, len);
+        ctx.stroke();
+      }
+      // two oral arms, heavier and slower
+      ctx.lineWidth = 1.6;
+      for (let k = 0; k < 2; k++) {
+        const tx = (k - 0.5) * wid * 0.4;
+        const sw = Math.sin(t * 0.9 + j.ph + k * 2.4) * s * 0.5;
+        const len = s * 2.3 * (1 - 0.18 * pul);
+        ctx.strokeStyle = "rgba(190,235,255,0.16)";
+        ctx.beginPath();
+        ctx.moveTo(tx, -s * 0.04);
+        ctx.bezierCurveTo(tx + sw * 0.4, len * 0.35, tx - sw * 0.7, len * 0.7, tx + sw, len);
         ctx.stroke();
       }
       ctx.restore();
@@ -440,7 +532,13 @@
       const a = (0.06 + 0.3 * p.z) * (0.35 + 0.65 * f);
       ctx.fillStyle = `rgba(214,236,246,${a})`;
       const r = 0.6 + p.z * 1.15;
-      ctx.fillRect(xx, yy, r, r);
+      if (p.z > 0.92) { // nearest flakes: soft round motes
+        ctx.beginPath();
+        ctx.arc(xx, yy, r * 1.15, 0, 6.2832);
+        ctx.fill();
+      } else {
+        ctx.fillRect(xx, yy, r, r);
+      }
     }
   }
 
@@ -496,15 +594,25 @@
     const s = c.s;
     const wob = RM ? 0 : Math.sin(t * 1.2 + c.ph);
     if (c.type === "hatchet") {
-      const w = 46 * s, h = 60 * s;
-      p.moveTo(-w * 0.5, 0);
-      p.quadraticCurveTo(-w * 0.1, -h * 0.62, w * 0.42, -h * 0.1);
-      p.lineTo(w * 0.62, -h * 0.2);
-      p.lineTo(w * 0.62, h * 0.08);
-      p.lineTo(w * 0.42, 0);
-      p.quadraticCurveTo(w * 0.05, h * 0.66, -w * 0.5, 0);
-      p.moveTo(-w * 0.3, -h * 0.06);
-      p.arc(-w * 0.3, -h * 0.06, 3.4 * s, 0, 6.2832);
+      const w = 54 * s, h = 66 * s;
+      p.moveTo(-w * 0.55, -h * 0.06);                       // upturned mouth
+      p.lineTo(-w * 0.4, -h * 0.3);                          // steep forehead
+      p.quadraticCurveTo(-w * 0.05, -h * 0.5, w * 0.28, -h * 0.16); // back
+      p.lineTo(w * 0.42, -h * 0.1);                          // peduncle top
+      p.lineTo(w * 0.6, -h * 0.24);                          // tail fork top
+      p.lineTo(w * 0.52, 0);
+      p.lineTo(w * 0.6, h * 0.2);                            // tail fork bottom
+      p.lineTo(w * 0.42, h * 0.02);
+      p.quadraticCurveTo(w * 0.02, h * 0.55, -w * 0.34, h * 0.44); // deep keel
+      p.quadraticCurveTo(-w * 0.56, h * 0.22, -w * 0.55, -h * 0.06); // chin
+      p.moveTo(-w * 0.27, -h * 0.12);
+      p.arc(-w * 0.32, -h * 0.12, 5 * s, 0, 6.2832);         // telescope eye
+      for (let k = 0; k < 6; k++) {                          // belly photophores
+        const cx = -w * 0.34 + k * w * 0.125;
+        const cy = h * (0.4 - k * 0.026);
+        p.moveTo(cx + 1.7 * s, cy);
+        p.arc(cx, cy, 1.7 * s, 0, 6.2832);
+      }
     } else if (c.type === "squid") {
       const L = 120 * s;
       p.moveTo(-L * 0.62, 0);
@@ -677,11 +785,15 @@
     scrollY = window.scrollY || 0;
     ctx.clearRect(0, 0, vw, vh);
     drawGradient();
+    drawSun(t);
     drawCaustics(t);
     drawRays(t);
     drawBubbles(t, dt);
     if (dt > 0) stepFish(dt);
-    if (scrollY + vh > bands.meso[0] - 100 && scrollY < bands.meso[1] + 100) drawFish();
+    if (scrollY + vh > bands.meso[0] - 200 && scrollY < bands.meso[1] + 200) {
+      drawFarFish(t);
+      drawFish();
+    }
     drawJellies(RM ? T0 : t);
     drawSnow(t);
     if (dt > 0) stepFlashes(dt);
@@ -691,6 +803,17 @@
     const p = ascending ? clamp((performance.now() - ascendT0) / ASCEND_MS, 0, 1) : 0;
     if (riseBubbles.length || ascending) stepRiseBubbles(dt, p);
     updateGauge();
+    updateContacts();
+  }
+
+  /* sonar contact count — how much life is currently lit */
+  const gContacts = document.querySelector(".g-contacts");
+  let lastContacts = "";
+  function updateContacts() {
+    let n = 0;
+    for (const c of hidden) if (c.reveal > 0.25) n++;
+    const txt = n ? String(n).padStart(2, "0") : "—";
+    if (txt !== lastContacts) { lastContacts = txt; gContacts.textContent = txt; }
   }
 
   let rafId = 0, running = false, lastTs = 0;
@@ -750,10 +873,33 @@
 
   /* ---------------- input ---------------- */
 
+  // the anglerfish answers a light with light
+  const anglerSvg = document.querySelector(".angler");
+  let flareT = 0;
+  function flareLure() {
+    anglerSvg.classList.add("flare");
+    clearTimeout(flareT);
+    flareT = setTimeout(() => anglerSvg.classList.remove("flare"), 2600);
+    const r = anglerSvg.getBoundingClientRect();
+    const ex = r.left + r.width * (136 / 660);
+    const ey = r.top + r.height * (86 / 380) + scrollY;
+    for (let i = 0; i < 9; i++) {
+      flashes.push({
+        x: ex + (Math.random() - 0.5) * 260,
+        y: ey + (Math.random() - 0.3) * 200,
+        t: RM ? 0.5 : 0, dur: 1 + Math.random() * 1.5,
+      });
+    }
+    if (RM) { render(); setTimeout(render, 800); setTimeout(() => { flashes = []; render(); }, 1700); }
+  }
+
   // "click" (not pointerdown) so touch-scroll flicks don't fire pings
   window.addEventListener("click", (e) => {
     if (e.target.closest("a, button")) return;
     addPing(e.clientX, e.clientY);
+    const r = anglerSvg.getBoundingClientRect();
+    if (e.clientX > r.left - 30 && e.clientX < r.right + 30 &&
+        e.clientY > r.top - 30 && e.clientY < r.bottom + 30) flareLure();
   });
 
   hint.addEventListener("click", () => addPing(vw / 2, vh * 0.5));

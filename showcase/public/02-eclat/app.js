@@ -19,6 +19,8 @@ uniform float uTime;
 uniform vec2  uSource;   /* plume origin, uv, y-up */
 uniform vec2  uPointer;  /* pointer, uv, y-up */
 uniform float uSheen;    /* 0..1 iridescent presence */
+uniform vec2  uPulse;    /* last press, uv, y-up */
+uniform float uPulseT;   /* time of last press */
 
 float hash(vec2 p){
   p = fract(p * vec2(123.34, 456.21));
@@ -88,11 +90,20 @@ void main(){
 
   /* iridescent sheen — a thin-film tint lent by the visitor's presence */
   vec2 pp = vec2((uv.x - uPointer.x) * aspect, uv.y - uPointer.y);
-  float field = exp(-dot(pp, pp) * 15.0) * uSheen;
-  vec3 irid = 0.5 + 0.5 * cos(6.28318 * (f * 1.9 + h * 0.7) + vec3(0.0, 2.1, 4.2) + t * 0.16);
-  col += density * field * (irid - 0.5) * 0.6;   /* hue shift inside the smoke */
-  col += density * field * irid * 0.22;          /* faint lift */
-  col += haze * field * (irid - 0.5) * 2.6;      /* whisper of colour in the haze */
+  float field = exp(-dot(pp, pp) * 16.0) * uSheen;
+  vec3 irid = 0.5 + 0.5 * cos(6.28318 * (f * 1.15 + h * 0.45) + vec3(0.0, 2.1, 4.2) + t * 0.16);
+  irid = mix(vec3(dot(irid, vec3(0.333))), irid, 0.7);   /* soften toward oil-film pastels */
+  col += density * field * (irid - 0.5) * 0.5;   /* hue shift inside the smoke strands */
+  col += density * field * irid * 0.16;          /* faint lift */
+  col += haze * field * (irid - 0.5) * 1.05;     /* whisper of colour in the haze */
+
+  /* the breath — a slow iridescent ripple from the visitor's touch */
+  vec2 pu = vec2((uv.x - uPulse.x) * aspect, uv.y - uPulse.y);
+  float age = t - uPulseT;
+  float ring = exp(-pow((length(pu) - age * 0.20) * 9.0, 2.0)) * exp(-age * 1.1) * step(0.0, age);
+  float body = density * 0.9 + haze * 3.5 + 0.05;
+  col += ring * body * (irid - 0.5) * 0.55;
+  col += ring * (density * 0.8 + 0.02) * 0.12;
 
   /* soft in-shader vignette */
   float vig = smoothstep(1.3, 0.35, length((uv - 0.5) * vec2(aspect, 1.0)));
@@ -136,7 +147,9 @@ function initSmoke(){
   gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
 
   const U = {};
-  for(const n of ['uRes','uTime','uSource','uPointer','uSheen']) U[n] = gl.getUniformLocation(prog, n);
+  for(const n of ['uRes','uTime','uSource','uPointer','uSheen','uPulse','uPulseT']) U[n] = gl.getUniformLocation(prog, n);
+  gl.uniform1f(U.uPulseT, -100.0);
+  gl.uniform2f(U.uPulse, 0.5, 0.4);
 
   const QUALITY = 0.8; /* smoke is soft — render under-res, scale up */
   let cw = 0, ch = 0;
@@ -174,6 +187,14 @@ function initSmoke(){
       lastMove = performance.now();
     }, { passive:true });
   }
+
+  /* the breath — press the dark and it answers */
+  hero.addEventListener('pointerdown', (e) => {
+    if(reduced() || !running) return;
+    const r = canvas.getBoundingClientRect();
+    gl.uniform2f(U.uPulse, (e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
+    gl.uniform1f(U.uPulseT, time);
+  }, { passive:true });
 
   let running = false, visible = true, raf = 0;
   let time = 18.0, last = 0;
@@ -303,7 +324,7 @@ function initWisps(){
       tint += (tintTarget - tint) * Math.min(1, dt * 3);
       ctx.fillStyle = 'rgba(16,16,19,0.05)';
       ctx.fillRect(0, 0, W, H);
-      ctx.lineWidth = 1.2;
+      ctx.lineWidth = 1.2 + tint * 0.5;
       ctx.lineCap = 'round';
       const [tr, tg, tb] = style.tint;
       for(const p of parts){
@@ -314,7 +335,7 @@ function initWisps(){
         const cr = Math.round(214 + (tr - 214) * tint);
         const cg = Math.round(214 + (tg - 214) * tint);
         const cb = Math.round(222 + (tb - 222) * tint);
-        const al = p.spark ? style.alpha * 2.4 : style.alpha;
+        const al = (p.spark ? style.alpha * 2.4 : style.alpha) * (1 + tint * 0.9);
         ctx.strokeStyle = `rgba(${cr},${cg},${cb},${al * (0.5 + 0.5 * Math.sin(t * 1.3 + p.ph))})`;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);

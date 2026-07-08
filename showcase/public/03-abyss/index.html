@@ -130,27 +130,31 @@
           </radialGradient>
         </defs>
         <g class="ang" fill="none" stroke="#A9E4FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <!-- body: back, tail fan, belly -->
-          <path d="M124,170 C168,132 250,118 326,124 C404,130 468,160 502,202
-                   L540,178 C566,194 568,232 542,248 L502,224
-                   C458,258 376,272 306,264 C248,258 206,248 176,234"/>
-          <!-- tail fork inner -->
-          <path d="M540,182 C528,200 528,226 540,244" stroke-opacity=".7"/>
+          <!-- back -->
+          <path d="M124,170 C168,132 250,118 326,124 C404,130 468,160 502,202"/>
+          <!-- caudal fin: forked fan + rays -->
+          <path d="M502,198 C536,166 568,158 588,168 C576,190 576,226 588,248 C568,256 534,246 502,222 Z"/>
+          <path d="M514,202 L566,180 M516,210 L574,207 M514,218 L564,234" stroke-opacity=".5" stroke-width="1.1"/>
+          <!-- belly, meeting the chin -->
+          <path d="M502,222 C458,258 376,272 306,264 C258,258 228,262 214,262"/>
           <!-- upper jaw -->
           <path d="M124,170 Q152,194 184,212"/>
           <!-- lower jaw + chin -->
           <path d="M184,212 Q142,230 106,234 Q150,262 214,262" />
-          <!-- teeth: lower jaw, pointing up -->
-          <path d="M126,230 L131,208 M146,226 L152,202 M166,222 L173,200" stroke-width="1.3"/>
-          <!-- teeth: upper jaw, pointing down -->
-          <path d="M138,181 L146,200 M154,190 L163,207 M170,199 L178,212" stroke-width="1.3"/>
+          <!-- needle teeth: lower jaw up, upper jaw down -->
+          <path d="M168,219 L175,197 M151,224 L159,198 M136,228 L143,203 M121,232 L127,212" stroke-width="1.3"/>
+          <path d="M138,182 L144,201 M153,193 L160,210 M168,203 L174,216" stroke-width="1.3"/>
           <!-- eye -->
           <circle cx="204" cy="176" r="7"/>
           <circle cx="204" cy="176" r="2.4" fill="#A9E4FF" stroke="none"/>
-          <!-- dorsal fin -->
-          <path d="M386,140 C400,118 428,114 446,126 M420,132 L428,152" stroke-opacity=".8"/>
-          <!-- pectoral fin -->
-          <path d="M318,222 C340,236 366,240 388,234 M322,230 C342,246 368,250 390,244" stroke-opacity=".7"/>
+          <!-- dorsal fin, seated on the back -->
+          <path d="M371,130 C388,102 424,98 448,118 C444,132 442,142 439,154 C416,146 392,138 371,130 Z" stroke-opacity=".85"/>
+          <path d="M392,124 L398,108 M412,120 L420,106" stroke-opacity=".5" stroke-width="1.1"/>
+          <!-- pectoral fin, rooted on the flank -->
+          <path d="M320,202 Q315,211 320,218" stroke-opacity=".85"/>
+          <path d="M322,206 C344,214 366,218 386,214 M322,210 C344,224 366,228 388,224 M322,214 C342,232 362,238 382,236" stroke-opacity=".6"/>
+          <!-- anal fin -->
+          <path d="M456,246 C462,260 476,262 486,251" stroke-opacity=".6"/>
           <!-- lateral line -->
           <path d="M236,196 C300,188 380,192 452,212" stroke-opacity=".35" stroke-dasharray="1 7"/>
           <!-- the lure -->
@@ -186,6 +190,7 @@
     <span class="g-zonewrap"><span class="g-zone">EPIPELAGIC</span></span>
     <span class="g-row">PRESS&nbsp;<b class="g-press">1 atm</b></span>
     <span class="g-row">TEMP&nbsp;<b class="g-temp">21.8&thinsp;&deg;C</b></span>
+    <span class="g-row">CONTACTS&nbsp;<b class="g-contacts">&mdash;</b></span>
   </div>
   <div class="g-rail"><i class="g-dot"></i></div>
 </aside>

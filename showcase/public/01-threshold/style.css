@@ -147,6 +147,8 @@ body.no-gl .chapter[data-stop="6"] { background: #0A0A0C; }
   color: var(--chrome);
   transition: color 0.8s var(--ease);
   white-space: nowrap;
+  padding: 1rem 0.6rem;
+  margin: -1rem -0.6rem;
 }
 
 .wordmark-sub {
@@ -528,18 +530,21 @@ main { position: relative; z-index: 10; }
 }
 
 .credit-links a {
+  display: inline-block;
   font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--ink-dim);
-  text-decoration: none;
-  border-bottom: 1px solid var(--hair);
-  padding: 0.5em 0.1em;
-  transition: color 0.5s var(--ease), border-color 0.5s var(--ease);
+  text-decoration: underline;
+  text-decoration-color: var(--hair);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+  padding: 14px 8px;
+  transition: color 0.5s var(--ease), text-decoration-color 0.5s var(--ease);
 }
 
-.credit-links a:hover { color: var(--amber); border-color: var(--amber); }
+.credit-links a:hover { color: var(--amber); text-decoration-color: var(--amber); }
 
 .credit-sep { color: var(--ink-faint); }
 

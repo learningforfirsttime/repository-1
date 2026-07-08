@@ -139,20 +139,30 @@ function blade(len, wid, curl) {
     + `<path class="vn" d="M${f1(wid * .25)} ${f1(wid * .35)} Q ${f1(cx + wid * .28)} ${f1(cy + wid * .5)}, ${f1(tx - wid * .4)} ${f1(ty - wid * .2)}"/>`;
 }
 
-/* pinnatifid / dissected leaf: lobes along a midrib */
-function lobedLeaf(rng, len, wid) {
+/* pinnatifid / dissected leaf: lobes along a midrib.
+   slim=true gives the finely-cut umbellifer look */
+function lobedLeaf(rng, len, wid, slim = false) {
   let s = `<path class="vn" d="M0 0 L ${f1(len)} 0"/>`;
-  const pairs = rng.int(2, 3);
+  const pairs = slim ? rng.int(4, 5) : rng.int(2, 3);
+  const wf = slim ? .18 : .4;
+  const baseA = slim ? 50 : 46;
   for (let i = 1; i <= pairs; i++) {
-    const t = .16 + (i / (pairs + .7)) * .66;
+    const t = .14 + (i / (pairs + .55)) * .72;
     const lx = len * t;
-    const ll = wid * (1.12 - t * .68);
-    const a = 46 + rng.range(-6, 8);
-    s += `<g transform="translate(${f1(lx)} 0) rotate(${f1(-a)})"><path class="lf" d="${leafD(ll, ll * .4)}"/></g>`;
-    s += `<g transform="translate(${f1(lx)} 0) rotate(${f1(a)})"><path class="lf" d="${leafD(ll, ll * .4)}"/></g>`;
+    const ll = wid * (1.14 - t * .6);
+    const a = baseA + rng.range(-6, 8);
+    s += `<g transform="translate(${f1(lx)} 0) rotate(${f1(-a)})"><path class="lf" d="${leafD(ll, ll * wf)}"/></g>`;
+    s += `<g transform="translate(${f1(lx)} 0) rotate(${f1(a)})"><path class="lf" d="${leafD(ll, ll * wf)}"/></g>`;
   }
-  s += `<g transform="translate(${f1(len)} 0)"><path class="lf" d="${leafD(wid * .95, wid * .36)}"/></g>`;
+  s += `<g transform="translate(${f1(len)} 0)"><path class="lf" d="${leafD(wid * (slim ? .8 : .95), wid * wf * .9)}"/></g>`;
   return s;
+}
+
+/* a closed, nodding flower bud: two green sepals hugging a pale oval */
+function budHTML() {
+  return `<path class="petal" d="${leafD(11, 4.2)}"/>`
+    + `<path class="lf lf-solid" d="M0 0 C 2 -3.6, 6.5 -4.6, 9.5 -2.4 C 6.5 -1, 3 -.4, 0 0 Z"/>`
+    + `<path class="lf lf-solid" d="M0 0 C 2 3.6, 6.5 4.6, 9.5 2.4 C 6.5 1, 3 .4, 0 0 Z"/>`;
 }
 
 function petalHTML() {
@@ -274,13 +284,13 @@ function fern(rng) {
     for (const nd of attach) {
       if (nd.t < .07 || nd.t > .96) continue;
       const ramp = clamp01(nd.t / .2);
-      const Lp = (len * .3) * ramp * Math.pow(1 - nd.t, .72) + 5;
+      const Lp = (len * .17) * ramp * Math.pow(1 - nd.t, .72) + 4;
       for (const s of [-1, 1]) {
-        const a2 = nd.a + s * rng.range(52, 64);
+        const a2 = nd.a + s * rng.range(56, 68);
         S.organ({
-          x: f1(nd.x), y: f1(nd.y), angle: f1(a2), rotFrom: f1(a2 - s * 44),
+          x: f1(nd.x), y: f1(nd.y), angle: f1(a2), rotFrom: f1(a2 - s * 40),
           birth: nd.birth + .02, dur: .09,
-          html: pinna(f1(Lp), f1(Math.max(2.2, Lp * .17)), Math.max(3, Math.round(Lp / 7))),
+          html: pinna(f1(Lp), f1(Math.max(1.8, Lp * .15)), Math.max(4, Math.round(Lp / 5))),
         });
       }
     }
@@ -289,21 +299,21 @@ function fern(rng) {
 }
 
 function grass(rng) {
-  const S = sprout(rng, 420, 560);
-  const bx = 210, by = 508;
+  const S = sprout(rng, 500, 560);
+  const bx = 250, by = 508;
   roots(S, bx, by, rng.int(4, 6), 0, .1);
   hatch(S, bx, by, .04);
-  for (let m = 0; m < rng.int(3, 4); m++) {
+  for (let m = 0; m < rng.int(2, 3); m++) {
     const s = m % 2 ? 1 : -1;
     S.organ({
-      x: f1(bx + rng.range(-8, 8)), y: by, angle: f1(-90 + s * rng.range(40, 64)),
+      x: f1(bx + rng.range(-8, 8)), y: by, angle: f1(-90 + s * rng.range(42, 62)),
       rotFrom: -90, birth: .05, dur: .14,
-      html: blade(f1(rng.range(90, 150)), 4.2, rng.range(.5, .85)),
+      html: blade(f1(rng.range(95, 150)), 3.6, rng.range(.5, .85)),
     });
   }
   const culms = rng.int(3, 4);
   for (let i = 0; i < culms; i++) {
-    const off = (i - (culms - 1) / 2) * 11 + rng.range(-3, 3);
+    const off = (i - (culms - 1) / 2) * 16 + rng.range(-4, 4);
     const ang = -90 + off * .8 + rng.range(-3, 3);
     const len = rng.range(300, 372) - Math.abs(off) * 2.5;
     const birth = .06 + i * .05;
@@ -314,7 +324,7 @@ function grass(rng) {
       S.organ({
         x: f1(nd.x), y: f1(nd.y), angle: f1(-90 + sd * rng.range(30, 52)), rotFrom: f1(-90 + sd * 6),
         birth: nd.birth + .02, dur: .12,
-        html: blade(f1(rng.range(115, 165)), 4.6, rng.range(.55, .8)),
+        html: blade(f1(rng.range(115, 165)), 3.8, rng.range(.55, .8)),
       });
     }
     for (const nd of nodes.slice(-4, -1)) {
@@ -340,20 +350,20 @@ function daisy(rng) {
   const bx = 210, by = 508;
   roots(S, bx, by, rng.int(4, 6), 0, .1);
   hatch(S, bx, by, .04);
-  const nodes = chain(S, { x: bx, y: by, ang: -90 + rng.range(-4, 4), len: rng.range(250, 290), segs: 7, drift: 2.2, bend: rng.range(-.6, .6), w0: 2.8, w1: 1.1, birth: .08, grow: .46 });
+  const nodes = chain(S, { x: bx, y: by, ang: -90 + rng.range(-4, 4), len: rng.range(300, 335), segs: 7, drift: 2.2, bend: rng.range(-.6, .6), w0: 3, w1: 1.2, birth: .08, grow: .46 });
   const tips = [{ nd: nodes[nodes.length - 1], kind: 'flower' }];
   /* two branches */
   const bIdx = [rng.int(2, 3), rng.int(4, 5)];
   bIdx.forEach((idx, j) => {
     const nd = nodes[idx];
     const sd = j % 2 ? 1 : -1;
-    const br = chain(S, { x: nd.x, y: nd.y, ang: nd.a + sd * rng.range(22, 34), len: rng.range(85, 130) * (1 - nd.t * .35), segs: 4, drift: 2, bend: -sd * 2.2, w0: 1.9, w1: .9, birth: nd.birth + .04, grow: .28 });
+    const br = chain(S, { x: nd.x, y: nd.y, ang: nd.a + sd * rng.range(24, 36), len: rng.range(105, 155) * (1 - nd.t * .35), segs: 4, drift: 2, bend: -sd * 3, w0: 2, w1: .95, birth: nd.birth + .04, grow: .28 });
     tips.push({ nd: br[br.length - 1], kind: j === 0 && rng.chance(.6) ? 'bud' : 'flower' });
     /* leaf at branch base */
     S.organ({
       x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a - sd * rng.range(40, 55)), rotFrom: f1(nd.a),
       birth: nd.birth + .03, dur: .12,
-      html: lobedLeaf(rng, f1(rng.range(60, 85)), f1(rng.range(20, 26))),
+      html: lobedLeaf(rng, f1(rng.range(70, 95)), f1(rng.range(22, 28))),
     });
   });
   /* lower leaves */
@@ -362,7 +372,7 @@ function daisy(rng) {
     S.organ({
       x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a + sd * rng.range(42, 60)), rotFrom: f1(nd.a),
       birth: nd.birth + .03, dur: .12,
-      html: lobedLeaf(rng, f1(rng.range(75, 100)), f1(rng.range(24, 30))),
+      html: lobedLeaf(rng, f1(rng.range(85, 115)), f1(rng.range(26, 33))),
     });
   }
   /* flowers */
@@ -370,23 +380,23 @@ function daisy(rng) {
     const { nd, kind } = tip;
     const fb = nd.birth + .04;
     if (kind === 'bud') {
-      S.organ({ x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a), rotFrom: f1(nd.a - 30), birth: fb, dur: .1, html: `<path class="lf lf-solid" d="${starD(6.5, 6, 2.6)}"/><path class="petal" d="${leafD(8, 3.4)}" transform="rotate(0)"/>` });
+      S.organ({ x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a + rng.range(15, 35)), rotFrom: f1(nd.a - 30), birth: fb, dur: .1, html: budHTML() });
       continue;
     }
-    S.organ({ x: f1(nd.x), y: f1(nd.y), angle: 0, rotFrom: 0, birth: fb, dur: .07, html: `<path class="lf lf-solid" d="${starD(7.5, 7, 3)}"/>` });
-    const n = rng.int(11, 14);
+    S.organ({ x: f1(nd.x), y: f1(nd.y), angle: 0, rotFrom: 0, scale: 1.25, birth: fb, dur: .07, html: `<path class="lf lf-solid" d="${starD(7.5, 7, 3)}"/>` });
+    const n = rng.int(12, 15);
     const a0 = rng.range(0, 360);
     for (let i = 0; i < n; i++) {
       const a = a0 + i * 360 / n + rng.range(-4, 4);
       S.organ({
         x: f1(nd.x), y: f1(nd.y), angle: f1(a), rotFrom: f1(a - 26),
-        scale: rng.range(.9, 1.1), birth: fb + .025 + i * .006, dur: .07,
+        scale: rng.range(1.15, 1.4), birth: fb + .025 + i * .006, dur: .07,
         html: petalHTML(),
       });
     }
-    let disc = `<circle class="disc" r="6.2"/>`;
-    for (let k = 0; k < 7; k++) {
-      const [dx2, dy2] = pt(0, 0, rng.range(0, 360), rng.range(0, 4));
+    let disc = `<circle class="disc" r="7.4"/>`;
+    for (let k = 0; k < 8; k++) {
+      const [dx2, dy2] = pt(0, 0, rng.range(0, 360), rng.range(0, 4.8));
       disc += `<circle class="dot" cx="${f1(dx2)}" cy="${f1(dy2)}" r=".7"/>`;
     }
     S.organ({ x: f1(nd.x), y: f1(nd.y), angle: 0, rotFrom: 0, birth: fb + .1, dur: .07, html: disc });
@@ -395,33 +405,40 @@ function daisy(rng) {
 }
 
 function umbel(rng) {
-  const S = sprout(rng, 420, 560);
-  const bx = 210, by = 508;
+  const S = sprout(rng, 420, 600);
+  const bx = 210, by = 548;
   roots(S, bx, by, rng.int(4, 6), 0, .1);
   hatch(S, bx, by, .04);
-  const nodes = chain(S, { x: bx, y: by, ang: -90 + rng.range(-3, 3), len: rng.range(310, 350), segs: 7, drift: 1.4, bend: rng.range(-.5, .5), w0: 3, w1: 1.3, birth: .08, grow: .44 });
-  /* dissected leaves low on the stem */
+  const nodes = chain(S, { x: bx, y: by, ang: -90 + rng.range(-3, 3), len: rng.range(390, 425), segs: 8, drift: 1.4, bend: rng.range(-.5, .5), w0: 3.1, w1: 1.3, birth: .08, grow: .44 });
+  /* finely dissected leaves low on the stem */
   for (const [idx, sd] of [[1, -1], [2, 1], [3, -1]]) {
     const nd = nodes[idx];
     S.organ({
       x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a + sd * rng.range(38, 52)), rotFrom: f1(nd.a),
       birth: nd.birth + .03, dur: .12,
-      html: lobedLeaf(rng, f1(rng.range(80, 115) * (1 - nd.t * .5)), f1(rng.range(24, 32))),
+      html: lobedLeaf(rng, f1(rng.range(95, 130) * (1 - nd.t * .55)), f1(rng.range(26, 34)), true),
     });
   }
+  /* one small sheathing leaf higher up */
+  const upper = nodes[5];
+  S.organ({
+    x: f1(upper.x), y: f1(upper.y), angle: f1(upper.a + rng.range(30, 44) * (rng.chance(.5) ? 1 : -1)), rotFrom: f1(upper.a),
+    birth: upper.birth + .03, dur: .1,
+    html: lobedLeaf(rng, f1(rng.range(38, 52)), f1(rng.range(13, 17)), true),
+  });
   const apex = nodes[nodes.length - 1];
   /* bracts */
   for (const sd of [-1, 1]) {
     S.organ({ x: f1(apex.x), y: f1(apex.y), angle: f1(90 + sd * rng.range(28, 45)), rotFrom: f1(90), scale: 1, birth: apex.birth + .02, dur: .07, html: `<path class="lf lf-solid" d="${leafD(13, 2.2)}"/>` });
   }
-  /* the umbel: rays ending in umbellets */
-  const n = rng.int(9, 12);
-  const fan = rng.range(120, 142);
+  /* the umbel: rays curling upward into a dome, each ending in an umbellet */
+  const n = rng.int(11, 13);
+  const fan = rng.range(138, 152);
   for (let i = 0; i < n; i++) {
     const pos = i / (n - 1) - .5;
     const rayAng = -90 + pos * fan + rng.range(-3, 3);
-    const rayLen = rng.range(50, 66) * (.76 + .52 * Math.abs(pos));
-    const ray = chain(S, { x: apex.x, y: apex.y, ang: rayAng, len: rayLen, segs: 2, drift: 1.5, bend: pos * 4, w0: 1, w1: .65, birth: apex.birth + .04 + Math.abs(pos) * .025, grow: .09, cls: 'stem thin' });
+    const rayLen = rng.range(54, 70) * (.72 + .6 * Math.abs(pos));
+    const ray = chain(S, { x: apex.x, y: apex.y, ang: rayAng, len: rayLen, segs: 3, drift: 1.2, bend: -pos * 12, w0: 1, w1: .65, birth: apex.birth + .04 + Math.abs(pos) * .025, grow: .09, cls: 'stem thin' });
     const end = ray[ray.length - 1];
     S.organ({
       x: f1(end.x), y: f1(end.y), angle: f1(end.a + 90), rotFrom: f1(end.a + 90 + 20),
@@ -432,62 +449,70 @@ function umbel(rng) {
 }
 
 function bell(rng) {
-  const S = sprout(rng, 420, 560);
-  const bx = 210, by = 508;
-  roots(S, bx, by, rng.int(4, 6), 0, .1);
-  hatch(S, bx, by, .04);
-  /* basal rosette */
-  for (let i = 0; i < rng.int(4, 5); i++) {
+  const S = sprout(rng, 500, 560);
+  const by = 508;
+  /* two flowering stems sharing one crown */
+  const stems = [
+    { bx: 282, len: rng.range(330, 360), w0: 2.6, birth: .1, from: 3 },
+    { bx: 206, len: rng.range(225, 255), w0: 2.1, birth: .18, from: 2 },
+  ];
+  roots(S, 245, by, rng.int(5, 7), 0, .1);
+  hatch(S, 245, by, .04);
+  /* basal rosette spanning both stems */
+  for (let i = 0; i < rng.int(5, 6); i++) {
     const sd = i % 2 ? 1 : -1;
     S.organ({
-      x: f1(bx + rng.range(-5, 5)), y: by - 2, angle: f1(-90 + sd * rng.range(32, 64)), rotFrom: -90,
+      x: f1(245 + rng.range(-24, 24)), y: by - 2, angle: f1(-90 + sd * rng.range(32, 66)), rotFrom: -90,
       birth: .05 + i * .015, dur: .12,
-      html: leaf(f1(rng.range(58, 88)), f1(rng.range(10, 14)), { bend: rng.range(-6, 6), veins: 3 }),
+      html: leaf(f1(rng.range(62, 95)), f1(rng.range(10, 14)), { bend: rng.range(-6, 6), veins: 3 }),
     });
   }
-  const nodes = chain(S, { x: bx, y: by, ang: -90 + rng.range(-3, 3), len: rng.range(290, 320), segs: 8, drift: 1.2, bend: rng.range(-.5, .5), w0: 2.6, w1: 1, birth: .1, grow: .5 });
-  /* small stem leaves */
-  for (const [idx, sd] of [[1, 1], [2, -1]]) {
-    const nd = nodes[idx];
-    S.organ({
-      x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a + sd * rng.range(40, 55)), rotFrom: f1(nd.a),
-      birth: nd.birth + .03, dur: .1,
-      html: leaf(f1(rng.range(38, 55)), f1(rng.range(7, 9)), { veins: 2 }),
-    });
-  }
-  /* hanging bells along the upper stem */
-  let side = rng.chance(.5) ? 1 : -1;
-  for (let k = 3; k < nodes.length - 1; k++) {
-    const nd = nodes[k];
-    side = -side;
-    const ped = chain(S, { x: nd.x, y: nd.y, ang: nd.a + side * rng.range(55, 70), len: rng.range(16, 24), segs: 2, drift: 2, bend: 15, w0: .9, w1: .55, birth: nd.birth + .03, grow: .08, cls: 'stem thin' });
-    const end = ped[ped.length - 1];
-    const bAng = rng.range(-10, 10);
-    S.organ({
-      x: f1(end.x), y: f1(end.y), angle: f1(bAng), rotFrom: f1(bAng + side * 34),
-      birth: end.birth + .03, dur: .12, html: bellHTML(rng),
-    });
-  }
-  /* buds at the tip */
-  const tip = nodes[nodes.length - 1];
-  for (const sd of [-1, 1]) {
-    S.organ({
-      x: f1(tip.x), y: f1(tip.y), angle: f1(45 + sd * 45 + rng.range(-10, 10)), rotFrom: f1(-90),
-      scale: .9, birth: tip.birth + .03, dur: .1,
-      html: `<path class="petal" d="${leafD(11, 3.6)}"/><path class="lf lf-solid" d="M0 0 L 3.5 -2 L 3 .5 Z"/>`,
-    });
+  for (const st of stems) {
+    const nodes = chain(S, { x: st.bx, y: by, ang: -90 + rng.range(-3, 3), len: st.len, segs: 8, drift: 1.2, bend: rng.range(-.5, .5), w0: st.w0, w1: 1, birth: st.birth, grow: .5 });
+    /* small stem leaves */
+    for (const [idx, sd] of [[1, 1], [2, -1]]) {
+      const nd = nodes[idx];
+      S.organ({
+        x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a + sd * rng.range(40, 55)), rotFrom: f1(nd.a),
+        birth: nd.birth + .03, dur: .1,
+        html: leaf(f1(rng.range(38, 55)), f1(rng.range(7, 9)), { veins: 2 }),
+      });
+    }
+    /* hanging bells along the upper stem */
+    let side = rng.chance(.5) ? 1 : -1;
+    for (let k = st.from; k < nodes.length - 1; k++) {
+      const nd = nodes[k];
+      side = -side;
+      const ped = chain(S, { x: nd.x, y: nd.y, ang: nd.a + side * rng.range(55, 70), len: rng.range(16, 24), segs: 2, drift: 2, bend: 15, w0: .9, w1: .55, birth: nd.birth + .03, grow: .08, cls: 'stem thin' });
+      const end = ped[ped.length - 1];
+      const bAng = rng.range(-10, 10);
+      S.organ({
+        x: f1(end.x), y: f1(end.y), angle: f1(bAng), rotFrom: f1(bAng + side * 34),
+        birth: end.birth + .03, dur: .12, html: bellHTML(rng),
+      });
+    }
+    /* buds at the tip */
+    const tip = nodes[nodes.length - 1];
+    for (const sd of [-1, 1]) {
+      S.organ({
+        x: f1(tip.x), y: f1(tip.y), angle: f1(45 + sd * 45 + rng.range(-10, 10)), rotFrom: f1(-90),
+        scale: .9, birth: tip.birth + .03, dur: .1,
+        html: `<path class="petal" d="${leafD(11, 3.6)}"/><path class="lf lf-solid" d="M0 0 L 3.5 -2 L 3 .5 Z"/>`,
+      });
+    }
   }
   return S.plan();
 }
 
 function vine(rng) {
-  const S = sprout(rng, 460, 560);
-  const bx = 165, by = 508;
+  const S = sprout(rng, 440, 560);
+  const bx = 205, by = 508;
   roots(S, bx, by, rng.int(4, 6), 0, .1);
   hatch(S, bx, by, .04);
   const nodes = chain(S, {
-    x: bx, y: by, ang: -82 + rng.range(-3, 3), len: rng.range(400, 450), segs: 16,
-    drift: 1.2, bend: rng.range(.2, .6), waveAmp: rng.range(10, 13.5), waveFreq: 1.15,
+    x: bx, y: by, ang: -87 + rng.range(-2, 2), len: rng.range(410, 450), segs: 16,
+    drift: 1, bend: rng.range(.1, .35), waveAmp: rng.range(14, 16.5), waveFreq: 1.05,
+    wavePhase: rng.range(-.5, .5),
     w0: 2.3, w1: .9, birth: .08, grow: .62,
   });
   let side = 1;
@@ -505,8 +530,8 @@ function vine(rng) {
     const nd = nodes[Math.round(t * (nodes.length - 1))];
     const sd = rng.chance(.5) ? 1 : -1;
     S.organ({
-      x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a + sd * rng.range(60, 85)), rotFrom: f1(nd.a + sd * 20),
-      scale: 1.15, birth: nd.birth + .05, dur: .13, html: trumpetHTML(),
+      x: f1(nd.x), y: f1(nd.y), angle: f1(nd.a + sd * rng.range(65, 92)), rotFrom: f1(nd.a + sd * 20),
+      scale: 1.6, birth: nd.birth + .05, dur: .13, html: trumpetHTML(),
     });
   }
   /* tendrils */

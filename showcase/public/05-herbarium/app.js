@@ -63,10 +63,18 @@ function mountPlant(svg, plan) {
       }
     }
   }
+  function reset() {
+    for (const a of anim) {
+      if (a.type === 'stem') a.el.style.strokeDashoffset = a.len;
+      else a.el.setAttribute('transform', `translate(${a.x} ${a.y}) rotate(${a.rotFrom}) scale(0.001)`);
+    }
+  }
   const done = () => svg.classList.add('grown');
   return {
     grow(ms) {
       cancelAnimationFrame(raf);
+      svg.classList.remove('grown');
+      reset();
       const t0 = performance.now();
       const tick = (now) => {
         const p = Math.min(1, (now - t0) / ms);
@@ -104,8 +112,12 @@ function pressPaper(fig, seedOffset) {
   for (let x = w - m; x > m; x -= step) pts.push([x, h - m + jit()]);
   for (let y = h - m; y > m; y -= step) pts.push([m + jit(), y]);
   const d = 'M' + pts.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' L ') + ' Z';
-  let inner = `<path d="${d}" transform="translate(.4 1.6)" fill="rgba(96,78,42,.25)"/>`;
-  inner += `<path d="${d}" fill="var(--plate)" stroke="var(--plate-edge)" stroke-width="1"/>`;
+  const gid = 'pg' + (seedOffset >>> 0);
+  let inner = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2=".85" y2="1">`
+    + `<stop offset="0" stop-color="#FBF6E7"/><stop offset=".55" stop-color="#F9F3E1"/><stop offset="1" stop-color="#F3EAD2"/>`
+    + `</linearGradient></defs>`;
+  inner += `<path d="${d}" transform="translate(.4 1.6)" fill="rgba(96,78,42,.25)"/>`;
+  inner += `<path d="${d}" fill="url(#${gid})" stroke="var(--plate-edge)" stroke-width="1"/>`;
   /* a faint age stain, sometimes */
   if (rng.chance(.65)) {
     const sx = rng.range(w * .15, w * .85), sy = rng.range(h * .12, h * .55);
@@ -169,6 +181,20 @@ for (const fig of plates) {
   if (pc) pc.textContent = plan.parts.length;
   pressPaper(fig, seed);
   pressSeal(fig.querySelector('[data-seal]'), seed);
+  /* discovery: a grown specimen can be asked to grow again */
+  if (!reduced) {
+    svg.setAttribute('role', 'button');
+    svg.setAttribute('tabindex', '0');
+    svg.setAttribute('aria-label', (svg.getAttribute('aria-label') || 'Specimen') + '. Activate to watch it grow again.');
+    const replay = () => {
+      if (!svg.classList.contains('grown')) return;
+      fig._ctl.grow(+fig.dataset.ms || 3800);
+    };
+    svg.addEventListener('click', replay);
+    svg.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); replay(); }
+    });
+  }
 }
 
 /* propagation plate paper + seal too */
@@ -188,7 +214,7 @@ if (reduced) {
   for (const fig of plates) triggerGrowth(fig);
 } else {
   const hero = document.getElementById('tab-1');
-  if (hero) setTimeout(() => triggerGrowth(hero), 420);
+  if (hero) setTimeout(() => triggerGrowth(hero), 260);
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (!e.isIntersecting) continue;

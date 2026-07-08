@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIMBUS — Bureau of Small Weathers</title>
+<meta name="description" content="A fictional atelier that tailors weather for interiors: morning fog for libraries, steady rain for sleep, a break of sun for kitchens. The rain on this window is simulated, drop by drop, in canvas.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%232E3A4E'/%3E%3Ccircle cx='19' cy='20' r='7' fill='%23A9BAD4' opacity='.9'/%3E%3Ccircle cx='28' cy='18' r='9' fill='%23C7D4E8' opacity='.85'/%3E%3Cpath d='M16 33l-2 5M24 33l-2 5M32 33l-2 5' stroke='%23A9BAD4' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/newsreader.css">
+<link rel="stylesheet" href="/fonts/dm-sans.css">
+<style>
+  :root {
+    --dusk: #232c3d;
+    --dusk-2: #2e3a4e;
+    --slate: #46536b;
+    --mist: #aebace;
+    --paper: #eef0f2;
+    --paper-ink: #232a38;
+    --amber: #d9a04c;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --serif: "Newsreader", Georgia, serif;
+    --sans: "DM Sans", sans-serif;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--dusk);
+    color: var(--mist);
+    font-family: var(--serif);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--amber); color: var(--dusk); }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+
+  /* ——— hero: the window ——— */
+  .window { position: relative; height: 100svh; overflow: hidden; }
+  .window canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .window .frame {
+    position: absolute; inset: 0; pointer-events: none;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.45) inset, 0 0 120px rgba(8,10,16,0.75) inset;
+  }
+  .hero-copy {
+    position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: clamp(20px, 3vw, 40px) clamp(20px, 4vw, 52px);
+  }
+  .hero-top { display: flex; justify-content: space-between; font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.26em; color: rgba(238,240,242,0.85); text-transform: uppercase; text-shadow: 0 1px 12px rgba(10,14,22,0.8); }
+  .hero-mid { text-align: left; max-width: 800px; }
+  .hero-mid h1 {
+    font-size: clamp(46px, 8.4vw, 110px); font-weight: 300; font-style: italic;
+    line-height: 1.02; color: #f2f4f6; letter-spacing: 0.01em;
+    text-shadow: 0 2px 30px rgba(10, 14, 22, 0.65);
+    font-variation-settings: "opsz" 72;
+  }
+  .hero-mid .sub { margin-top: 22px; font-family: var(--sans); font-weight: 300; font-size: clamp(15px, 1.5vw, 18px); color: rgba(238,240,242,0.82); max-width: 44ch; text-shadow: 0 1px 14px rgba(10,14,22,0.8); }
+  .hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(238,240,242,0.7); text-shadow: 0 1px 10px rgba(10,14,22,0.8); }
+  .hero-bottom b { color: var(--amber); font-weight: 600; }
+
+  /* ——— shared ——— */
+  section { padding: clamp(76px, 12vh, 140px) clamp(20px, 4vw, 52px); position: relative; }
+  .measure { max-width: 1120px; margin: 0 auto; }
+  .kicker { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase; color: var(--amber); }
+  h2 { font-size: clamp(32px, 4.4vw, 54px); font-weight: 300; line-height: 1.12; margin-top: 16px; color: #e8ecf1; }
+  h2 em { font-style: italic; }
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ——— commissions ——— */
+  .rooms { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(18px, 2.4vw, 30px); margin-top: 54px; }
+  .room {
+    background: linear-gradient(180deg, rgba(70,83,107,0.34), rgba(35,44,61,0.6));
+    border: 1px solid rgba(174,186,206,0.16);
+    border-radius: 4px; overflow: hidden;
+    transition: transform 0.6s var(--ease), border-color 0.6s var(--ease), box-shadow 0.6s var(--ease);
+  }
+  .room:hover { transform: translateY(-5px); border-color: rgba(217,160,76,0.45); box-shadow: 0 30px 60px -34px rgba(0,0,0,0.8); }
+  .room canvas { width: 100%; height: 190px; display: block; }
+  .room .body { padding: 24px 26px 28px; }
+  .room h3 { font-size: 24px; font-weight: 400; font-style: italic; color: #edf0f4; }
+  .room .for { font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--amber); margin-top: 4px; }
+  .room p { font-size: 15px; margin-top: 12px; color: var(--mist); }
+  .room .spec { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(174,186,206,0.14); font-family: var(--sans); font-size: 11px; letter-spacing: 0.14em; color: #8fa0ba; display: flex; justify-content: space-between; text-transform: uppercase; }
+
+  /* ——— field notes (paper) ——— */
+  .notes { background: var(--paper); color: var(--paper-ink); }
+  .notes .kicker { color: #a5651f; }
+  .notes h2 { color: #1d2430; }
+  .notes .entries { margin-top: 50px; display: grid; gap: 0; }
+  .entry { display: grid; grid-template-columns: 130px 1fr; gap: 26px; padding: 30px 0; border-top: 1px solid rgba(35,42,56,0.16); }
+  .entry:last-child { border-bottom: 1px solid rgba(35,42,56,0.16); }
+  .entry .date { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.2em; color: #a5651f; text-transform: uppercase; padding-top: 6px; }
+  .entry p { font-size: 17.5px; line-height: 1.75; max-width: 62ch; }
+  .entry p em { font-style: italic; }
+  @media (max-width: 620px) { .entry { grid-template-columns: 1fr; gap: 8px; } }
+
+  /* ——— instruments ——— */
+  .inst .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 38px; margin-top: 46px; }
+  .inst h3 { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  .inst p { font-size: 15px; color: var(--mist); }
+
+  /* ——— closing ——— */
+  .closing { text-align: center; padding-bottom: 120px; }
+  .closing h2 { max-width: 22ch; margin-left: auto; margin-right: auto; }
+  .btn {
+    display: inline-block; margin-top: 40px; cursor: pointer;
+    font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--dusk); background: linear-gradient(170deg, #e8c684, var(--amber));
+    border: none; padding: 18px 38px; border-radius: 2px;
+    box-shadow: 0 14px 40px -18px rgba(217,160,76,0.6);
+    transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 20px 50px -18px rgba(217,160,76,0.75); }
+  .btn:active { transform: translateY(0); }
+  .forecast-note { min-height: 2.2em; margin-top: 26px; font-style: italic; color: var(--mist); opacity: 0; transition: opacity 0.8s var(--ease); }
+  .forecast-note.show { opacity: 1; }
+
+  footer {
+    border-top: 1px solid rgba(174,186,206,0.16);
+    padding: 26px clamp(20px, 4vw, 52px) 36px;
+    display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between;
+    font-family: var(--sans); font-size: 10.5px; font-weight: 500; letter-spacing: 0.14em; color: #8fa0ba; text-transform: uppercase;
+  }
+  footer a { color: #d5deeb; text-decoration: none; border-bottom: 1px solid rgba(174,186,206,0.3); padding-bottom: 2px; transition: color 0.4s var(--ease), border-color 0.4s var(--ease); }
+  footer a:hover { color: var(--amber); border-color: var(--amber); }
+
+  .grain { position: fixed; inset: 0; z-index: 70; pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  }
+  @media (max-width: 700px) {
+    .hero-top span:nth-child(2) { display: none; }
+    .hero-top { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="window" id="top">
+  <canvas id="glass" aria-hidden="true"></canvas>
+  <div class="frame" aria-hidden="true"></div>
+  <div class="hero-copy">
+    <div class="hero-top">
+      <span>NIMBUS</span>
+      <span>BUREAU OF SMALL WEATHERS</span>
+      <span>EST. A RAINY YEAR</span>
+    </div>
+    <div class="hero-mid">
+      <h1>Weather,<br>made to measure.</h1>
+      <p class="sub">We fit rooms with rain, fog, and the occasional deliberate sunbeam. The window you are looking through is not a photograph — every drop condensed on it just now, for you.</p>
+    </div>
+    <div class="hero-bottom">
+      <span><b>Drag</b> across the glass to wipe it clear</span>
+      <span>Scroll for commissions ↓</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section aria-labelledby="rooms-h">
+    <div class="measure">
+      <div class="reveal">
+        <p class="kicker">Commissions</p>
+        <h2 id="rooms-h">Three weathers,<br>currently <em>in fitting</em>.</h2>
+      </div>
+      <div class="rooms">
+        <article class="room reveal" style="--d:.05s">
+          <canvas data-vign="fog" aria-hidden="true"></canvas>
+          <div class="body">
+            <h3>Morning Fog</h3>
+            <p class="for">For libraries &amp; long thoughts</p>
+            <p>A knee-deep fog that arrives at nine and burns off by noon, calibrated so the spines of the books stay legible while the floor disappears. Readers report improved patience.</p>
+            <div class="spec"><span>Visibility 4–9 m</span><span>Silence incl.</span></div>
+          </div>
+        </article>
+        <article class="room reveal" style="--d:.15s">
+          <canvas data-vign="rain" aria-hidden="true"></canvas>
+          <div class="body">
+            <h3>Steady Rain</h3>
+            <p class="for">For sleep &amp; convalescence</p>
+            <p>Our most commissioned weather. A patient, windless rain pitched two tones below conversation, with drop sizes drawn from a September we keep on file. No thunder unless requested in writing.</p>
+            <div class="spec"><span>4 mm / hour</span><span>Perpetual</span></div>
+          </div>
+        </article>
+        <article class="room reveal" style="--d:.25s">
+          <canvas data-vign="sun" aria-hidden="true"></canvas>
+          <div class="body">
+            <h3>Break of Sun</h3>
+            <p class="for">For kitchens, 7:40 am</p>
+            <p>One shaft of morning sun, angled to land on the table exactly where the marmalade goes. Includes drifting dust, which our clients insist is the point.</p>
+            <div class="spec"><span>Duration 22 min</span><span>Dust incl.</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes" aria-labelledby="notes-h">
+    <div class="measure">
+      <div class="reveal">
+        <p class="kicker">Field Notes</p>
+        <h2 id="notes-h">From the bureau's ledger.</h2>
+      </div>
+      <div class="entries">
+        <div class="entry reveal">
+          <span class="date">Entry 041 · March</span>
+          <p>A client asked for <em>the smell of rain without the rain.</em> We declined. Some weathers cannot be separated from their consequences; this is the first thing the bureau teaches, and the last thing clients believe.</p>
+        </div>
+        <div class="entry reveal" style="--d:.08s">
+          <span class="date">Entry 057 · April</span>
+          <p>Delivered the fog to the reading room. The librarian stood in it for a long while, then said, <em>"it is exactly like the morning I decided to stay."</em> We do not know which morning she meant. We invoiced accordingly.</p>
+        </div>
+        <div class="entry reveal" style="--d:.16s">
+          <span class="date">Entry 062 · April</span>
+          <p>Note to apprentices: when fitting rain to a bedroom, measure the roof first. The same rain is a lullaby on slate and an argument on tin. <em>Weather is acoustics wearing a coat.</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="inst" aria-labelledby="inst-h">
+    <div class="measure">
+      <div class="reveal">
+        <p class="kicker">The Instruments</p>
+        <h2 id="inst-h">How a weather is taken in.</h2>
+      </div>
+      <div class="cols reveal" style="--d:.1s">
+        <div>
+          <h3>The Sitting</h3>
+          <p>You describe the afternoon you want to live inside. We take measurements: ceiling height, light direction, the sound your windows make. Two visits, one of them unannounced.</p>
+        </div>
+        <div>
+          <h3>The Draft</h3>
+          <p>A scale model of your weather runs in the atelier for a week. You may visit it. Most clients ask for less lightning than they originally wanted; all of them ask for more dusk.</p>
+        </div>
+        <div>
+          <h3>The Fitting</h3>
+          <p>Installation takes a day. Calibration takes a season — rain must learn a room the way a coat learns shoulders. Adjustments are free for the life of the weather.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="measure reveal">
+      <p class="kicker">Consultations</p>
+      <h2>Tell us which sky<br>you have been missing.</h2>
+      <button class="btn" id="forecast" type="button">Request a forecast</button>
+      <p class="forecast-note" id="forecast-note" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>NIMBUS · A FICTIONAL BUREAU — THE RAIN, HOWEVER, IS REAL CODE</span>
+  <span>DESIGNED &amp; BUILT IN CODE BY CLAUDE · <a href="/">GALLERY</a> · <a href="/guide/">HOW THIS WAS MADE</a></span>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

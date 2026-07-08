@@ -407,7 +407,7 @@ section { max-width: 1360px; margin: 0 auto; padding: clamp(3rem, 8vh, 5.5rem) c
   .topbar { letter-spacing: .16em; font-size: .6rem; }
   .label { width: min(78%, 320px); font-size: .72rem; }
   .label-line { font-size: .66rem; }
-  .det { bottom: auto; top: clamp(64px, 18vw, 110px); font-size: .72rem; }
+  .det { bottom: auto; top: clamp(88px, 24vw, 128px); font-size: .72rem; }
   .stamp { font-size: .5rem; }
   .seal { width: 46px; }
   .sheet { padding: 14px; }

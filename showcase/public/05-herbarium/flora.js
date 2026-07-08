@@ -272,8 +272,8 @@ function fern(rng) {
     const ang = angles[i] + rng.range(-4, 4);
     const len = base * (1 - Math.abs(ang + 90) / 110 * .58);
     const bend = (ang > -90 ? 1 : -1) * rng.range(1.2, 2.6);
-    const birth = .08 + i * .055;
-    const nodes = chain(S, { x: bx, y: by, ang, len, segs: 11, drift: 1.1, bend, w0: 3.4, w1: .6, birth, grow: .5 });
+    const birth = .04 + i * .042;
+    const nodes = chain(S, { x: bx, y: by, ang, len, segs: 11, drift: 1.1, bend, w0: 3.4, w1: .6, birth, grow: .48 });
     /* nodes + midpoints for denser pinnae */
     const attach = [];
     for (let k = 1; k < nodes.length; k++) {

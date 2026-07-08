@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THRESHOLD — A Museum of Light</title>
+<meta name="description" content="THRESHOLD is a museum whose only medium is light. Four rooms of tuned, breathing color — rendered live in a single WebGL shader. Admission by dusk.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230A0A0C'/%3E%3Cdefs%3E%3CradialGradient id='g' cx='50%25' cy='66%25' r='58%25'%3E%3Cstop offset='0' stop-color='%23FF9E3D'/%3E%3Cstop offset='.45' stop-color='%23E8449A'/%3E%3Cstop offset='1' stop-color='%230A0A0C' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='40' r='27' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/unbounded.css">
+<link rel="stylesheet" href="/fonts/space-grotesk.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+<canvas id="field" aria-hidden="true"></canvas>
+
+<header class="chrome-top">
+  <a class="wordmark" href="#top">Threshold<span class="wordmark-sub">A museum of light</span></a>
+  <p class="room-indicator" aria-live="polite"><span id="room-num">00</span><span class="indicator-rule" aria-hidden="true"></span><span id="room-name">Entry Hall</span></p>
+</header>
+
+<main>
+
+  <!-- 00 · ENTRY HALL -->
+  <section class="chapter hall" id="hall" data-stop="0">
+    <div class="hall-inner">
+      <p class="kicker reveal">Pier District &middot; Est. 2014 &middot; Admission by dusk</p>
+      <h1 class="hall-title reveal">Threshold</h1>
+      <p class="hall-sub reveal">A museum of light</p>
+      <hr class="hall-rule reveal" aria-hidden="true">
+      <p class="hall-lede reveal">Four rooms. No objects. The collection is the air itself —
+      tuned, colored, and set breathing. Nothing here is behind glass,
+      because nothing here is a thing.</p>
+      <button class="enter-cue reveal" id="enter" type="button">
+        <span class="enter-label">Enter the rooms</span>
+        <span class="enter-arrow" aria-hidden="true">&darr;</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 01 · ROOM I — MERIDIAN -->
+  <section class="chapter room" id="room-1" data-stop="1">
+    <span class="numeral numeral-1" aria-hidden="true">01</span>
+    <article class="plaque plaque-left">
+      <p class="plaque-room reveal">Room I</p>
+      <h2 class="plaque-title reveal">Meridian</h2>
+      <p class="plaque-artist reveal">Vera Lindqvist</p>
+      <p class="plaque-medium reveal">Light, duration &mdash; 2017</p>
+      <p class="plaque-statement reveal">Lindqvist raises a horizon that belongs to no landscape.
+      The room holds the last minute before a sunrise that has been indefinitely
+      postponed. Visitors tend to wait; the room, on principle, does not.</p>
+    </article>
+  </section>
+
+  <!-- 02 · ROOM II — VESPERS -->
+  <section class="chapter room" id="room-2" data-stop="2">
+    <span class="numeral numeral-2" aria-hidden="true">02</span>
+    <article class="plaque plaque-right">
+      <p class="plaque-room reveal">Room II</p>
+      <h2 class="plaque-title reveal">Vespers</h2>
+      <p class="plaque-artist reveal">Tom&aacute;s Abreu</p>
+      <p class="plaque-medium reveal">Light, breath &mdash; 2019</p>
+      <p class="plaque-statement reveal">An oval of evening opens in the far wall, or appears to.
+      Abreu tuned its swelling to the pulse of a resting adult, so the aperture
+      breathes at the pace of someone nearly asleep. Stand close enough and
+      you will begin to match it.</p>
+    </article>
+  </section>
+
+  <!-- 03 · ROOM III — STATIC -->
+  <section class="chapter room" id="room-3" data-stop="3">
+    <span class="numeral numeral-3" aria-hidden="true">03</span>
+    <article class="plaque plaque-left">
+      <p class="plaque-room reveal">Room III</p>
+      <h2 class="plaque-title reveal">Static</h2>
+      <p class="plaque-artist reveal">Hana Okabe</p>
+      <p class="plaque-medium reveal">Light, patience &mdash; 2021</p>
+      <p class="plaque-statement reveal">The brightest room in the museum and the hardest one to see.
+      Okabe set the white a few degrees off neutral and lets it wander; the drift
+      becomes visible about ninety seconds after you stop looking for it.</p>
+    </article>
+  </section>
+
+  <!-- 04 · ROOM IV — UNDERTOW -->
+  <section class="chapter room" id="room-4" data-stop="4">
+    <span class="numeral numeral-4" aria-hidden="true">04</span>
+    <article class="plaque plaque-right">
+      <p class="plaque-room reveal">Room IV</p>
+      <h2 class="plaque-title reveal">Undertow</h2>
+      <p class="plaque-artist reveal">Elias Vann</p>
+      <p class="plaque-medium reveal">Light, weight &mdash; 2024</p>
+      <p class="plaque-statement reveal">Light enters at the ceiling and never reaches the floor.
+      Vann calls the piece a study in generous loss: the blue deepens the way a
+      held breath does &mdash; past comfort, into calm, and a little past that.</p>
+    </article>
+  </section>
+
+  <!-- 05 · VISIT -->
+  <section class="chapter visit" id="visit" data-stop="5">
+    <div class="visit-inner">
+      <p class="kicker reveal">Signage &middot; ground floor</p>
+      <h2 class="visit-title reveal">Visit</h2>
+      <dl class="visit-board">
+        <div class="visit-line reveal">
+          <dt>Building</dt>
+          <dd>The Former Signal Works<br>3 Meridian Slip, Pier District</dd>
+        </div>
+        <div class="visit-line reveal">
+          <dt>Hours</dt>
+          <dd>Wednesday &ndash; Sunday<br>First sitting at dusk &middot; last entry one hour before close</dd>
+        </div>
+        <div class="visit-line reveal">
+          <dt>Protocol</dt>
+          <dd>Rooms are entered six at a time, in stocking feet.<br>Coats, phones, and hurry may be left at the desk.</dd>
+        </div>
+        <div class="visit-line reveal">
+          <dt>Admission</dt>
+          <dd>14 &middot; under twelve free &middot; dusk Fridays pay&#8209;what&#8209;you&#8209;wish</dd>
+        </div>
+      </dl>
+      <div class="reserve-wrap reveal">
+        <button class="reserve" id="reserve" type="button">Reserve a dusk sitting</button>
+        <p class="reserve-reply" id="reserve-reply" aria-live="polite" hidden>The desk keeps no ledger.
+        Sittings are first&#8209;come, at the door &mdash; arrive before the light does.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 · COLOPHON -->
+  <section class="chapter colophon" id="colophon" data-stop="6">
+    <div class="colophon-inner">
+      <h2 class="visually-hidden">Colophon</h2>
+      <p class="colophon-text reveal">Threshold is a fictional museum imagined for this showcase.
+      Its rooms are rendered live in a single WebGL fragment shader &mdash; no photographs,
+      no video, no images of any kind. The light you just walked through is mathematics,
+      breathing.</p>
+      <footer class="site-footer reveal">
+        <p class="credit">Designed &amp; built in code by Claude</p>
+        <nav class="credit-links" aria-label="Showcase">
+          <a href="/">Gallery</a>
+          <span class="credit-sep" aria-hidden="true">&middot;</span>
+          <a href="/guide/">How this was made</a>
+        </nav>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<div class="chrome-bottom" aria-hidden="true">
+  <div class="hum">
+    <canvas id="hum-scope" width="150" height="22"></canvas>
+    <span class="hum-label">Building hum &middot; 52 Hz</span>
+  </div>
+  <p class="dwell"><span class="dwell-label">Time in building</span> <span id="dwell-clock">00:00</span></p>
+</div>
+
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

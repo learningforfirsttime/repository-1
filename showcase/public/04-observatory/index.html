@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LYRA — Deep Field Atlas</title>
+<meta name="description" content="A telescope you scroll. LYRA is a deep-field atlas of invented skies — six thousand stars, four catalogued objects, one long slew. Every photon drawn in code.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%2305060A'/%3E%3Ccircle cx='24' cy='24' r='2.4' fill='%237FD9E8'/%3E%3Cpath d='M24 8v8M24 32v8M8 24h8M32 24h8' stroke='%237FD9E8' stroke-width='1.4' opacity='.7'/%3E%3Ccircle cx='24' cy='24' r='13' fill='none' stroke='%23E8B87F' stroke-width='1' opacity='.55'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/space-grotesk.css">
+<link rel="stylesheet" href="/fonts/jetbrains-mono.css">
+<style>
+  :root {
+    --space: #05060a;
+    --panel: rgba(7, 9, 16, 0.58);
+    --text: #e8ecf4;
+    --dim: #8b94ab;
+    --cyan: #7fd9e8;
+    --amber: #e8b87f;
+    --line: rgba(127, 217, 232, 0.28);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --mono: "JetBrains Mono", monospace;
+    --disp: "Space Grotesk", sans-serif;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  html { scrollbar-color: #2a3350 var(--space); }
+  body {
+    background: var(--space);
+    color: var(--text);
+    font-family: var(--disp);
+    font-weight: 300;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--cyan); color: var(--space); }
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+
+  #sky {
+    position: fixed; inset: 0; width: 100%; height: 100%;
+    display: block;
+    background:
+      radial-gradient(120% 90% at 70% 20%, #0a0e1c 0%, var(--space) 60%);
+  }
+
+  .grain {
+    position: fixed; inset: 0; z-index: 40; pointer-events: none; opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+  .vignette {
+    position: fixed; inset: 0; z-index: 39; pointer-events: none;
+    background: radial-gradient(130% 100% at 50% 50%, transparent 55%, rgba(0,0,0,0.5) 100%);
+  }
+
+  /* ——— fixed chrome ——— */
+  .hud { position: fixed; z-index: 50; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; color: var(--dim); transition: opacity 0.6s var(--ease); }
+  body.hud-off .hud-bl, body.hud-off .hud-br { opacity: 0; pointer-events: none; }
+  .hud-tl { top: 22px; left: 26px; display: flex; align-items: baseline; gap: 14px; }
+  .hud-tl .mark { font-family: var(--disp); font-weight: 500; font-size: 15px; letter-spacing: 0.55em; color: var(--text); }
+  .hud-tr { top: 24px; right: 26px; text-align: right; }
+  .hud-bl { bottom: 22px; left: 26px; white-space: pre; line-height: 1.9; }
+  .hud-bl b { color: var(--cyan); font-weight: 400; }
+  .hud-br { bottom: 26px; right: 26px; display: flex; align-items: center; gap: 10px; }
+  .tick { width: 7px; height: 7px; border: 1px solid var(--dim); border-radius: 50%; transition: all 0.5s var(--ease); }
+  .tick.on { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+  .tickline { width: 26px; height: 1px; background: rgba(139,148,171,0.35); }
+  @media (max-width: 720px) { .hud-bl, .hud-tr { display: none; } .hud-br { bottom: 20px; right: 20px; } }
+
+  /* ——— flow ——— */
+  main { position: relative; z-index: 10; }
+  section.ch { min-height: 175vh; padding: 0 6vw; }
+  section.ch .pin {
+    position: sticky; top: 0; min-height: 100svh;
+    display: flex; align-items: center; justify-content: flex-start;
+  }
+  section.ch.right .pin { justify-content: flex-end; }
+  section.hero { min-height: 100svh; display: flex; align-items: center; justify-content: center; text-align: center; }
+
+  .hero h1 {
+    font-size: clamp(64px, 14vw, 190px);
+    font-weight: 300; letter-spacing: 0.28em; text-indent: 0.28em;
+    line-height: 1;
+    background: linear-gradient(180deg, #ffffff 20%, #93a4c8 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero .sub { margin-top: 26px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.5em; color: var(--cyan); text-transform: uppercase; }
+  .hero .whisper { margin-top: 60px; font-size: 14px; color: var(--dim); letter-spacing: 0.08em; }
+  .mbr { display: none; }
+  @media (max-width: 720px) {
+    .hero .whisper { font-size: 12.5px; max-width: 34ch; margin-left: auto; margin-right: auto; }
+    .mbr { display: inline; }
+  }
+  .hero .cue { margin: 26px auto 0; width: 1px; height: 68px; background: linear-gradient(to bottom, var(--cyan), transparent); position: relative; overflow: hidden; }
+  .cue::after { content: ""; position: absolute; left: 0; width: 100%; height: 45%; top: -45%; background: linear-gradient(to bottom, transparent, #fff); animation: fall 2.4s var(--ease) infinite; }
+  @keyframes fall { to { top: 110%; } }
+
+  /* ——— catalogue cards ——— */
+  .card {
+    width: min(430px, 88vw);
+    background: var(--panel);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(127,217,232,0.14);
+    border-left: 2px solid var(--cyan);
+    padding: 34px 36px 30px;
+    opacity: 0; transform: translateY(34px);
+    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  }
+  section.ch.amber .card { border-left-color: var(--amber); }
+  section.ch.on .card { opacity: 1; transform: none; }
+  .card .des { font-family: var(--mono); font-size: 11px; letter-spacing: 0.3em; color: var(--cyan); }
+  section.ch.amber .des { color: var(--amber); }
+  .card h2 { font-size: clamp(30px, 4vw, 42px); font-weight: 300; letter-spacing: 0.02em; margin: 10px 0 18px; line-height: 1.1; }
+  .card table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--dim); margin-bottom: 18px; }
+  .card td { padding: 5px 0; border-bottom: 1px solid rgba(139,148,171,0.16); }
+  .card td:last-child { text-align: right; color: var(--text); }
+  .card p { font-size: 14.5px; color: #bac3d8; }
+  .spectro { margin-top: 20px; }
+  .spectro canvas { width: 100%; height: 54px; display: block; border: 1px solid rgba(139,148,171,0.2); }
+  .spectro .lbl { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.22em; color: var(--dim); margin-top: 6px; display: flex; justify-content: space-between; }
+
+  /* ——— terminus + mission ——— */
+  .terminus { min-height: 170vh; padding: 0 6vw; text-align: center; }
+  .terminus .pin { position: sticky; top: 0; min-height: 100svh; display: flex; align-items: center; justify-content: center; }
+  .terminus .inner { opacity: 0; transform: translateY(30px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+  .terminus.on .inner { opacity: 1; transform: none; }
+  .terminus h2 { font-size: clamp(34px, 6vw, 72px); font-weight: 300; letter-spacing: 0.06em; max-width: 18ch; margin: 0 auto; }
+  .terminus p { margin: 26px auto 0; max-width: 46ch; color: var(--dim); font-size: 15px; }
+
+  .mission { position: relative; background: linear-gradient(to bottom, transparent, rgba(5,6,10,0.92) 18%, #05060a 40%); padding: 22vh 6vw 0; }
+  .mission .grid { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 44px; padding-bottom: 90px; }
+  .mission h3 { font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.34em; color: var(--cyan); text-transform: uppercase; margin-bottom: 14px; }
+  .mission p { font-size: 14.5px; color: #aab3c9; }
+  .mission .lead { max-width: 1080px; margin: 0 auto 70px; font-size: clamp(22px, 3vw, 32px); font-weight: 300; line-height: 1.45; max-width: 30ch; }
+  .mission .lead em { color: var(--amber); font-style: normal; }
+
+  footer { position: relative; border-top: 1px solid rgba(139,148,171,0.18); padding: 30px 6vw 40px; display: flex; flex-wrap: wrap; gap: 18px; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--dim); background: #05060a; }
+  footer a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(127,217,232,0.35); padding-bottom: 1px; transition: border-color .4s var(--ease), color .4s var(--ease); }
+  footer a:hover { color: #fff; border-color: #fff; }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cue::after { animation: none; }
+    .card, .terminus .inner { transition: none; }
+    * { scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header>
+  <div class="hud hud-tl"><span class="mark">LYRA</span><span>DEEP FIELD ATLAS</span></div>
+  <div class="hud hud-tr">SURVEY CYCLE MMXXVI<br>PLATE 04 · INVENTED SKIES</div>
+  <div class="hud hud-bl" id="radec" aria-hidden="true"></div>
+  <div class="hud hud-br" id="prog" aria-label="Scroll progress through five catalogue stops"></div>
+</header>
+
+<main>
+  <section class="ch hero" id="top">
+    <div>
+      <p class="sub">The telescope is your scroll wheel</p>
+      <h1>LYRA</h1>
+      <p class="whisper">An atlas of skies that do not exist —<br class="mbr">six thousand stars, four objects, one long slew.<br>Every photon on this page is computed, not photographed.</p>
+      <div class="cue" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="ch" data-stop="1">
+    <div class="pin"><div class="card">
+      <span class="des">LYR-0001 · EMISSION NEBULA</span>
+      <h2>The Lantern</h2>
+      <table>
+        <tr><td>DISTANCE</td><td>4,180 ly</td></tr>
+        <tr><td>SPAN</td><td>22 arcmin</td></tr>
+        <tr><td>DOMINANT LINE</td><td>Hα 656nm</td></tr>
+        <tr><td>FIRST PLATE</td><td>Cycle I</td></tr>
+      </table>
+      <p>The survey's first entry, and still its warmest. A slow bloom of ionised rose, lit from inside by a cluster too young to have names. Observers report that it appears to breathe; the instruments, more cautiously, agree.</p>
+      <div class="spectro"><canvas data-seed="11" width="520" height="108"></canvas><div class="lbl"><span>EMISSION SPECTRUM</span><span>λ 380–740 nm</span></div></div>
+    </div></div>
+  </section>
+
+  <section class="ch right" data-stop="2">
+    <div class="pin"><div class="card">
+      <span class="des">LYR-0342 · GLOBULAR CLUSTER</span>
+      <h2>The Whale's Heart</h2>
+      <table>
+        <tr><td>DISTANCE</td><td>11,400 ly</td></tr>
+        <tr><td>POPULATION</td><td>≈ 240,000 stars</td></tr>
+        <tr><td>CORE</td><td>collapsed</td></tr>
+        <tr><td>AGE</td><td>12.1 Gyr</td></tr>
+      </table>
+      <p>A quarter-million ancient suns packed into a sphere you could hide behind a fingertip. It has been falling toward the disc, and missing it, for twelve billion years — the oldest recorded case of second thoughts.</p>
+      <div class="spectro"><canvas data-seed="42" width="520" height="108"></canvas><div class="lbl"><span>INTEGRATED SPECTRUM</span><span>λ 380–740 nm</span></div></div>
+    </div></div>
+  </section>
+
+  <section class="ch" data-stop="3">
+    <div class="pin"><div class="card">
+      <span class="des">LYR-0977 · REFLECTION NEBULA</span>
+      <h2>The Loom</h2>
+      <table>
+        <tr><td>DISTANCE</td><td>860 ly</td></tr>
+        <tr><td>ILLUMINATION</td><td>borrowed</td></tr>
+        <tr><td>FILAMENTS</td><td>17 catalogued</td></tr>
+        <tr><td>HUE</td><td>scattered blue</td></tr>
+      </table>
+      <p>It makes no light of its own. Every thread is starlight scattered sideways by dust — a loom that weaves with other people's photons and takes none of the credit. The filaments drift a full arcsecond per century, which is to say: it is being woven still.</p>
+      <div class="spectro"><canvas data-seed="77" width="520" height="108"></canvas><div class="lbl"><span>SCATTERED SPECTRUM</span><span>λ 380–740 nm</span></div></div>
+    </div></div>
+  </section>
+
+  <section class="ch amber right" data-stop="4">
+    <div class="pin"><div class="card">
+      <span class="des">LYR-1204 · SUPERNOVA REMNANT</span>
+      <h2>Ember Field</h2>
+      <table>
+        <tr><td>DISTANCE</td><td>6,700 ly</td></tr>
+        <tr><td>EVENT</td><td>+ 9,000 yr</td></tr>
+        <tr><td>SHELL VELOCITY</td><td>1,400 km/s</td></tr>
+        <tr><td>REMNANT</td><td>unlocated</td></tr>
+      </table>
+      <p>Nine thousand years ago something here refused to go quietly. What remains is an amber shell still travelling at fourteen hundred kilometres a second — a ring of embers from a fire no one alive has seen, keeping the shape of the argument.</p>
+      <div class="spectro"><canvas data-seed="120" width="520" height="108"></canvas><div class="lbl"><span>SHOCK SPECTRUM</span><span>λ 380–740 nm</span></div></div>
+    </div></div>
+  </section>
+
+  <section class="terminus" data-stop="5">
+    <div class="pin"><div class="inner">
+      <span class="des" style="font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--cyan)">PLATE 04 · FULL FIELD</span>
+      <h2>Every star on this page was placed by arithmetic.</h2>
+      <p>No photographs. No textures. No telescope, in the end, except the one you are holding — the atlas was computed the moment you arrived, and it will be computed again, identically, for whoever comes after you.</p>
+    </div></div>
+  </section>
+
+  <section class="mission" aria-label="About the survey">
+    <p class="lead">LYRA is a survey of skies that <em>could</em> exist — a proof that wonder does not require a lens, only a coordinate system and taste.</p>
+    <div class="grid">
+      <div><h3>The Instrument</h3><p>Six thousand instanced stars with black-body colour temperatures, four procedural deep-sky objects, and a camera on a spline. Rendered live in WebGL at sixty frames a second on the machine you are using right now.</p></div>
+      <div><h3>The Method</h3><p>Scroll position is the telescope drive. Your progress down the page slews the camera through a Catmull-Rom path between catalogue stops; nothing is filmed, nothing is faked, nothing is fetched.</p></div>
+      <div><h3>The Catalogue</h3><p>Four objects, honestly invented: an emission nebula, a globular cluster, a reflection nebula, a supernova remnant. Their spectra are generated per object from seeded emission lines. Hover one and read the light.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>LYRA · DEEP FIELD ATLAS — A FICTIONAL SURVEY, HONESTLY COMPUTED</span>
+    <span>DESIGNED &amp; BUILT IN CODE BY CLAUDE · <a href="/">GALLERY</a> · <a href="/guide/">HOW THIS WAS MADE</a></span>
+  </footer>
+</main>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

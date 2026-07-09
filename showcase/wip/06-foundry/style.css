@@ -179,6 +179,28 @@ a { color: inherit; }
 }
 .scroll-cue:hover { background: var(--ink); color: var(--paper); }
 
+/* ================= TICKERS ================= */
+
+.ticker {
+  overflow: hidden;
+  border-top: 2px solid var(--ink);
+  white-space: nowrap;
+}
+.ticker-acid { background: var(--acid); color: var(--ink); }
+.ticker-ink { background: var(--ink); color: var(--paper); }
+.ticker-track { display: inline-flex; }
+.ticker-track span {
+  display: inline-block;
+  padding: 11px 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  animation: tick 36s linear infinite;
+}
+.ticker-rev span { animation-direction: reverse; }
+@keyframes tick { to { transform: translateX(-100%); } }
+
 /* ================= BANDS ================= */
 
 .band {
@@ -237,6 +259,13 @@ a { color: inherit; }
   text-transform: uppercase;
   margin-bottom: clamp(40px, 5.5vw, 80px);
 }
+/* headings slam in from hairline-condensed to black-extended */
+@keyframes stamp-in {
+  from { font-variation-settings: 'wght' 100, 'wdth' 62; }
+  to { font-variation-settings: 'wght' 900, 'wdth' 115; }
+}
+.sec-head.in, .mani-head.in { animation: stamp-in 0.55s steps(5, end) both; }
+
 .mani-head em {
   font-style: normal;
   color: var(--acid);
@@ -411,7 +440,8 @@ input[type="range"]:active::-webkit-slider-thumb { background: var(--acid); bord
   contain: layout;
   cursor: crosshair;
 }
-.pw { font-variation-settings: 'wght' 200; }
+.pw { font-variation-settings: 'wght' 200; cursor: pointer; }
+.pw:hover { color: var(--acid); }
 
 /* ================= 04 WATERFALL ================= */
 
@@ -642,4 +672,6 @@ input[type="range"]:active::-webkit-slider-thumb { background: var(--acid); bord
   html { scroll-behavior: auto; }
   .rv { opacity: 1; transform: none; transition: none; }
   .glyph { transition: none; }
+  .ticker-track span { animation: none; }
+  .sec-head.in, .mani-head.in { animation: none; }
 }

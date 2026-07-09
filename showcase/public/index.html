@@ -1,1 +1,224 @@
-<!doctype html><meta charset="utf-8"><title>Gallery — under construction</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nine Rooms — a demonstration of code-drawn web design</title>
+<meta name="description" content="Nine single-page websites, each a different world: shaders, canvas simulations, generative SVG, playable toys. No photographs, no stock, no image pipelines — every visual is drawn in code. Built by Claude.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%230C0D10'/%3E%3Cg fill='none' stroke='%23ECE9E2' stroke-width='1.4'%3E%3Crect x='9' y='9' width='13' height='13'/%3E%3Crect x='26' y='9' width='13' height='13'/%3E%3Crect x='9' y='26' width='13' height='13'/%3E%3C/g%3E%3Crect x='26' y='26' width='13' height='13' fill='%23E8B87F'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/fraunces.css">
+<link rel="stylesheet" href="/fonts/space-grotesk.css">
+<link rel="stylesheet" href="/fonts/jetbrains-mono.css">
+<style>
+  :root {
+    --bg: #0c0d10;
+    --bg2: #121319;
+    --text: #ece9e2;
+    --dim: #8f8d86;
+    --hair: rgba(236, 233, 226, 0.14);
+    --gold: #e8b87f;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --disp: "Fraunces", Georgia, serif;
+    --ui: "Space Grotesk", sans-serif;
+    --mono: "JetBrains Mono", monospace;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--ui); font-weight: 300; line-height: 1.65; overflow-x: hidden; }
+  ::selection { background: var(--gold); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .grain { position: fixed; inset: 0; z-index: 70; pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  header.hero { position: relative; padding: clamp(90px, 16vh, 160px) clamp(22px, 5vw, 64px) clamp(60px, 9vh, 100px); overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: -30% -10%;
+    background:
+      radial-gradient(45% 38% at 18% 28%, rgba(217, 111, 232, 0.10), transparent 70%),
+      radial-gradient(42% 40% at 82% 22%, rgba(127, 217, 232, 0.09), transparent 70%),
+      radial-gradient(50% 44% at 55% 88%, rgba(232, 184, 127, 0.08), transparent 70%);
+    animation: drift 26s var(--ease) infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes drift { to { transform: translate(3%, -4%) scale(1.06); } }
+  @media (prefers-reduced-motion: reduce) { .hero::before { animation: none; } }
+
+  .hero .inner { position: relative; max-width: 1200px; margin: 0 auto; }
+  .hero .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); }
+  .hero h1 { font-family: var(--disp); font-weight: 300; font-variation-settings: "opsz" 144; font-size: clamp(52px, 9vw, 128px); line-height: 0.98; letter-spacing: -0.01em; margin-top: 24px; }
+  .hero h1 em { font-style: italic; font-weight: 380; }
+  .hero .sub { margin-top: 30px; max-width: 62ch; font-size: clamp(15px, 1.5vw, 18px); color: var(--dim); }
+  .hero .sub b { color: var(--text); font-weight: 400; }
+  .hero .cta { margin-top: 34px; display: flex; gap: 26px; flex-wrap: wrap; align-items: center; }
+  .hero .cta a { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--text); text-decoration: none; border: 1px solid var(--hair); padding: 13px 22px; border-radius: 2px; transition: all 0.45s var(--ease); }
+  .hero .cta a:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 0 clamp(22px, 5vw, 64px) 40px; }
+  .rooms { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: clamp(20px, 2.6vw, 34px); }
+
+  .room { display: block; text-decoration: none; color: inherit; border: 1px solid var(--hair); border-radius: 6px; overflow: hidden; background: var(--bg2);
+    transition: transform 0.55s var(--ease), border-color 0.55s var(--ease), box-shadow 0.55s var(--ease); }
+  .room:hover { transform: translateY(-6px); border-color: color-mix(in oklab, var(--acc) 60%, transparent); box-shadow: 0 30px 60px -34px rgba(0,0,0,0.9), 0 0 44px -22px var(--acc); }
+  .thumb { position: relative; aspect-ratio: 16 / 10; overflow: hidden; display: block; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.015); transition: transform 0.9s var(--ease); }
+  .room:hover .thumb img { transform: scale(1.06); }
+  .thumb::after { content: ""; position: absolute; inset: 0; box-shadow: 0 0 0 1px rgba(0,0,0,0.25) inset, 0 -34px 40px -30px rgba(0,0,0,0.55) inset; }
+  .room .body { padding: 20px 22px 22px; display: block; }
+  .room .row1 { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .room .numeral { font-family: var(--disp); font-style: italic; font-size: 15px; color: var(--acc); }
+  .room .dots { display: flex; gap: 5px; }
+  .room .dots span { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset; }
+  .room h2 { font-family: var(--disp); font-weight: 380; font-size: 24px; letter-spacing: 0.01em; margin-top: 8px; }
+  .room h2 small { font-family: var(--ui); font-weight: 300; font-size: 14px; color: var(--dim); margin-left: 8px; }
+  .room p { font-size: 14px; color: var(--dim); margin-top: 8px; min-height: 3.2em; }
+  .room .tags { display: block; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--hair); font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #6f6d67; line-height: 1.9; }
+
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; transition: none; } }
+
+  .method { max-width: 1200px; margin: 0 auto; padding: clamp(70px, 11vh, 120px) clamp(22px, 5vw, 64px); }
+  .method .rule { height: 1px; background: linear-gradient(to right, var(--hair), transparent); margin-bottom: 50px; }
+  .method .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 44px; }
+  .method h3 { font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+  .method p { font-size: 14.5px; color: var(--dim); }
+  .method p b { color: var(--text); font-weight: 400; }
+  .method a { color: var(--gold); }
+
+  footer { border-top: 1px solid var(--hair); padding: 26px clamp(22px, 5vw, 64px) 38px; display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #6f6d67; }
+  footer a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--hair); padding-bottom: 2px; transition: all 0.35s var(--ease); }
+  footer a:hover { color: var(--gold); border-color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="hero">
+  <div class="inner">
+    <p class="kicker">A demonstration in nine parts · zero assets</p>
+    <h1>Nine rooms,<br>drawn <em>entirely</em> in code.</h1>
+    <p class="sub">Nine single-page websites, each a different world — a museum of light, a perfume of smoke, an ocean, a sky, a herbarium that grows. <b>No photographs, no stock, no image pipelines.</b> Every pixel on every page is a shader, a canvas, an SVG, or a stylesheet — designed, built, and iterated by Claude.</p>
+    <div class="cta">
+      <a href="/guide/">How this was made</a>
+      <a href="#rooms">Enter the rooms ↓</a>
+    </div>
+  </div>
+</header>
+
+<main id="rooms">
+  <div class="rooms">
+    <a class="room reveal" href="/01-threshold/" style="--acc:#d96fe8">
+      <span class="thumb"><img src="/thumbs/01-threshold.jpg" alt="A vast magenta-violet field of light with the word THRESHOLD" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room I</span><span class="dots"><span style="background:#0a0a0c"></span><span style="background:#d96fe8"></span><span style="background:#e8b87f"></span></span></span>
+        <h2>THRESHOLD<small>a museum of light</small></h2>
+        <p>Four rooms of breathing color you walk through by scrolling; your pointer carries a lens through the fields.</p>
+        <span class="tags">raw WebGL · scroll-driven fields · gamma-correct dissolves</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/02-eclat/" style="--acc:#b9c4d9; --d:.05s">
+      <span class="thumb"><img src="/thumbs/02-eclat.jpg" alt="Monochrome smoke rising around the word ÉCLAT and a line-drawn perfume bottle" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room II</span><span class="dots"><span style="background:#0b0b0d"></span><span style="background:#b9c4d9"></span><span style="background:#9a7fd9"></span></span></span>
+        <h2>ÉCLAT<small>parfumeur de nuit</small></h2>
+        <p>Black-and-white smoke that takes on an oil-slick sheen only where you move. Press the dark and it breathes.</p>
+        <span class="tags">fbm smoke shader · stroke-drawn flacon · thin-film hues</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/03-abyss/" style="--acc:#2e96b8; --d:.1s">
+      <span class="thumb"><img src="/thumbs/03-abyss.jpg" alt="Sunlit teal water with god rays and the word SOUNDING" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room III</span><span class="dots"><span style="background:#7fd4e8"></span><span style="background:#2e96b8"></span><span style="background:#010609"></span></span></span>
+        <h2>SOUNDING<small>a descent</small></h2>
+        <p>Scrolling is diving: surface to hadal trench, 10,935 metres, past jellyfish and things that answer sonar.</p>
+        <span class="tags">canvas sea life · depth color ramp · sonar reveals</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/04-observatory/" style="--acc:#7fd9e8; --d:.15s">
+      <span class="thumb"><img src="/thumbs/04-observatory.jpg" alt="A starfield with the giant word LYRA" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room IV</span><span class="dots"><span style="background:#05060a"></span><span style="background:#7fd9e8"></span><span style="background:#e8b87f"></span></span></span>
+        <h2>LYRA<small>deep field atlas</small></h2>
+        <p>A telescope you scroll: six thousand computed stars, four invented objects, one long slew between them.</p>
+        <span class="tags">three.js points · spline camera · seeded spectra</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/05-herbarium/" style="--acc:#7a8b5c; --d:.2s">
+      <span class="thumb"><img src="/thumbs/05-herbarium.jpg" alt="A pressed fern on a cream herbarium sheet with a red wax seal" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room V</span><span class="dots"><span style="background:#f4edda"></span><span style="background:#7a8b5c"></span><span style="background:#a33b2e"></span></span></span>
+        <h2>FOLIUM<small>a living herbarium</small></h2>
+        <p>Seven species grown live from seeded grammars — and a propagation plate where you sow new ones.</p>
+        <span class="tags">generative SVG botany · deterministic seeds · wax &amp; deckle</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/08-arcade/" style="--acc:#ff3da6; --d:.25s">
+      <span class="thumb"><img src="/thumbs/08-arcade.jpg" alt="A neon CRT screen reading MIDNIGHT COIN over a synthwave grid" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room VI</span><span class="dots"><span style="background:#0d0518"></span><span style="background:#ff3da6"></span><span style="background:#29e6ff"></span></span></span>
+        <h2>MIDNIGHT COIN<small>a basement arcade</small></h2>
+        <p>The whole page is a CRT — scanlines, glitches, six attract-mode marquees, and a coin-drop game you can play.</p>
+        <span class="tags">CSS CRT optics · six mini-canvases · playable physics</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/10-murmuration/" style="--acc:#b4592a; --d:.3s">
+      <span class="thumb"><img src="/thumbs/10-murmuration.jpg" alt="Thousands of tiny bird strokes swirling around elegant italic type" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room VII</span><span class="dots"><span style="background:#eceae3"></span><span style="background:#1b1b1e"></span><span style="background:#b4592a"></span></span></span>
+        <h2>MURMURA<small>living sculptures</small></h2>
+        <p>Two thousand autonomous agents flock across paper; your cursor is a falcon, and the exhibit takes shapes.</p>
+        <span class="tags">boids + spatial hash · target formations · ink trails</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/11-nimbus/" style="--acc:#d9a04c; --d:.35s">
+      <span class="thumb"><img src="/thumbs/11-nimbus.jpg" alt="Rain streaking down a fogged dusk window with the words Weather, made to measure" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room VIII</span><span class="dots"><span style="background:#232c3d"></span><span style="background:#aebace"></span><span style="background:#d9a04c"></span></span></span>
+        <h2>NIMBUS<small>bureau of small weathers</small></h2>
+        <p>Rain condenses on a window, drop by drop, over a bokeh dusk. Drag to wipe the glass; the fog creeps back.</p>
+        <span class="tags">rain-on-glass canvas · droplet lenses · wipeable fog</span>
+      </span>
+    </a>
+
+    <a class="room reveal" href="/13-ledger/" style="--acc:#5471d6; --d:.4s">
+      <span class="thumb"><img src="/thumbs/13-ledger.jpg" alt="An editorial page with an ultramarine area chart of a floating city's altitude" loading="lazy"></span>
+      <span class="body">
+        <span class="row1"><span class="numeral">Room IX</span><span class="dots"><span style="background:#f5f3ed"></span><span style="background:#2742c8"></span><span style="background:#d9571c"></span></span></span>
+        <h2>AERARIUM<small>accounts of a floating city</small></h2>
+        <p>An annual report as art: altitude, rain, birds, and treasury flows, every figure drawn live in SVG.</p>
+        <span class="tags">hand-built charts · validated palette · crosshair tooltips</span>
+      </span>
+    </a>
+  </div>
+</main>
+
+<section class="method" aria-label="The rules of the demonstration">
+  <div class="rule"></div>
+  <div class="grid">
+    <div class="reveal"><h3>The Constraint</h3><p><b>If it is on screen, it was drawn by code.</b> No photographs, no stock, no AI-image or video pipelines, no CDNs, no runtime network requests. The only binary assets are fonts (self-hosted) and the thumbnails on this page — which are screenshots of the rooms themselves.</p></div>
+    <div class="reveal" style="--d:.1s"><h3>The Discipline</h3><p>Every room went through <b>three documented iteration passes</b>: screenshot the page, study it, list the faults, fix them, shoot again. Then a gate: clean console, zero external requests, a complete page under reduced motion, no horizontal scroll at 390px.</p></div>
+    <div class="reveal" style="--d:.2s"><h3>The Author</h3><p>Designed and built by <b>Claude</b> — concept, copy, palettes, shaders, simulations, typography, and the process itself. The full method, including how to reproduce it, is written up in <a href="/guide/">the guide</a>.</p></div>
+  </div>
+</section>
+
+<footer>
+  <span>NINE ROOMS · EVERY BRAND HEREIN IS FICTIONAL</span>
+  <span>DESIGNED &amp; BUILT IN CODE BY CLAUDE · <a href="/guide/">HOW THIS WAS MADE</a></span>
+</footer>
+
+<script type="module">
+  const io = new IntersectionObserver(
+    (es) => es.forEach((e) => e.isIntersecting && (e.target.classList.add("in"), io.unobserve(e.target))),
+    { threshold: 0.15, rootMargin: "0px 0px -5% 0px" }
+  );
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+</script>
+</body>
+</html>

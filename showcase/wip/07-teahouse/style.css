@@ -215,6 +215,7 @@ section {
   left: -1.4rem;
   top: 50%;
   transform: translateY(-50%);
+  white-space: nowrap;
   writing-mode: vertical-rl;
   font-family: var(--kanji);
   font-weight: 400;
@@ -383,9 +384,9 @@ html.js .step.drawn .pict path { stroke-dashoffset: 0; }
 
 .step-no {
   display: block;
-  font-size: .72rem;
+  font-size: .78rem;
   font-weight: 500;
-  letter-spacing: .42em;
+  letter-spacing: .18em;
   text-transform: uppercase;
   color: var(--persimmon);
   margin-bottom: .5rem;
@@ -419,9 +420,15 @@ legend {
 }
 
 .tag-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
   gap: .7rem .6rem;
+}
+@media (max-width: 760px) {
+  .tag-row { grid-template-columns: repeat(3, max-content); }
+}
+@media (max-width: 480px) {
+  .tag-row { grid-template-columns: repeat(2, max-content); }
 }
 
 .tag { position: relative; display: inline-block; }

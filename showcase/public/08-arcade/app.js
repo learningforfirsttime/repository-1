@@ -475,7 +475,7 @@ function renderRanks() {
     r.crownEl.hidden = i !== 0;
   });
 }
-renderanks: renderRanks();
+renderRanks();
 
 /* type-in + count-up when scrolled into view */
 let scoresRevealed = false;

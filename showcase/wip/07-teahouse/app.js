@@ -65,8 +65,8 @@ class Enso {
     const R = Math.min(w, h) * 0.37;
     const W0 = R * 0.155;
     const N = 560;
-    const theta0 = -Math.PI * 0.62 + (rnd() - 0.5) * 0.3;
-    const sweep = Math.PI * (1.83 + rnd() * 0.06);
+    const theta0 = -Math.PI * 0.30 + (rnd() - 0.5) * 0.2;   // start upper right
+    const sweep = Math.PI * (1.85 + rnd() * 0.05);           // gap stays upper right
     const psi = (rnd() - 0.5) * 0.22;               // slight tilt
     const ph1 = rnd() * 6.28, ph2 = rnd() * 6.28;
 
@@ -75,7 +75,7 @@ class Enso {
       const t = i / N;
       const th = theta0 + sweep * t;
       const wob = 0.6 * Math.sin(3.1 * th + ph1) + 0.4 * Math.sin(7.3 * th + ph2);
-      const r = R * (1 + 0.017 * wob);
+      const r = R * (1 + 0.012 * wob);
       let x = Math.cos(th) * r * 1.035;
       let y = Math.sin(th) * r * 0.965;
       const xr = x * Math.cos(psi) - y * Math.sin(psi);
@@ -84,8 +84,8 @@ class Enso {
       /* pressure: press in, ride, taper to a lifted point */
       let wdt = W0 * (0.66 + 0.38 * Math.sin(Math.PI * Math.min(t / 0.94, 1)));
       if (t < 0.035) wdt *= 0.7 + 0.42 * (t / 0.035);       // the first press
-      if (t > 0.9)   wdt *= Math.max(0.05, Math.pow(1 - (t - 0.9) / 0.1, 1.25));
-      wdt *= 1 + 0.13 * Math.sin(23 * th + ph2);
+      if (t > 0.86)  wdt *= Math.max(0.04, Math.pow(1 - (t - 0.86) / 0.14, 1.35));
+      wdt *= 1 + 0.05 * Math.sin(17 * th + ph2);
 
       /* ink drying along the stroke */
       const dens = Math.max(0.22, 1 - 0.72 * Math.pow(t, 1.35)
@@ -108,11 +108,12 @@ class Enso {
       const u = rnd() * 2 - 1;
       bristles.push({
         o: Math.sign(u) * Math.pow(Math.abs(u), 0.72),
-        a: 0.09 + rnd() * 0.20,
+        a: 0.12 + rnd() * 0.24,
         bw: 0.7 + rnd() * 1.5,
         p1: rnd() * 6.28,
         p2: rnd() * 6.28,
         j: (rnd() - 0.5) * 1.6,
+        drift: (rnd() - 0.5) * 2.4,               // bristles wander, breaking the braid
       });
     }
     this.geom = { pts, bristles, N, rndSpat: prng(this.seed ^ 0xBEEF) };
@@ -125,9 +126,17 @@ class Enso {
     const t = i / N;
 
     /* soft wash body */
-    ctx.strokeStyle = `rgba(${INK},${(0.062 * p1.d).toFixed(4)})`;
+    ctx.strokeStyle = `rgba(${INK},${(0.06 * p1.d).toFixed(4)})`;
     ctx.lineWidth = p1.w;
     ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(p0.x, p0.y);
+    ctx.lineTo(p1.x, p1.y);
+    ctx.stroke();
+
+    /* dark ink core */
+    ctx.strokeStyle = `rgba(${INK},${(0.16 * p1.d).toFixed(4)})`;
+    ctx.lineWidth = p1.w * 0.45;
     ctx.beginPath();
     ctx.moveTo(p0.x, p0.y);
     ctx.lineTo(p1.x, p1.y);
@@ -138,8 +147,9 @@ class Enso {
     for (const b of bristles) {
       const s = Math.sin(i * 0.13 + b.p1) + 0.7 * Math.sin(i * 0.041 + b.p2);
       if (s < dryCut) continue;
-      const off0 = b.o * p0.w * 0.5 + b.j;
-      const off1 = b.o * p1.w * 0.5 + b.j;
+      const wander = Math.sin(i * 0.012 + b.p1) * b.drift;
+      const off0 = b.o * p0.w * 0.5 + b.j + wander;
+      const off1 = b.o * p1.w * 0.5 + b.j + wander;
       ctx.strokeStyle = `rgba(${INK},${(b.a * p1.d * (0.6 + 0.4 * Math.sin(i * 0.09 + b.p2))).toFixed(4)})`;
       ctx.lineWidth = b.bw;
       ctx.beginPath();

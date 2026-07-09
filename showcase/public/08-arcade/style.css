@@ -626,6 +626,7 @@ body.glitch .page, body.glitch .hud { animation: jitter .14s steps(2) both; }
 }
 .game-refill:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #8A7500, 0 0 34px rgba(255, 233, 74, .5); }
 .game-refill:active { transform: translateY(3px); box-shadow: 0 3px 0 #8A7500, 0 0 20px rgba(255, 233, 74, .35); }
+.game-refill.bump { animation: bump .35s var(--ease); }
 .game-refill .blink { animation-duration: 1.4s; }
 
 .game-hint { font-family: var(--tty); font-size: 19px; color: var(--dim); line-height: 1.35; }

@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto Memory Doll — Letters for the feelings you cannot say aloud</title>
+<meta name="description" content="A candlelit letter-writing atelier. Speak, haltingly or not at all; your Auto Memory Doll will listen, and write the letter you always meant to send.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='22' fill='%232A1620'/%3E%3Ccircle cx='24' cy='24' r='21' fill='none' stroke='%23D9A855' stroke-width='1.2' opacity='.8'/%3E%3Ctext x='24' y='31' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='22' fill='%23E8C170'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/bodoni-moda.css">
+<link rel="stylesheet" href="/fonts/cormorant-garamond.css">
+<style>
+  :root {
+    --night: #12090c;
+    --night-2: #1c1015;
+    --espresso: #241318;
+    --gold: #d9a855;
+    --gold-bright: #f0cd8a;
+    --gold-dim: rgba(217, 168, 85, 0.4);
+    --royal: #6b4396;
+    --royal-soft: #9a6fd0;
+    --teal: #57c2b0;
+    --parchment: #f2e3cb;
+    --ink-soft: #c9b096;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --disp: "Bodoni Moda", "Didot", Georgia, serif;
+    --body: "Cormorant Garamond", Georgia, serif;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background:
+      radial-gradient(120% 90% at 78% 10%, #2a1620 0%, var(--night) 55%),
+      var(--night);
+    color: var(--parchment);
+    font-family: var(--body);
+    font-weight: 400;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--gold); color: var(--night); }
+  :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 3px; border-radius: 2px; }
+
+  /* ————— atmosphere layers ————— */
+  #salon { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .vignette { position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(130% 105% at 50% 40%, transparent 48%, rgba(6, 2, 4, 0.66) 100%); }
+  .grain { position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .filigree { position: fixed; z-index: 3; pointer-events: none; color: var(--gold-dim); width: clamp(120px, 16vw, 220px); height: auto; opacity: 0.85; }
+  .filigree.tl { top: 74px; left: 14px; }
+  .filigree.tr { top: 74px; right: 14px; transform: scaleX(-1); }
+
+  /* ————— nav ————— */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px clamp(20px, 4.5vw, 58px);
+    background: linear-gradient(to bottom, rgba(18, 9, 12, 0.92), rgba(18, 9, 12, 0.55) 70%, transparent);
+  }
+  nav::after { content: ""; position: absolute; left: clamp(20px, 4.5vw, 58px); right: clamp(20px, 4.5vw, 58px); bottom: 0; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-dim) 18%, var(--gold-dim) 82%, transparent); }
+  .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; color: var(--parchment); }
+  .seal {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: radial-gradient(circle at 36% 30%, #8a4a5e, #4a2030 70%);
+    box-shadow: 0 0 0 1px rgba(217, 168, 85, 0.55), 0 2px 10px rgba(0, 0, 0, 0.6), 0 0 0 3.5px rgba(217, 168, 85, 0.12);
+    display: grid; place-items: center;
+    font-family: var(--disp); font-style: italic; font-size: 19px; color: var(--gold-bright);
+  }
+  .brand .name { font-family: var(--body); font-weight: 600; font-size: 13.5px; letter-spacing: 0.34em; text-transform: uppercase; }
+  .brand .name span { color: var(--gold); }
+  .links { display: flex; align-items: center; gap: clamp(18px, 2.6vw, 34px); }
+  .links a.txt {
+    font-family: var(--body); font-weight: 600; font-size: 11.5px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--ink-soft); text-decoration: none; padding: 8px 2px; position: relative; transition: color 0.4s var(--ease);
+  }
+  .links a.txt::after { content: ""; position: absolute; left: 0; right: 100%; bottom: 4px; height: 1px; background: var(--gold); transition: right 0.5s var(--ease); }
+  .links a.txt:hover { color: var(--gold-bright); }
+  .links a.txt:hover::after { right: 0; }
+  .pill {
+    font-family: var(--body); font-weight: 600; font-size: 11.5px; letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--gold-bright); text-decoration: none;
+    border: 1px solid var(--gold-dim); border-radius: 999px; padding: 12px 26px;
+    background: linear-gradient(170deg, rgba(217, 168, 85, 0.14), rgba(217, 168, 85, 0.03));
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.3) inset;
+    transition: all 0.5s var(--ease);
+  }
+  .pill:hover { border-color: var(--gold); box-shadow: 0 0 24px rgba(217, 168, 85, 0.25), 0 0 0 1px rgba(0,0,0,0.3) inset; transform: translateY(-1px); }
+  @media (max-width: 860px) { .links a.txt { display: none; } }
+
+  /* ————— hero ————— */
+  .hero { position: relative; z-index: 5; min-height: 200vh; }
+  .hero .pin { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center;
+    padding: 90px clamp(20px, 4.5vw, 58px) 0;
+    max-width: 1340px; margin: 0 auto;
+  }
+  .hero-copy { position: relative; z-index: 6; padding-bottom: 6vh; }
+  .kicker { font-family: var(--body); font-weight: 600; font-size: 11px; letter-spacing: 0.44em; text-transform: uppercase; color: var(--gold); }
+  .kicker::after { content: ""; display: inline-block; width: 54px; height: 1px; background: var(--gold-dim); margin-left: 16px; vertical-align: middle; }
+  h1 {
+    font-family: var(--disp); font-weight: 400;
+    font-size: clamp(38px, 5.6vw, 74px);
+    line-height: 1.08; letter-spacing: 0.005em;
+    margin-top: 26px; max-width: 13ch;
+    color: #f7ecd9;
+    text-shadow: 0 2px 40px rgba(217, 168, 85, 0.12);
+  }
+  h1 em { font-style: italic; color: var(--gold-bright); }
+  .spoken {
+    margin-top: 34px; max-width: 46ch;
+    font-family: var(--body); font-style: italic; font-weight: 500;
+    font-size: clamp(17px, 1.8vw, 21px); line-height: 1.75; color: var(--ink-soft);
+    min-height: 4.6em;
+  }
+  .spoken .caret { display: inline-block; width: 1px; height: 1.05em; background: var(--gold); vertical-align: -0.15em; margin-left: 2px; }
+  @media (prefers-reduced-motion: no-preference) { .spoken .caret { animation: blink 1.1s steps(1) infinite; } }
+  @keyframes blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+  .hero-ctas { margin-top: 30px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+  .btn-foil {
+    font-family: var(--body); font-weight: 600; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--night); text-decoration: none;
+    background: linear-gradient(168deg, var(--gold-bright), var(--gold) 55%, #a97e35);
+    padding: 16px 34px; border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(240, 205, 138, 0.7), 0 10px 34px -12px rgba(217, 168, 85, 0.55);
+    transition: all 0.5s var(--ease); position: relative; overflow: hidden;
+  }
+  .btn-foil::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+    background: linear-gradient(100deg, transparent, rgba(255, 250, 235, 0.6), transparent); transform: skewX(-18deg); transition: left 0.9s var(--ease); }
+  .btn-foil:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(240, 205, 138, 0.9), 0 16px 44px -12px rgba(240, 205, 138, 0.6); }
+  .btn-foil:hover::after { left: 130%; }
+  .btn-quiet { font-family: var(--body); font-weight: 600; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--gold-dim); padding-bottom: 4px; transition: all 0.4s var(--ease); }
+  .btn-quiet:hover { color: var(--gold-bright); border-color: var(--gold); }
+
+  /* ————— the doll ————— */
+  .doll-stage { position: relative; z-index: 5; height: min(88svh, 820px); align-self: end; display: flex; align-items: flex-end; justify-content: center; }
+  .doll-stage .halo { position: absolute; left: 50%; top: 54%; transform: translate(-50%, -50%); width: 130%; aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(217, 168, 85, 0.13) 0%, rgba(122, 79, 176, 0.07) 42%, transparent 68%); pointer-events: none; }
+  #doll-slot { position: relative; height: 100%; width: auto; aspect-ratio: 440 / 780; max-width: 92%; opacity: 0; transform: translateY(28px); transition: opacity 1.6s var(--ease) 0.3s, transform 1.6s var(--ease) 0.3s; }
+  #doll-slot.arrived { opacity: 1; transform: none; }
+  #doll-slot svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .stage-caption { position: absolute; bottom: 3.5vh; left: 50%; transform: translateX(-50%); white-space: nowrap;
+    font-family: var(--body); font-weight: 600; font-size: 10.5px; letter-spacing: 0.4em; text-transform: uppercase; color: rgba(201, 176, 150, 0.65); }
+  .stage-caption b { color: var(--gold); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .hero .pin { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); padding-top: 96px; }
+    .hero-copy { padding-bottom: 0; }
+    h1 { font-size: clamp(34px, 9vw, 52px); }
+    .spoken { min-height: 5.5em; font-size: 16px; }
+    .doll-stage { height: auto; min-height: 0; margin-top: 8px; }
+    #doll-slot { height: min(52svh, 480px); }
+    .stage-caption { display: none; }
+  }
+
+  /* ————— below the fold: the atelier ————— */
+  .atelier { position: relative; z-index: 5; padding: clamp(90px, 14vh, 150px) clamp(20px, 4.5vw, 58px) clamp(80px, 12vh, 130px); }
+  .atelier .inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(36px, 6vw, 84px); align-items: center; }
+  @media (max-width: 900px) { .atelier .inner { grid-template-columns: 1fr; } }
+
+  .frame {
+    position: relative; padding: clamp(14px, 1.8vw, 22px);
+    background: linear-gradient(160deg, #2b1b22, #1a0e13);
+    box-shadow: 0 0 0 1px rgba(217, 168, 85, 0.5), 0 0 0 5px rgba(20, 10, 14, 0.9), 0 0 0 6px rgba(217, 168, 85, 0.28), 0 34px 80px -30px rgba(0, 0, 0, 0.9);
+  }
+  .frame::before, .frame::after { content: "❦"; position: absolute; font-size: 15px; color: var(--gold-dim); }
+  .frame::before { top: -1px; left: 50%; transform: translate(-50%, -55%); }
+  .frame::after { bottom: -1px; left: 50%; transform: translate(-50%, 55%); }
+  .frame svg { display: block; width: 100%; height: auto; }
+  .frame figcaption { margin-top: 12px; text-align: center; font-style: italic; font-size: 13.5px; color: rgba(201, 176, 150, 0.75); letter-spacing: 0.06em; }
+
+  .atelier .kicker::after { width: 40px; }
+  .atelier h2 { font-family: var(--disp); font-weight: 400; font-size: clamp(30px, 3.8vw, 48px); line-height: 1.14; margin-top: 20px; color: #f7ecd9; }
+  .atelier h2 em { font-style: italic; color: var(--gold-bright); }
+  .atelier p.lede { margin-top: 22px; font-size: clamp(16.5px, 1.6vw, 19px); color: var(--ink-soft); max-width: 52ch; }
+  .atelier p.lede b { color: var(--parchment); font-weight: 600; }
+  .atelier .sig { margin-top: 26px; font-style: italic; font-size: 15px; color: rgba(201, 176, 150, 0.7); }
+
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease); transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1 !important; transform: none !important; transition: none; } #doll-slot { transition: none; } }
+
+  /* ————— footer ————— */
+  footer { position: relative; z-index: 5; border-top: 1px solid rgba(217, 168, 85, 0.22); padding: 26px clamp(20px, 4.5vw, 58px) 38px;
+    display: flex; flex-wrap: wrap; gap: 16px 34px; align-items: center; justify-content: space-between;
+    background: linear-gradient(to top, rgba(10, 4, 7, 0.85), transparent); }
+  footer .cols { display: flex; gap: clamp(18px, 3vw, 36px); flex-wrap: wrap; }
+  footer a { font-family: var(--body); font-weight: 600; font-size: 10.5px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.4s var(--ease); }
+  footer a:hover { color: var(--gold-bright); }
+  footer .motto { font-style: italic; font-size: 14px; color: rgba(201, 176, 150, 0.75); }
+  footer .credit { flex-basis: 100%; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(201, 176, 150, 0.45); font-weight: 600; }
+  footer .credit a { color: rgba(217, 168, 85, 0.75); letter-spacing: inherit; }
+</style>
+</head>
+<body>
+<canvas id="salon" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<svg class="filigree tl" viewBox="0 0 200 120" fill="none" aria-hidden="true">
+  <path d="M4 116 C10 60, 40 24, 96 14 C130 8, 162 14, 196 6 M4 116 C30 96, 44 74, 46 42 M4 116 C44 108, 78 96, 96 74"
+        stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="96" cy="14" r="2.2" fill="currentColor"/>
+  <circle cx="46" cy="42" r="1.6" fill="currentColor"/>
+  <circle cx="96" cy="74" r="1.6" fill="currentColor"/>
+</svg>
+<svg class="filigree tr" viewBox="0 0 200 120" fill="none" aria-hidden="true">
+  <path d="M4 116 C10 60, 40 24, 96 14 C130 8, 162 14, 196 6 M4 116 C30 96, 44 74, 46 42 M4 116 C44 108, 78 96, 96 74"
+        stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="96" cy="14" r="2.2" fill="currentColor"/>
+  <circle cx="46" cy="42" r="1.6" fill="currentColor"/>
+  <circle cx="96" cy="74" r="1.6" fill="currentColor"/>
+</svg>
+
+<nav aria-label="Primary">
+  <a class="brand" href="#top">
+    <span class="seal" aria-hidden="true">A</span>
+    <span class="name">AUTO<span>&thinsp;·&thinsp;</span>MEMORY<span>&thinsp;·&thinsp;</span>DOLL</span>
+  </a>
+  <div class="links">
+    <a class="txt" href="#atelier">The Atelier</a>
+    <a class="txt" href="#atelier">Services</a>
+    <a class="txt" href="#atelier">Letters</a>
+    <a class="pill" href="#atelier">Request a Doll</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="pin">
+    <div class="hero-copy">
+      <p class="kicker">A letter-writing atelier · Est. in a gentler century</p>
+      <h1>Letters for the feelings you <em>cannot say aloud.</em></h1>
+      <p class="spoken" aria-live="off"><span id="typed"></span><span class="caret" aria-hidden="true"></span></p>
+      <span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">Welcome. I am your Auto Memory Doll. If you have feelings you cannot put into words — I will write them for you.</span>
+      <div class="hero-ctas">
+        <a class="btn-foil" href="#atelier">Commission a letter</a>
+        <a class="btn-quiet" href="#atelier">Visit the atelier</a>
+      </div>
+    </div>
+    <div class="doll-stage">
+      <div class="halo" aria-hidden="true"></div>
+      <div id="doll-slot" role="img" aria-label="Your Auto Memory Doll — a young woman in a white ruffled Victorian blouse with a black ribbon tie and a royal-purple skirt, golden hair in a braided crown with a violet rose. As you scroll, she bows to greet you."></div>
+      <p class="stage-caption"><b>Scroll</b> — she will greet you properly</p>
+    </div>
+  </div>
+</header>
+
+<section class="atelier" id="atelier" aria-labelledby="atelier-h">
+  <div class="inner">
+    <figure class="frame reveal">
+      <svg viewBox="0 0 560 400" role="img" aria-label="An illustration of the atelier writing desk: a letter sealed in wax beside an inkwell and pen, in candlelight.">
+        <defs>
+          <linearGradient id="deskAir" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2e1b26"/><stop offset="1" stop-color="#150b10"/>
+          </linearGradient>
+          <radialGradient id="candleGlow" cx="0.72" cy="0.30" r="0.55">
+            <stop offset="0" stop-color="#f0cd8a" stop-opacity="0.5"/>
+            <stop offset="0.5" stop-color="#d9a855" stop-opacity="0.14"/>
+            <stop offset="1" stop-color="#d9a855" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="deskWood" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4a2c22"/><stop offset="1" stop-color="#2b1712"/>
+          </linearGradient>
+          <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f4e6cd"/><stop offset="1" stop-color="#dfc9a4"/>
+          </linearGradient>
+        </defs>
+        <rect width="560" height="400" fill="url(#deskAir)"/>
+        <rect width="560" height="400" fill="url(#candleGlow)"/>
+        <rect y="268" width="560" height="132" fill="url(#deskWood)"/>
+        <rect y="268" width="560" height="3" fill="#5c3a2b" opacity="0.8"/>
+        <!-- candle -->
+        <g transform="translate(402,120)">
+          <rect x="-17" y="66" width="34" height="86" rx="4" fill="#e8d9bd"/>
+          <rect x="-17" y="66" width="10" height="86" rx="4" fill="#f6ecd7" opacity="0.7"/>
+          <path d="M0 24 C10 42, 7 56, 0 62 C-7 56, -10 42, 0 24 Z" fill="#f6c368"/>
+          <path d="M0 36 C5 46, 4 54, 0 58 C-4 54, -5 46, 0 36 Z" fill="#fdeab8"/>
+          <rect x="-1.2" y="58" width="2.4" height="9" fill="#6b4326"/>
+          <ellipse cx="0" cy="156" rx="34" ry="8" fill="#1b0e0a" opacity="0.55"/>
+          <path d="M-17 96 C-24 108, -20 128, -17 140 L-17 152 L17 152 L17 118 C13 108, 15 100, 17 96 Z" fill="#e0cfae" opacity="0.6"/>
+        </g>
+        <!-- letter with wax seal -->
+        <g transform="translate(120,268) rotate(-7)">
+          <rect x="0" y="0" width="196" height="126" rx="3" fill="url(#paper)"/>
+          <path d="M0 0 L98 58 L196 0" fill="none" stroke="#b99a6b" stroke-width="1.6"/>
+          <circle cx="98" cy="66" r="19" fill="#7c3040"/>
+          <circle cx="98" cy="66" r="19" fill="none" stroke="#5d1f2d" stroke-width="2"/>
+          <text x="98" y="73" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="18" fill="#e8b7a0">A</text>
+          <line x1="18" y1="96" x2="112" y2="96" stroke="#b99a6b" stroke-width="1" opacity="0.7"/>
+          <line x1="18" y1="106" x2="86" y2="106" stroke="#b99a6b" stroke-width="1" opacity="0.55"/>
+        </g>
+        <!-- inkwell + pen -->
+        <g transform="translate(318,282)">
+          <ellipse cx="0" cy="52" rx="42" ry="8" fill="#160b08" opacity="0.6"/>
+          <path d="M-26 12 C-30 34, -22 48, 0 50 C22 48, 30 34, 26 12 C18 4, -18 4, -26 12 Z" fill="#241a2e"/>
+          <path d="M-26 12 C-18 18, 18 18, 26 12 C18 4, -18 4, -26 12 Z" fill="#3c2b4e"/>
+          <ellipse cx="0" cy="12" rx="15" ry="4.4" fill="#120a18"/>
+          <path d="M-4 14 L46 -64 L52 -60 L8 16 Z" fill="#c9a35c"/>
+          <path d="M46 -64 L58 -84 L60 -68 L52 -60 Z" fill="#e8cf96"/>
+          <path d="M-4 14 L8 16 L2 22 Z" fill="#8a6a30"/>
+        </g>
+        <!-- floating motes -->
+        <g fill="#f0cd8a">
+          <circle cx="240" cy="120" r="1.6" opacity="0.5"/><circle cx="300" cy="82" r="1.1" opacity="0.35"/>
+          <circle cx="180" cy="170" r="1.3" opacity="0.4"/><circle cx="460" cy="150" r="1.2" opacity="0.35"/>
+          <circle cx="360" cy="200" r="1" opacity="0.3"/><circle cx="90" cy="110" r="1.1" opacity="0.3"/>
+        </g>
+      </svg>
+      <figcaption>The desk is always ready. The kettle, regrettably, is always just boiled.</figcaption>
+    </figure>
+    <div>
+      <p class="kicker reveal">The Atelier</p>
+      <h2 class="reveal" style="--d:.08s">You speak. She listens.<br>What returns is <em>the truth,</em><br>beautifully said.</h2>
+      <p class="lede reveal" style="--d:.16s">Behind these doors, Auto Memory Dolls take dictation of the heart. Tell yours everything — haltingly, angrily, or not quite at all. She will find the sentence you were circling, set it in ink that suits your voice, and seal it in wax. <b>You need only decide who receives it.</b></p>
+      <p class="sig reveal" style="--d:.24s">— By appointment, and by candlelight.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="cols">
+    <a href="#atelier">Correspondence</a>
+    <a href="#atelier">Visiting Hours</a>
+    <a href="#atelier">The Dolls</a>
+  </div>
+  <p class="motto">"Sincerely yours — at last."</p>
+  <p class="credit">A fictional atelier · every visual drawn in code · designed &amp; built by Claude</p>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

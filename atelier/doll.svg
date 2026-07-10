@@ -131,8 +131,8 @@
     </g>
     <path d="M 204 244 C 210 252, 230 252, 236 244 L 236 252 C 230 258, 210 258, 204 252 Z" fill="#e2d5c8"/>
 
-    <!-- black ribbon bow + brooch -->
-    <g>
+    <!-- black ribbon bow + brooch (partially follows the head in the bow) -->
+    <g id="ribbon">
       <path d="M 214 262 C 200 254, 188 256, 184 266 C 182 276, 192 282, 204 278 C 210 276, 214 270, 214 262 Z" fill="#241a26"/>
       <path d="M 226 262 C 240 254, 252 256, 256 266 C 258 276, 248 282, 236 278 C 230 276, 226 270, 226 262 Z" fill="#241a26"/>
       <path d="M 214 262 C 204 258, 194 260, 190 266 C 194 272, 204 274, 212 270 Z" fill="#3a2e3e" opacity="0.8"/>
@@ -171,6 +171,10 @@
         <circle cx="260" cy="202" r="1.8" fill="#eafffa" opacity="0.95"/>
       </g>
 
+      <!-- under-hair plate: gaps between locks read as shaded hair, never transparency -->
+      <path d="M 164 132 C 154 92, 176 60, 214 54 C 254 48, 288 70, 290 108 C 291 122, 286 134, 280 140 C 268 116, 246 104, 220 104 C 194 104, 174 116, 164 132 Z" fill="#6e5124"/>
+      <path d="M 168 134 C 166 118, 172 104, 184 96 C 176 112, 173 124, 174 138 Z" fill="#6e5124"/>
+      <path d="M 272 134 C 274 118, 270 104, 260 94 C 268 110, 271 122, 270 138 Z" fill="#6e5124"/>
       <!-- face -->
       <path d="M 176 112 C 171 148, 175 184, 189 206 C 199 220, 211 228, 220 228 C 229 228, 241 220, 251 206 C 265 184, 269 148, 264 112 C 252 92, 188 92, 176 112 Z" fill="#ffe9d8"/>
       <!-- jaw shading -->
@@ -179,8 +183,8 @@
       <!-- features -->
       <g id="features">
         <!-- brows -->
-        <path d="M 186 141 C 192 136.5, 202 136, 209 139" stroke="#d8ab6a" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M 254 141 C 248 136.5, 238 136, 231 139" stroke="#d8ab6a" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M 185 141 C 191 137.5, 202 137, 209 139.5" stroke="#b98a52" stroke-width="2.3" stroke-linecap="round"/>
+        <path d="M 255 141 C 249 137.5, 238 137, 231 139.5" stroke="#b98a52" stroke-width="2.3" stroke-linecap="round"/>
         <!-- eye whites -->
         <path d="M 182 163 C 186 152, 206 150, 212 160 C 211 172, 188 174, 182 163 Z" fill="#fff"/>
         <path d="M 258 163 C 254 152, 234 150, 228 160 C 229 172, 252 174, 258 163 Z" fill="#fff"/>
@@ -214,11 +218,13 @@
             <path d="M 226 146 C 233 154, 253 153, 260 147" stroke="#4a2e28" stroke-width="2.4" fill="none" stroke-linecap="round"/>
           </g>
         </g>
-        <!-- upper lash lines -->
-        <path d="M 180 161 C 185 150, 207 148, 213 159" stroke="#4a2e28" stroke-width="3.4" stroke-linecap="round"/>
-        <path d="M 213 159 L 217 155" stroke="#4a2e28" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M 260 161 C 255 150, 233 148, 227 159" stroke="#4a2e28" stroke-width="3.4" stroke-linecap="round"/>
-        <path d="M 227 159 L 223 155" stroke="#4a2e28" stroke-width="2.6" stroke-linecap="round"/>
+        <!-- upper lash lines (fade as the lids lower, so a closed eye is one line) -->
+        <g id="lashes">
+          <path d="M 180 161 C 185 150, 207 148, 213 159" stroke="#4a2e28" stroke-width="3.4" stroke-linecap="round"/>
+          <path d="M 181.5 160 L 176.5 155" stroke="#4a2e28" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M 260 161 C 255 150, 233 148, 227 159" stroke="#4a2e28" stroke-width="3.4" stroke-linecap="round"/>
+          <path d="M 258.5 160 L 263.5 155" stroke="#4a2e28" stroke-width="2.6" stroke-linecap="round"/>
+        </g>
         <!-- lower lash -->
         <path d="M 186 171 C 192 175, 204 175, 210 171" stroke="#b98a6e" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>
         <path d="M 254 171 C 248 175, 236 175, 230 171" stroke="#b98a6e" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>
@@ -248,13 +254,13 @@
           <path d="M 258 124 L 262 146 L 266 126 Z"/>
         </g>
         <g stroke="#a87c36" stroke-width="1.3" opacity="0.7" stroke-linecap="round">
-          <path d="M 196 96 C 191 112, 189 126, 190 138"/>
-          <path d="M 224 92 C 218 110, 216 128, 217 143"/>
-          <path d="M 248 94 C 243 110, 241 126, 242 142"/>
+          <path d="M 193 106 C 190 118, 189 128, 190 138"/>
+          <path d="M 220 104 C 216 118, 216 132, 217 143"/>
+          <path d="M 245 106 C 242 118, 241 130, 242 142"/>
         </g>
         <g stroke="#f9e2a8" stroke-width="1.6" opacity="0.75" stroke-linecap="round">
-          <path d="M 203 94 C 199 110, 197 124, 198 138"/>
-          <path d="M 231 90 C 226 108, 224 126, 225 142"/>
+          <path d="M 201 106 C 198 118, 197 128, 198 138"/>
+          <path d="M 228 104 C 225 118, 224 132, 225 142"/>
         </g>
       </g>
 
@@ -262,6 +268,11 @@
       <g id="crown">
         <path d="M 162 128 C 152 96, 172 66, 206 58 C 246 49, 282 68, 286 104 C 288 118, 284 130, 278 138
                  C 282 116, 272 92, 246 82 C 214 70, 180 84, 170 112 C 167 120, 164 125, 162 128 Z" fill="url(#hairG)"/>
+        <!-- small braided knot, peeking from behind the crown -->
+        <g transform="translate(-8,15)">
+          <ellipse cx="258" cy="66" rx="15.5" ry="10.5" fill="#d9a855" transform="rotate(14 258 66)"/>
+          <path d="M 246 60 C 252 56, 262 55, 270 60 M 244 68 C 252 63, 264 62, 272 68 M 248 74 C 255 70, 265 70, 270 73" stroke="#a87c36" stroke-width="1.4" fill="none" opacity="0.8"/>
+        </g>
         <!-- braid bumps over the crown -->
         <g fill="url(#hairG)" stroke="#a87c36" stroke-width="1.2">
           <ellipse cx="168" cy="116" rx="11" ry="8" transform="rotate(-58 168 116)"/>
@@ -282,11 +293,6 @@
           <path d="M 231 72 C 237 70, 243 71, 248 74"/>
           <path d="M 252 79 C 258 78, 264 81, 267 85"/>
           <path d="M 268 92 C 274 93, 278 97, 280 102"/>
-        </g>
-        <!-- small braided knot, seated against the crown -->
-        <g transform="translate(-5,9)">
-          <ellipse cx="258" cy="66" rx="16" ry="10.5" fill="#d9a855" transform="rotate(14 258 66)"/>
-          <path d="M 246 60 C 252 56, 262 55, 270 60 M 244 68 C 252 63, 264 62, 272 68 M 248 74 C 255 70, 265 70, 270 73" stroke="#a87c36" stroke-width="1.4" fill="none" opacity="0.8"/>
         </g>
         <!-- gold bead pins along the right -->
         <circle cx="278" cy="122" r="2.4" fill="#f0cd8a"/>

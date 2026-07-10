@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEIJAKU 静寂 — A Tea House in the Old Style · Kyoto</title>
+<meta name="description" content="Seijaku is a fictional Kyoto tea house of eight seats, taking seasonal reservations. Wabi-sabi minimalism: an ink-brush enso, four animated seasons, and a ceremony told in five quiet steps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect x='6' y='6' width='88' height='88' rx='16' fill='%23AE3E25'/%3E%3Cg fill='none' stroke='%23F5F0E4' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M27 25 H73'/%3E%3Cpath d='M39 14 V33'/%3E%3Cpath d='M61 14 V33'/%3E%3Cpath d='M50 34 Q42 46 25 55'/%3E%3Cpath d='M50 34 Q58 46 75 55'/%3E%3Cpath d='M33 62 H67'/%3E%3Cpath d='M50 48 V88'/%3E%3Cpath d='M50 66 Q44 75 36 81'/%3E%3Cpath d='M50 66 Q56 75 64 81'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/cormorant-garamond.css">
+<link rel="stylesheet" href="/fonts/shippori-mincho.css">
+<link rel="stylesheet" href="./style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<canvas id="inkveil" aria-hidden="true"></canvas>
+
+<header class="site-head">
+  <a class="seal-mark" href="#top" aria-label="Seijaku — back to top">
+    <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <rect x="6" y="6" width="88" height="88" rx="16" fill="var(--hanko)"/>
+      <g fill="none" stroke="var(--paper)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M27 25 H73"/><path d="M39 14 V33"/><path d="M61 14 V33"/>
+        <path d="M50 34 Q42 46 25 55"/><path d="M50 34 Q58 46 75 55"/>
+        <path d="M33 62 H67"/><path d="M50 48 V88"/>
+        <path d="M50 66 Q44 75 36 81"/><path d="M50 66 Q56 75 64 81"/>
+      </g>
+    </svg>
+  </a>
+  <a class="head-link" href="#reserve">Reservations</a>
+</header>
+
+<main id="top">
+
+  <!-- ———— 1 · HERO ———— -->
+  <section class="hero">
+    <div class="hero-art reveal" style="--d:.1s">
+      <div class="enso-wrap" id="enso-wrap" role="button" tabindex="0"
+           aria-label="An ink brushstroke enso. Press to draw it again." title="Draw again">
+        <canvas id="enso" aria-hidden="true"></canvas>
+      </div>
+      <p class="hero-kanji" lang="ja" aria-label="Seijaku, meaning stillness">静寂</p>
+    </div>
+
+    <div class="hero-copy">
+      <p class="eyebrow reveal" style="--d:.5s">Kyoto · a lane off Shirakawa · est. 1911</p>
+      <h1 class="wordmark reveal" style="--d:.65s">Seijaku</h1>
+      <p class="tagline reveal" style="--d:.8s">A tea house in the old style</p>
+      <p class="lede reveal" style="--d:.95s">Eight seats, one room, and a kettle that has
+      not gone cold in a hundred years. We take guests by reservation, season by
+      season, and answer every letter in ink.</p>
+    </div>
+
+    <p class="hero-phrase reveal" lang="ja" style="--d:1.2s"
+       aria-label="Ichigo ichie — one time, one meeting">一期一会<span class="phrase-dot" aria-hidden="true"></span></p>
+
+    <div class="scroll-cue" aria-hidden="true">
+      <span lang="ja">間</span>
+      <i></i>
+    </div>
+  </section>
+
+  <!-- ———— 2 · SEASONS ———— -->
+  <section class="seasons" id="seasons">
+    <p class="side-phrase" lang="ja" aria-label="Kisetsu — the seasons">季節</p>
+
+    <header class="sect-head">
+      <p class="eyebrow reveal">The room, four ways</p>
+      <h2 class="reveal" style="--d:.12s">The four seasons <em>of the room</em></h2>
+      <p class="sect-lede reveal" style="--d:.24s">The room is nine feet square and it never
+      changes; only the light does. Each season the host alters one scroll and one
+      flower, and nothing else. Sit long enough and you will notice what the room
+      already knows.</p>
+    </header>
+
+    <div class="season-grid">
+      <figure class="season s-spring reveal">
+        <div class="season-side">
+          <span class="season-kanji" lang="ja">春</span>
+          <span class="season-dot" aria-hidden="true"></span>
+          <span class="season-name">Spring</span>
+        </div>
+        <div class="mini-frame"><canvas class="mini" data-season="spring" aria-hidden="true"></canvas></div>
+        <figcaption>Petals cross the sill — no one rises to close it.</figcaption>
+      </figure>
+
+      <figure class="season s-summer reveal" style="--d:.15s">
+        <div class="season-side">
+          <span class="season-kanji" lang="ja">夏</span>
+          <span class="season-dot" aria-hidden="true"></span>
+          <span class="season-name">Summer</span>
+        </div>
+        <div class="mini-frame"><canvas class="mini" data-season="summer" aria-hidden="true"></canvas></div>
+        <figcaption>Rain threads the stone lantern; the kettle answers under its breath.</figcaption>
+      </figure>
+
+      <figure class="season s-autumn reveal" style="--d:.3s">
+        <div class="season-side">
+          <span class="season-kanji" lang="ja">秋</span>
+          <span class="season-dot" aria-hidden="true"></span>
+          <span class="season-name">Autumn</span>
+        </div>
+        <div class="mini-frame"><canvas class="mini" data-season="autumn" aria-hidden="true"></canvas></div>
+        <figcaption>One maple leaf lands red side up, and is left there.</figcaption>
+      </figure>
+
+      <figure class="season s-winter reveal" style="--d:.45s">
+        <div class="season-side">
+          <span class="season-kanji" lang="ja">冬</span>
+          <span class="season-dot" aria-hidden="true"></span>
+          <span class="season-name">Winter</span>
+        </div>
+        <div class="mini-frame"><canvas class="mini" data-season="winter" aria-hidden="true"></canvas></div>
+        <figcaption>Snow keeps falling on the snow — the room grows quieter than its name.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ———— 3 · CEREMONY ———— -->
+  <section class="ceremony" id="ceremony">
+    <p class="side-phrase" lang="ja" aria-label="Wa kei sei jaku — harmony, respect, purity, stillness">和敬清寂</p>
+
+    <header class="sect-head">
+      <p class="eyebrow reveal">Two hours, five gestures</p>
+      <h2 class="reveal" style="--d:.12s">The ceremony</h2>
+      <p class="sect-lede reveal" style="--d:.24s">A sitting lasts near two hours and follows
+      a path worn smooth by four hundred years of hands. You do not need to know the
+      steps. The room will show you.</p>
+    </header>
+
+    <ol class="steps">
+      <li class="step reveal">
+        <svg class="pict" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+          <path pathLength="1" style="--i:0" d="M16 76 Q15 69 24 67 Q34 65 35 72 Q36 79 26 81 Q17 82 16 76 Z"/>
+          <path pathLength="1" style="--i:1" d="M38 62 Q37 56 45 54 Q53 53 54 59 Q55 65 46 66 Q39 67 38 62 Z"/>
+          <path pathLength="1" style="--i:2" d="M56 48 Q55 43 62 41 Q69 40 70 45 Q71 50 64 52 Q57 53 56 48 Z"/>
+          <path pathLength="1" style="--i:3" d="M70 34 Q69 30 75 28 Q80 27 81 31 Q82 35 76 37 Q71 38 70 34 Z"/>
+          <path pathLength="1" style="--i:4" d="M30 60 Q32 58 34 59"/>
+          <path pathLength="1" style="--i:5" d="M60 56 Q62 54 64 55"/>
+        </svg>
+        <div class="step-body">
+          <span class="step-no">i</span>
+          <h3>The stones</h3>
+          <p>Seven stones cross the garden. Whatever followed you through the city
+          cannot follow you across them.</p>
+        </div>
+      </li>
+
+      <li class="step reveal">
+        <svg class="pict" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+          <path pathLength="1" style="--i:0" d="M22 18 V80"/>
+          <path pathLength="1" style="--i:1" d="M74 18 V80"/>
+          <path pathLength="1" style="--i:2" d="M22 18 Q48 15 74 18"/>
+          <path pathLength="1" style="--i:3" d="M38 80 V48 H64 V80"/>
+          <path pathLength="1" style="--i:4" d="M51 48 V80"/>
+          <path pathLength="1" style="--i:5" d="M16 80 H80"/>
+          <path pathLength="1" style="--i:6" d="M62 29 Q62 24 67 24 Q72 24 72 29 Q72 34 67 34 Q62 34 62 29 Z"/>
+        </svg>
+        <div class="step-body">
+          <span class="step-no">ii</span>
+          <h3>The low door</h3>
+          <p>The doorway stands three feet high. Emperor or merchant, every guest bows
+          to enter — and enters equal.</p>
+        </div>
+      </li>
+
+      <li class="step reveal">
+        <svg class="pict" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+          <path pathLength="1" style="--i:0" d="M34 38 Q30 42 30 50 Q30 68 48 70 Q66 68 66 50 Q66 42 62 38"/>
+          <path pathLength="1" style="--i:1" d="M38 36 Q48 30 58 36"/>
+          <path pathLength="1" style="--i:2" d="M46 28 Q48 25 50 28"/>
+          <path pathLength="1" style="--i:3" d="M33 41 Q29 39 31 35"/>
+          <path pathLength="1" style="--i:4" d="M63 41 Q67 39 65 35"/>
+          <path pathLength="1" style="--i:5" d="M43 23 Q39 17 43 11"/>
+          <path pathLength="1" style="--i:6" d="M53 23 Q57 17 53 11"/>
+          <path pathLength="1" style="--i:7" d="M36 74 H60"/>
+          <path pathLength="1" style="--i:8" d="M39 74 L37 82"/>
+          <path pathLength="1" style="--i:9" d="M57 74 L59 82"/>
+          <path pathLength="1" style="--i:10" d="M33 82 H63"/>
+        </svg>
+        <div class="step-body">
+          <span class="step-no">iii</span>
+          <h3>The kettle</h3>
+          <p>Well water, brought just short of a boil. Listen — the simmer is called
+          <em>matsukaze</em>, wind in the pines.</p>
+        </div>
+      </li>
+
+      <li class="step reveal">
+        <svg class="pict" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+          <path pathLength="1" style="--i:0" d="M45 34 V14 Q45 11 48 11 Q51 11 51 14 V34"/>
+          <path pathLength="1" style="--i:1" d="M40 35 H56"/>
+          <path pathLength="1" style="--i:2" d="M39 41 H57"/>
+          <path pathLength="1" style="--i:3" d="M41 42 Q33 58 34 72 Q34 75 37 74"/>
+          <path pathLength="1" style="--i:4" d="M44 42 Q40 58 39 75"/>
+          <path pathLength="1" style="--i:5" d="M46 42 Q45 60 44 76"/>
+          <path pathLength="1" style="--i:6" d="M48 42 Q48 60 48 76"/>
+          <path pathLength="1" style="--i:7" d="M50 42 Q52 60 53 76"/>
+          <path pathLength="1" style="--i:8" d="M52 42 Q56 58 57 75"/>
+          <path pathLength="1" style="--i:9" d="M55 42 Q63 58 62 72 Q62 75 59 74"/>
+        </svg>
+        <div class="step-body">
+          <span class="step-no">iv</span>
+          <h3>The whisk</h3>
+          <p>Two scoops of matcha, whisked until the surface settles into still green
+          foam. The host's wrist does the remembering.</p>
+        </div>
+      </li>
+
+      <li class="step reveal">
+        <svg class="pict" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+          <path pathLength="1" style="--i:0" d="M24 42 Q48 50 72 42"/>
+          <path pathLength="1" style="--i:1" d="M24 42 Q25 62 38 68 Q48 71 58 68 Q71 62 72 42"/>
+          <path pathLength="1" style="--i:2" d="M31 46 Q48 52 65 46"/>
+          <path pathLength="1" style="--i:3" d="M44 69 L43 75"/>
+          <path pathLength="1" style="--i:4" d="M52 69 L53 75"/>
+          <path pathLength="1" style="--i:5" d="M41 75 H55"/>
+          <path pathLength="1" style="--i:6" d="M48 32 Q43 26 48 19 Q53 12 49 6"/>
+        </svg>
+        <div class="step-body">
+          <span class="step-no">v</span>
+          <h3>The bowl</h3>
+          <p>Turned twice in the hand, offered with its best face toward you. Drink
+          slowly. Say nothing you do not mean.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ———— 4 · RESERVATIONS ———— -->
+  <section class="reserve" id="reserve">
+    <p class="side-phrase" lang="ja" aria-label="Chado — the way of tea">茶道</p>
+
+    <header class="sect-head">
+      <p class="eyebrow reveal">Reservations</p>
+      <h2 class="reveal" style="--d:.12s">A seat, <em>in season</em></h2>
+      <p class="sect-lede reveal" style="--d:.24s">We seat eight guests at each sitting and
+      keep two places for chance. Tell us your month and your number; the host reads
+      requests each evening by lamplight, and replies in his own hand.</p>
+    </header>
+
+    <form id="resform" class="reveal" style="--d:.3s" novalidate>
+      <fieldset class="months">
+        <legend>The month</legend>
+        <div class="tag-row" id="tagrow"></div>
+      </fieldset>
+
+      <div class="form-row">
+        <fieldset class="party">
+          <legend>Your number</legend>
+          <div class="stepper">
+            <button type="button" id="party-less" aria-label="Fewer guests">&minus;</button>
+            <output id="party-out" for="party-less party-more" aria-live="polite">two</output>
+            <button type="button" id="party-more" aria-label="More guests">+</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="sitting">
+          <legend>The sitting</legend>
+          <div class="sit-row">
+            <label class="sit"><input type="radio" name="sitting" value="first light"><span>First light</span></label>
+            <label class="sit"><input type="radio" name="sitting" value="midday" checked><span>Midday</span></label>
+            <label class="sit"><input type="radio" name="sitting" value="dusk"><span>Dusk</span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <button type="submit" class="request-btn"><span>Request a seat</span></button>
+    </form>
+
+    <div class="reply" id="reply" hidden>
+      <svg class="reply-seal" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <rect x="6" y="6" width="88" height="88" rx="16" fill="var(--hanko)"/>
+        <g fill="none" stroke="var(--paper)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M27 25 H73"/><path d="M39 14 V33"/><path d="M61 14 V33"/>
+          <path d="M50 34 Q42 46 25 55"/><path d="M50 34 Q58 46 75 55"/>
+          <path d="M33 62 H67"/><path d="M50 48 V88"/>
+          <path d="M50 66 Q44 75 36 81"/><path d="M50 66 Q56 75 64 81"/>
+        </g>
+      </svg>
+      <p class="reply-line" id="reply-line">Received, and set aside to be read this evening.</p>
+      <p class="reply-note">The host will reply with the season.</p>
+      <button type="button" class="again" id="again">ask for another seat</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ———— 5 · FOOTER ———— -->
+<footer>
+  <div class="foot-mark">
+    <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <rect x="6" y="6" width="88" height="88" rx="16" fill="var(--hanko)"/>
+      <g fill="none" stroke="var(--paper)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M27 25 H73"/><path d="M39 14 V33"/><path d="M61 14 V33"/>
+        <path d="M50 34 Q42 46 25 55"/><path d="M50 34 Q58 46 75 55"/>
+        <path d="M33 62 H67"/><path d="M50 48 V88"/>
+        <path d="M50 66 Q44 75 36 81"/><path d="M50 66 Q56 75 64 81"/>
+      </g>
+    </svg>
+    <p class="foot-name">Seijaku <span lang="ja">静寂</span></p>
+  </div>
+  <p class="foot-addr">A lane off Shirakawa, Kyoto. The gate is unmarked; the
+  persimmon tree is not. Sittings by reservation only.</p>
+  <p class="foot-credit">Designed &amp; built in code by Claude
+    — <a href="/">Gallery</a> · <a href="/guide/">How this was made</a></p>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

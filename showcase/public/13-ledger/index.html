@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AERARIUM — Annual Report of the Cloud City of Vell, Year 312</title>
+<meta name="description" content="The floating city of Vell publishes its accounts: altitude held, rain harvested, birds naturalised, treasury flows. Every chart is hand-built SVG, animated, and audited.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23F5F3ED'/%3E%3Cpath d='M10 30c3-6 7-8 14-8s11 2 14 8' fill='none' stroke='%232742C8' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='15' r='3' fill='%23D9571C'/%3E%3Cpath d='M14 36h20' stroke='%2320242E' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/ibm-plex-serif.css">
+<link rel="stylesheet" href="/fonts/ibm-plex-sans.css">
+<link rel="stylesheet" href="/fonts/ibm-plex-mono.css">
+<style>
+  :root {
+    --paper: #f5f3ed;
+    --panel: #fbfaf6;
+    --ink: #20242e;
+    --muted: #6e7480;
+    --ultra: #2742c8;
+    --orange: #d9571c;
+    --hairline: rgba(32, 36, 46, 0.16);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans", sans-serif;
+    --mono: "IBM Plex Mono", monospace;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--ultra); color: #fff; }
+  :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+
+  /* ——— masthead ——— */
+  header.masthead { border-bottom: 2px solid var(--ink); padding: 26px 0 22px; }
+  .masthead .row { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+  .masthead .mark { font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: 0.3em; }
+  .masthead .mark span { color: var(--ultra); }
+  .masthead .no { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--muted); }
+
+  .hero { padding: clamp(44px, 7vh, 84px) 0 30px; }
+  .hero .kicker { font-family: var(--mono); font-size: 11.5px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--orange); }
+  .hero h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(40px, 6.6vw, 84px); line-height: 1.04; letter-spacing: -0.015em; margin-top: 14px; max-width: 17ch; }
+  .hero h1 em { font-style: italic; font-weight: 400; color: var(--ultra); }
+  .hero .lede { margin-top: 22px; max-width: 58ch; font-size: 17px; color: #3a3f4c; }
+  .hero .lede b { font-family: var(--mono); font-weight: 600; font-size: 15px; }
+
+  /* ——— sections ——— */
+  section { padding: clamp(40px, 7vh, 72px) 0; }
+  section + section { border-top: 1px solid var(--hairline); }
+  .sec-head { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: baseline; margin-bottom: 8px; }
+  .sec-no { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--orange); letter-spacing: 0.14em; }
+  .sec-head h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(24px, 3.4vw, 38px); line-height: 1.15; letter-spacing: -0.01em; max-width: 26ch; }
+  .sec-head h2 em { font-style: italic; font-weight: 400; }
+  .sec-note { grid-column: 2; font-size: 15px; color: var(--muted); max-width: 62ch; }
+
+  figure.chart { margin-top: 30px; background: var(--panel); border: 1px solid var(--hairline); border-radius: 4px; padding: clamp(16px, 2.6vw, 30px); position: relative; }
+  figure.chart figcaption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+  figure.chart figcaption .unit { color: var(--ink); }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  figure.chart.radial { overflow-x: auto; }
+  figure.chart.radial svg { min-width: 560px; }
+  .chart .legend { display: flex; gap: 22px; margin-top: 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--ink); flex-wrap: wrap; }
+  .legend .key { display: inline-flex; align-items: center; gap: 8px; }
+  .legend .swatch { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .legend .swatch.dot { width: 9px; height: 9px; border-radius: 50%; }
+
+  details.figures { margin-top: 14px; font-size: 13.5px; }
+  details.figures summary { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ultra); cursor: pointer; padding: 6px 0; }
+  details.figures table { border-collapse: collapse; margin-top: 10px; font-family: var(--mono); font-size: 12px; width: 100%; max-width: 560px; }
+  details.figures td, details.figures th { border-bottom: 1px solid var(--hairline); padding: 6px 14px 6px 0; text-align: right; }
+  details.figures th:first-child, details.figures td:first-child { text-align: left; }
+  details.figures th { font-weight: 600; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+  /* ——— stat tiles ——— */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 30px; }
+  .tile { background: var(--panel); border: 1px solid var(--hairline); border-radius: 4px; padding: 22px 22px 18px; }
+  .tile .label { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .tile .value { font-family: var(--serif); font-weight: 600; font-size: clamp(30px, 3.2vw, 40px); letter-spacing: -0.01em; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .tile .value small { font-size: 0.5em; font-weight: 400; color: var(--muted); margin-left: 4px; }
+  .tile svg { margin-top: 12px; }
+  .tile .delta { font-family: var(--mono); font-size: 11px; margin-top: 8px; }
+  .tile .delta.up { color: var(--ultra); }
+  .tile .delta.dn { color: var(--orange); }
+
+  /* ——— tooltip ——— */
+  #tip {
+    position: fixed; z-index: 60; pointer-events: none; opacity: 0;
+    background: var(--ink); color: #f4f2ec; border-radius: 3px;
+    font-family: var(--mono); font-size: 11.5px; line-height: 1.5;
+    padding: 8px 11px; transform: translate(-50%, calc(-100% - 12px));
+    transition: opacity 0.2s var(--ease);
+    max-width: 260px; white-space: nowrap;
+  }
+  #tip b { color: #ffd9a8; font-weight: 600; }
+  #tip.on { opacity: 1; }
+
+  /* ——— auditor + footer ——— */
+  .auditor { background: var(--ink); color: #edeae0; }
+  .auditor .wrap { padding-top: clamp(40px, 7vh, 72px); padding-bottom: clamp(40px, 7vh, 72px); }
+  .auditor blockquote { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(21px, 2.8vw, 30px); line-height: 1.5; max-width: 34ch; }
+  .auditor figcaption { margin-top: 20px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #9aa0ad; }
+
+  footer { border-top: 2px solid var(--ink); margin-top: 0; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding-top: 22px; padding-bottom: 34px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+  footer a { color: var(--ultra); text-decoration: none; border-bottom: 1px solid rgba(39,66,200,0.35); padding-bottom: 1px; }
+  footer a:hover { color: var(--orange); border-color: var(--orange); }
+
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  }
+</style>
+</head>
+<body data-palette="#2742C8,#D9571C">
+<div id="tip" role="status" aria-hidden="true"></div>
+
+<header class="masthead">
+  <div class="wrap row">
+    <span class="mark">AERARIUM<span>·</span>VELL</span>
+    <span class="no">PUBLIC ACCOUNTS OF A CITY THAT FLOATS · FILED FROM 2,300 M</span>
+    <span class="no">FOLIO 312</span>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <p class="kicker">Annual Report · Year 312 of the Ascent</p>
+    <h1>The city held its <em>altitude</em>, its temper, and most of its umbrellas.</h1>
+    <p class="lede">Herein the Treasury of Vell renders its yearly account: where the city stood in the sky, what the clouds paid in rain, who arrived on the winds, and how the barrels were spent. Compiled by the Office of the Aerarium; <b>every figure drawn live, in code, before the reader</b>.</p>
+  </div>
+
+  <section aria-labelledby="s1">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">FIG. 1</span>
+        <h2 id="s1">We drifted up eleven metres, <em>on average, politely.</em></h2>
+        <p class="sec-note">Mean altitude held by the city each month. The March Gale cost us forty metres and one bandstand; the Festival of Lanterns required releasing ballast, as it does every year, over the objections of the Treasurer.</p>
+      </div>
+      <figure class="chart reveal" style="--d:.1s" id="fig-altitude">
+        <figcaption><span>MEAN ALTITUDE BY MONTH</span><span class="unit">METRES ABOVE THE OLD COAST</span></figcaption>
+        <!-- svg injected -->
+        <details class="figures"><summary>Figures, for the auditors</summary><div></div></details>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="s2">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">FIG. 2</span>
+        <h2 id="s2">The year in four numbers.</h2>
+      </div>
+      <div class="tiles" id="tiles"><!-- injected --></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s3">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">FIG. 3</span>
+        <h2 id="s3">The clouds paid <em>1.2 million barrels</em>, mostly in autumn.</h2>
+        <p class="sec-note">Rain harvested from the city's collection sails, by month. Petal area tracks the take; October alone filled a fifth of the cisterns. Values in thousands of barrels; the full ledger is beneath the figure.</p>
+      </div>
+      <figure class="chart radial reveal" style="--d:.1s" id="fig-rain">
+        <figcaption><span>RAIN HARVEST BY MONTH</span><span class="unit">THOUSAND BARRELS</span></figcaption>
+        <details class="figures"><summary>Figures, for the auditors</summary><div></div></details>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="s4">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">FIG. 4</span>
+        <h2 id="s4">Forty-eight thousand birds now <em>outnumber us</em> two to one.</h2>
+        <p class="sec-note">Registered citizens against naturalised birds, by month. The Registry reminds readers that a bird is naturalised the third time it returns; the birds do not acknowledge the Registry.</p>
+      </div>
+      <figure class="chart reveal" style="--d:.1s" id="fig-census">
+        <figcaption><span>CENSUS, MONTHLY</span><span class="unit">THOUSANDS</span></figcaption>
+        <details class="figures"><summary>Figures, for the auditors</summary><div></div></details>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="s5">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">FIG. 5</span>
+        <h2 id="s5">The wind arrived, as usual, <em>from the southwest.</em></h2>
+        <p class="sec-note">Hours of wind by compass bearing. The city is moored nose-to-southwest for this reason; visitors who insist the streets "all lean" are correct, and thanked for their observation.</p>
+      </div>
+      <figure class="chart radial reveal" style="--d:.1s" id="fig-wind">
+        <figcaption><span>WIND HOURS BY BEARING</span><span class="unit">SHARE OF THE YEAR</span></figcaption>
+        <details class="figures"><summary>Figures, for the auditors</summary><div></div></details>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="s6">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="sec-no">FIG. 6</span>
+        <h2 id="s6">Where the barrels went.</h2>
+        <p class="sec-note">Treasury flows for Year 312, in thousands of barrels. Rain tax remains our great income; lightning insurance remains our great regret. Flows are proportional; hover any band for the figure.</p>
+      </div>
+      <figure class="chart reveal" style="--d:.1s" id="fig-flow">
+        <figcaption><span>TREASURY FLOWS</span><span class="unit">THOUSAND BARRELS</span></figcaption>
+        <details class="figures"><summary>Figures, for the auditors</summary><div></div></details>
+      </figure>
+    </div>
+  </section>
+
+  <section class="auditor" aria-label="Auditor's opinion">
+    <div class="wrap">
+      <blockquote>&ldquo;In my opinion the accounts are true, fair, and lighter than air. I note, as every year, that the city keeps no reserve of gravity whatsoever, and, as every year, that it does not seem to need one.&rdquo;</blockquote>
+      <figcaption>— The Auditor General, appointed by the winds</figcaption>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>AERARIUM OF VELL · A FICTIONAL CITY, HONESTLY ACCOUNTED</span>
+    <span>DESIGNED &amp; BUILT IN CODE BY CLAUDE · <a href="/">GALLERY</a> · <a href="/guide/">HOW THIS WAS MADE</a></span>
+  </div>
+</footer>
+
+<script type="module" src="./charts.js"></script>
+</body>
+</html>

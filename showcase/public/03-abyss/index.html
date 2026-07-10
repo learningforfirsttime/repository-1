@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOUNDING — A Descent to 10,935 m</title>
+<meta name="description" content="An oceanographic field log you read by diving: scroll from the sunlit surface to the hadal trench, 10,935 metres down, past everything that glows on the way.">
+<meta name="theme-color" content="#04101E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2304101E'/%3E%3Ccircle cx='32' cy='34' r='19' fill='none' stroke='%238FE3FF' stroke-opacity='.35' stroke-width='2'/%3E%3Ccircle cx='32' cy='34' r='10' fill='none' stroke='%238FE3FF' stroke-opacity='.7' stroke-width='2'/%3E%3Ccircle cx='32' cy='34' r='3' fill='%23FFE3B0'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/sora.css">
+<link rel="stylesheet" href="/fonts/spectral.css">
+<link rel="stylesheet" href="/fonts/jetbrains-mono.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="sea" aria-hidden="true"></canvas>
+<div id="depthlines" aria-hidden="true"></div>
+
+<main id="log">
+
+  <header class="hero" id="surface">
+    <p class="overline mono">R/V CALLIOPE &nbsp;&middot;&nbsp; EXPEDITION 19 &nbsp;&middot;&nbsp; STATION HADAL&#8209;4 &nbsp;&middot;&nbsp; LOG OF DESCENT</p>
+    <h1 class="title">SOUNDING</h1>
+    <p class="lede">A field log of one descent &mdash; surface to trench floor,
+      <span class="num">10,935</span>&nbsp;metres. The log reads downward.
+      The only way out is through.</p>
+    <p class="cue mono" aria-hidden="true">&#9660; scroll to dive</p>
+  </header>
+
+  <section class="zone" id="z-epi" aria-label="Epipelagic zone">
+    <article class="entry">
+      <p class="z-tag mono">ZONE 01 &middot; EPIPELAGIC &middot; 0&ndash;200 m</p>
+      <h2>Where the light still argues</h2>
+      <p class="journal">Day 1 &middot; 06:41. We slipped under on a flat calm, and the
+        light came down with us like a curious animal &mdash; long blades of it swinging
+        through the green, stitching plankton into brief constellations. Everything here
+        is traffic. Copepods rising, carbon falling, a billion small elevators running
+        both directions at once. This bright lobby is the sea&rsquo;s entire economy,
+        and it is thinner, top to bottom, than our morning&rsquo;s sail was long.</p>
+      <aside class="specimen mono">
+        <span class="sp-label">SPECIMEN 19&#8209;A &middot; COPEPOD &middot; <i>Calanus finmarchicus</i></span>
+        A rice-grain crustacean that outweighs, in aggregate, every human being on Earth.
+        Its daily climb to the surface and back is, at scale, a marathon swum before breakfast.
+      </aside>
+    </article>
+  </section>
+
+  <section class="zone" id="z-meso" aria-label="Mesopelagic zone">
+    <article class="entry alt">
+      <p class="z-tag mono">ZONE 02 &middot; MESOPELAGIC &middot; 200&ndash;1,000 m</p>
+      <h2>The last rumor of blue</h2>
+      <p class="journal">Day 1 &middot; 09:12. Blue is the last color to surrender, and at
+        four hundred metres it is less a light than a rumor of one. The fish here have
+        decided a rumor is enough to hide from: mirror flanks, hatchet bellies, eyes
+        grown wide as portholes. Our sonar keeps reporting a seafloor that is not
+        there &mdash; a false bottom of packed small bodies, millions deep, that rises
+        every dusk to graze beneath the stars and sinks again before dawn. The largest
+        migration on Earth runs nightly through this room, and sells no tickets.</p>
+      <aside class="specimen mono">
+        <span class="sp-label">SPECIMEN 19&#8209;F &middot; LANTERNFISH &middot; <i>Myctophum punctatum</i></span>
+        Likely the most numerous vertebrate on the planet. Belly photophores tuned to the
+        exact blue of falling daylight erase its silhouette from below.
+      </aside>
+    </article>
+  </section>
+
+  <section class="zone" id="z-bathy" aria-label="Bathypelagic zone">
+    <article class="entry">
+      <p class="z-tag mono">ZONE 03 &middot; BATHYPELAGIC &middot; 1,000&ndash;4,000 m</p>
+      <h2>Light becomes speech</h2>
+      <p class="journal">Day 2 &middot; the clock stops mattering. Past a thousand metres
+        the sun is a memory the water no longer keeps, and our floodlights feel like
+        shouting in a library. When we cut them, the dark is not empty &mdash; it
+        breathes. Jellies pulse past like slow lungs. Every eddy of our wake wakes an
+        answering ring of blue sparks. We have stopped thinking of light as something
+        to see by. Down here it is grammar: courtship, alarm, ambush, all spoken in
+        the same cold syllable.</p>
+      <aside class="specimen mono">
+        <span class="sp-label">SPECIMEN 19&#8209;K &middot; ATOLLA JELLYFISH &middot; <i>Atolla wyvillei</i></span>
+        When seized, it spins a wheel of running blue light: a scream in photons &mdash;
+        a burglar alarm that invites something larger to eat whatever is eating it.
+      </aside>
+    </article>
+  </section>
+
+  <section class="zone" id="z-abysso" aria-label="Abyssopelagic zone">
+    <article class="entry alt">
+      <p class="z-tag mono">ZONE 04 &middot; ABYSSOPELAGIC &middot; 4,000&ndash;6,000 m</p>
+      <h2>The weather here is snow</h2>
+      <p class="journal">Day 3. The snow never stops. What falls past our windows has
+        been falling for weeks &mdash; shed carapaces, dust of shell, the slow ash of
+        that bright economy four kilometres above. It settles on the widest habitat
+        this planet owns, and the least visited; we hold better maps of the far side
+        of the Moon. Four hundred atmospheres now. The hull ticks as it agrees to the
+        pressure, one rivet at a time. Send a ping, and the water answers with shapes
+        it never volunteers.</p>
+      <aside class="specimen mono">
+        <span class="sp-label">SPECIMEN 19&#8209;P &middot; DUMBO OCTOPUS &middot; <i>Grimpoteuthis</i></span>
+        The deepest-living octopus known. It does not jet; it rows, flying slowly on two
+        ear-like fins, calm at pressures where steel thinks twice.
+      </aside>
+    </article>
+  </section>
+
+  <section class="zone" id="z-hadal" aria-label="Hadal zone">
+    <article class="entry">
+      <p class="z-tag mono">ZONE 05 &middot; HADAL &middot; 6,000&ndash;10,935 m</p>
+      <h2>The floor arrives quietly</h2>
+      <p class="journal">Day 4 &middot; bottom. 10,935 metres. The floor arrives
+        quietly &mdash; a pale ooze older than our species, printed with the tracks of
+        animals no one has named. At the rim of our lights something waits with a
+        lantern of its own, patient as geology, hunting by hospitality. We came down
+        expecting silence and found a language instead. So we do the polite thing.
+        We turn our lights off.</p>
+      <aside class="specimen mono">
+        <span class="sp-label">SPECIMEN 19&#8209;Z &middot; ANGLERFISH &middot; <i>Melanocetus</i></span>
+        Hunts by trust: one bacterial lamp held above a patient mouth. In the trench,
+        hope is a lure.
+      </aside>
+    </article>
+
+    <div class="floor">
+      <svg class="angler" viewBox="0 0 660 380" role="img" aria-label="Line drawing of an anglerfish, its glowing lure swaying">
+        <defs>
+          <radialGradient id="esca-halo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFE3B0" stop-opacity=".85"/>
+            <stop offset="45%" stop-color="#FFD9A0" stop-opacity=".25"/>
+            <stop offset="100%" stop-color="#FFD9A0" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <g class="ang" fill="none" stroke="#A9E4FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <!-- back -->
+          <path d="M124,170 C168,132 250,118 326,124 C404,130 468,160 502,202"/>
+          <!-- caudal fin: forked fan + rays -->
+          <path d="M502,198 C536,166 568,158 588,168 C576,190 576,226 588,248 C568,256 534,246 502,222 Z"/>
+          <path d="M514,202 L566,180 M516,210 L574,207 M514,218 L564,234" stroke-opacity=".5" stroke-width="1.1"/>
+          <!-- belly, meeting the chin -->
+          <path d="M502,222 C458,258 376,272 306,264 C258,258 228,262 214,262"/>
+          <!-- upper jaw -->
+          <path d="M124,170 Q152,194 184,212"/>
+          <!-- lower jaw + chin -->
+          <path d="M184,212 Q142,230 106,234 Q150,262 214,262" />
+          <!-- needle teeth: lower jaw up, upper jaw down -->
+          <path d="M168,219 L175,197 M151,224 L159,198 M136,228 L143,203 M121,232 L127,212" stroke-width="1.3"/>
+          <path d="M138,182 L144,201 M153,193 L160,210 M168,203 L174,216" stroke-width="1.3"/>
+          <!-- eye -->
+          <circle cx="204" cy="176" r="7"/>
+          <circle cx="204" cy="176" r="2.4" fill="#A9E4FF" stroke="none"/>
+          <!-- dorsal fin, seated on the back -->
+          <path d="M371,130 C388,102 424,98 448,118 C444,132 442,142 439,154 C416,146 392,138 371,130 Z" stroke-opacity=".85"/>
+          <path d="M392,124 L398,108 M412,120 L420,106" stroke-opacity=".5" stroke-width="1.1"/>
+          <!-- pectoral fin, rooted on the flank -->
+          <path d="M320,202 Q315,211 320,218" stroke-opacity=".85"/>
+          <path d="M322,206 C344,214 366,218 386,214 M322,210 C344,224 366,228 388,224 M322,214 C342,232 362,238 382,236" stroke-opacity=".6"/>
+          <!-- anal fin -->
+          <path d="M456,246 C462,260 476,262 486,251" stroke-opacity=".6"/>
+          <!-- lateral line -->
+          <path d="M236,196 C300,188 380,192 452,212" stroke-opacity=".35" stroke-dasharray="1 7"/>
+          <!-- the lure -->
+          <g class="lure">
+            <path d="M226,138 C210,96 178,72 142,82"/>
+            <circle class="esca-glow" cx="136" cy="86" r="26" fill="url(#esca-halo)" stroke="none"/>
+            <circle cx="136" cy="86" r="6.5" fill="#FFE3B0" stroke="#FFE3B0"/>
+          </g>
+        </g>
+      </svg>
+
+      <p class="closing">End of log. We were never the first lantern here &mdash;
+        only the newest.</p>
+
+      <button id="ascend" class="mono" type="button">&#9650;&nbsp; ASCEND &mdash; RETURN TO THE LIGHT</button>
+    </div>
+
+    <footer class="colophon">
+      <p class="mono fine">SOUNDING is a fictional expedition journal. Every ray, ring
+        and creature on this page is drawn live in code &mdash; no photographs were
+        taken aboard.</p>
+      <p class="mono fine">Designed &amp; built in code by Claude &nbsp;&middot;&nbsp;
+        <a href="/">Gallery</a> &nbsp;&middot;&nbsp;
+        <a href="/guide/">How this was made</a></p>
+    </footer>
+  </section>
+
+</main>
+
+<aside id="gauge" aria-hidden="true">
+  <div class="g-read mono">
+    <span class="g-depthrow"><span class="g-depth">0</span><span class="g-unit">m</span></span>
+    <span class="g-zonewrap"><span class="g-zone">EPIPELAGIC</span></span>
+    <span class="g-row">PRESS&nbsp;<b class="g-press">1 atm</b></span>
+    <span class="g-row">TEMP&nbsp;<b class="g-temp">21.8&thinsp;&deg;C</b></span>
+    <span class="g-row">CONTACTS&nbsp;<b class="g-contacts">&mdash;</b></span>
+  </div>
+  <div class="g-rail"><i class="g-dot"></i></div>
+</aside>
+
+<button id="pinghint" class="mono" type="button">&#9678;&nbsp; send a ping &mdash; the dark answers</button>
+
+<div id="vignette" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
+
+<script src="app.js" defer></script>
+</body>
+</html>

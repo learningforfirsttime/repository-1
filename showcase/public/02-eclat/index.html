@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ÉCLAT — Parfumeur de Nuit · Fumée Nº 1</title>
+<meta name="description" content="Maison Éclat, parfumeur de nuit. Fumée Nº 1 — a fragrance of cold ember, iris root and black tea, presented in smoke drawn live by code.">
+<meta name="theme-color" content="#0B0B0D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230B0B0D'/%3E%3Cpath d='M27 8h10M29 12l1 5M35 12l-1 5M30 17c0 5-9 6-9 15v18c0 4 2 6 6 6h10c4 0 6-2 6-6V32c0-9-9-10-9-15' fill='none' stroke='%23E9E7E2' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M24 38c3 1.6 13 1.6 16 0' fill='none' stroke='%23E9E7E2' stroke-width='.8' opacity='.6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/italiana.css">
+<link rel="stylesheet" href="/fonts/bodoni-moda.css">
+<link rel="stylesheet" href="/fonts/manrope.css">
+<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><span class="progress-bar" id="progressBar"></span><span class="progress-bead" id="progressBead"></span></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<header class="site-head" id="siteHead">
+  <a class="head-mark" href="#hero">ÉCLAT</a>
+  <nav aria-label="Site">
+    <a class="head-link" href="#accords">Les Accords</a>
+    <a class="head-link" href="#maison">La Maison</a>
+    <a class="head-link" href="#attente">L'Attente</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ················ I · HERO ················ -->
+  <section class="hero" id="hero" aria-label="Éclat — Fumée No. 1">
+    <canvas id="smoke" aria-hidden="true"></canvas>
+
+    <div class="hero-frame">
+      <p class="hero-eyebrow"><span>Maison Éclat</span><i class="dot"></i><span>Paris</span></p>
+
+      <div class="hero-stack">
+        <h1 class="wordmark">ÉCLAT</h1>
+        <p class="hero-sub">Parfumeur de nuit</p>
+      </div>
+
+      <svg id="flacon" viewBox="0 0 300 640" role="img" aria-label="Line drawing of the Fumée No. 1 flacon, its flame-cut stopper suspended above the open neck">
+        <g class="stopper">
+          <path pathLength="1" style="--d:.15s" class="s-main" d="M150 50 C160 66 168 82 168 102 C168 116 160 124 150 124 C140 124 132 116 132 102 C132 82 140 66 150 50 Z"/>
+          <path pathLength="1" style="--d:.55s" class="s-fine" d="M150 54 L150 122"/>
+          <path pathLength="1" style="--d:.65s" class="s-fine" d="M142 66 C139 84 139 104 143 121"/>
+          <path pathLength="1" style="--d:.72s" class="s-fine" d="M158 66 C161 84 161 104 157 121"/>
+          <path pathLength="1" style="--d:.85s" class="s-main" d="M146 124 L146 136 Q150 141 154 136 L154 124"/>
+        </g>
+        <g class="vessel">
+          <path pathLength="1" style="--d:.05s" class="s-main" d="M132 162 H168 V170 H132 Z"/>
+          <path pathLength="1" style="--d:.25s" class="s-main" d="M137 170 L137 200 C137 214 130 222 118 232 C100 244 92 252 92 272 L92 520 C92 536 100 542 116 542 L184 542 C200 542 208 536 208 520 L208 272 C208 252 200 244 182 232 C170 222 163 214 163 200 L163 170"/>
+          <path pathLength="1" style="--d:1.0s" class="s-faint" d="M98 526 C122 534 178 534 202 526"/>
+          <path pathLength="1" style="--d:1.1s" class="s-fine" d="M96 300 C122 308 178 308 204 300"/>
+          <path pathLength="1" style="--d:1.25s" class="s-faint" d="M104 282 C100 342 100 442 104 502"/>
+          <path pathLength="1" style="--d:1.35s" class="s-faint" d="M198 266 C200 286 201 302 201 322"/>
+          <path pathLength="1" style="--d:1.45s" class="s-faint" d="M136 226 C142 220 152 216 160 215"/>
+          <path pathLength="1" style="--d:1.30s" class="s-faint" d="M141 176 L141 200"/>
+        </g>
+        <g class="etching">
+          <path pathLength="1" style="--d:1.6s" class="s-fine" d="M126 362 H174"/>
+          <text x="150" y="400" class="etch-name">FUMÉE</text>
+          <text x="150" y="426" class="etch-no">Nº 1</text>
+          <path pathLength="1" style="--d:1.7s" class="s-fine" d="M126 444 H174"/>
+          <text x="150" y="468" class="etch-city">ÉCLAT · PARIS</text>
+        </g>
+      </svg>
+
+      <p class="hero-poem">What burns in silence<br>perfumes the night.</p>
+
+      <a class="hero-cue" href="#accords"><span class="cue-line" aria-hidden="true"></span><span class="cue-word">Descend</span></a>
+
+      <p class="hero-hint" aria-hidden="true">Move slowly — the smoke notices.</p>
+    </div>
+  </section>
+
+  <!-- ················ II · LES ACCORDS ················ -->
+  <section class="accords" id="accords" aria-labelledby="accords-title">
+    <div class="shell">
+      <p class="eyebrow reveal" style="--i:0"><span class="rule"></span>II · Les Accords<span class="rule"></span></p>
+      <h2 class="section-title reveal" id="accords-title" style="--i:1">Three accords,<br>folded into one smoke</h2>
+      <p class="section-lead reveal" style="--i:2">Fumée Nº 1 is composed to be discovered the way night discovers a room — gradually, and then all at once.</p>
+
+      <div class="accord-grid">
+        <article class="accord reveal" style="--i:1" data-wisp="ember">
+          <div class="accord-window"><canvas aria-hidden="true"></canvas></div>
+          <p class="accord-role">I · Tête</p>
+          <h3 class="accord-name">Braise froide</h3>
+          <p class="accord-sub">cold ember</p>
+          <p class="accord-copy">The strike of a match already gone out. Birch tar and pink pepper lifted from a cold hearth — bright for a single breath, then silver, then memory.</p>
+        </article>
+
+        <article class="accord reveal" style="--i:2" data-wisp="iris">
+          <div class="accord-window"><canvas aria-hidden="true"></canvas></div>
+          <p class="accord-role">II · Cœur</p>
+          <h3 class="accord-name">Racine d'iris</h3>
+          <p class="accord-sub">iris root</p>
+          <p class="accord-copy">Orris butter aged six years in darkness. Powder and suede, the hush of a glove drawn off, the inside of a violin case closed at midnight.</p>
+        </article>
+
+        <article class="accord reveal" style="--i:3" data-wisp="tea">
+          <div class="accord-window"><canvas aria-hidden="true"></canvas></div>
+          <p class="accord-role">III · Fond</p>
+          <h3 class="accord-name">Thé noir</h3>
+          <p class="accord-sub">black tea</p>
+          <p class="accord-copy">Lapsang leaves smoked over pine, worn leather, a drop of dark honey. The last warm thing in the room, and the longest to leave.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ················ III · LA MAISON ················ -->
+  <section class="maison" id="maison" aria-labelledby="maison-title">
+    <div class="shell">
+      <p class="eyebrow reveal" style="--i:0"><span class="rule"></span>III · La Maison<span class="rule"></span></p>
+      <div class="maison-grid">
+        <div class="maison-aside reveal" style="--i:1">
+          <h2 class="section-title small" id="maison-title">The house<br>that works<br>at night</h2>
+          <p class="maison-meta">9<sup>e</sup> arrondissement, Paris<br>Ouvert la nuit — fermé le jour</p>
+        </div>
+        <div class="maison-body">
+          <p class="reveal" style="--i:2">Maison Éclat keeps one atelier, one door, and no daytime hours. Since 1992 we have composed only between dusk and first light, when the streets go quiet and scent behaves differently — closer to the skin, slower to speak, more honest about what it intends to leave behind.</p>
+          <p class="reveal" style="--i:3">We release one fragrance at a time, in editions of nine hundred flacons, and we do not repeat ourselves. Fumée Nº 1 took eleven years. It is not a perfume about fire. It is a perfume about what fire leaves behind — the silver hour after the flame, when a room remembers being warm.</p>
+        </div>
+      </div>
+      <figure class="pull reveal" style="--i:2">
+        <blockquote class="pull-quote">We do not make perfume to&nbsp;be noticed. We make it to&nbsp;be&nbsp;remembered.</blockquote>
+        <figcaption class="pull-cite">Hélène Vaudray — nez de la maison</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ················ IV · LE RITUEL ················ -->
+  <section class="rituel" id="rituel" aria-labelledby="rituel-title">
+    <div class="shell">
+      <p class="eyebrow reveal" style="--i:0"><span class="rule"></span>IV · Le Rituel<span class="rule"></span></p>
+      <h2 class="section-title reveal" id="rituel-title" style="--i:1">How it is worn</h2>
+      <p class="section-lead reveal" style="--i:2">Fumée Nº 1 is worn, not applied. Four instructions, unchanged since the first edition.</p>
+
+      <ol class="steps">
+        <li class="step reveal" style="--i:1">
+          <span class="step-no">01</span>
+          <p class="step-copy">Wait for dusk. Fumée does not open in daylight; its first hour belongs to the evening.</p>
+        </li>
+        <li class="step reveal" style="--i:2">
+          <span class="step-no">02</span>
+          <p class="step-copy">One trace at the throat. One at the wrist you gesture with.</p>
+        </li>
+        <li class="step reveal" style="--i:3">
+          <span class="step-no">03</span>
+          <p class="step-copy">Do not rub. Smoke will not be hurried, and neither should you.</p>
+        </li>
+        <li class="step reveal" style="--i:4">
+          <span class="step-no">04</span>
+          <p class="step-copy">Then leave. The room should spend the rest of the night wondering who you were.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ················ V · L'ATTENTE ················ -->
+  <section class="attente" id="attente" aria-labelledby="attente-title">
+    <div class="shell narrow">
+      <p class="eyebrow reveal" style="--i:0"><span class="rule"></span>V · L'Attente<span class="rule"></span></p>
+      <h2 class="section-title reveal" id="attente-title" style="--i:1">The ledger</h2>
+      <p class="section-lead reveal" style="--i:2">The first edition of Fumée Nº 1 — nine hundred flacons — is spoken for. The second is aging now in the dark of the atelier, and will be ready when it is ready. We keep a ledger, not a queue: leave an address, and when the wax is cool the atelier will write to you. Ink, paper, no&nbsp;urgency.</p>
+
+      <div class="ledger reveal" style="--i:3">
+        <form id="ledgerForm" novalidate>
+          <label class="visually-hidden" for="ledgerEmail">Where may we write to you?</label>
+          <input id="ledgerEmail" name="email" type="email" autocomplete="email" spellcheck="false" placeholder="where may we write to you?">
+          <button type="submit" class="ledger-btn"><span>Ask to be written to</span></button>
+        </form>
+        <p class="ledger-note" id="ledgerNote" aria-live="polite"></p>
+        <div class="ledger-reply" id="ledgerReply" aria-live="polite" hidden>
+          <p class="reply-line">The atelier will write to you.</p>
+          <p class="reply-sub" id="replySub"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="shell">
+    <p class="foot-mark" aria-hidden="true">ÉCLAT</p>
+    <div class="foot-cols">
+      <p class="foot-addr">Maison Éclat<br>9<sup>e</sup> arrondissement, Paris<br>ouvert la nuit</p>
+      <p class="foot-fiction">Éclat is a fiction. Everything on this page — the smoke, the glass, the light — is drawn by code in your browser. Nothing was photographed.</p>
+      <p class="foot-credit">Designed &amp; built in code by Claude<br><a href="/">Gallery</a><span class="sep">·</span><a href="/guide/">How this was made</a></p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIDNIGHT COIN — Basement Arcade, Open After Dark</title>
+<meta name="description" content="MIDNIGHT COIN is a basement arcade beneath Ludlow Street, open only after dark. Six cabinets, one crown, free play on Fridays after midnight. Drop a coin, chase the high score.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230D0518'/%3E%3Ccircle cx='32' cy='32' r='19' fill='none' stroke='%23FFE94A' stroke-width='5'/%3E%3Crect x='29' y='22' width='6' height='20' rx='2' fill='%23FF3DA6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/press-start-2p.css">
+<link rel="stylesheet" href="/fonts/vt323.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ======================= CRT GLASS (overlay stack) ======================= -->
+<div class="crt" aria-hidden="true">
+  <div class="crt-layer crt-scanlines"></div>
+  <div class="crt-layer crt-sweep"></div>
+  <div class="crt-layer crt-grille"></div>
+  <div class="crt-layer crt-noise"></div>
+  <div class="crt-layer crt-vignette"></div>
+  <div class="crt-layer crt-corners"></div>
+  <div class="crt-layer crt-sheen"></div>
+  <div class="crt-layer crt-flicker"></div>
+  <div id="trackband" class="crt-layer"></div>
+</div>
+
+<!-- ======================= HUD ======================= -->
+<header class="hud" id="hud">
+  <span class="hud-cell hud-1up"><span class="hud-label blink-slow">1UP</span> <span id="hud-score">000000</span></span>
+  <span class="hud-cell hud-hi">HI-SCORE <span id="hud-hi">999990</span></span>
+  <button class="hud-cell hud-credits" id="hud-credit-btn" type="button" title="The coin mech. It accepts optimism.">
+    CREDITS <span id="hud-credits">3</span>
+  </button>
+</header>
+
+<main class="page" id="page">
+
+  <!-- ======================= 1 · HERO ======================= -->
+  <section class="hero" id="top" aria-label="Midnight Coin — a basement arcade">
+    <canvas id="grid-canvas" class="hero-grid" aria-hidden="true"></canvas>
+    <div class="hero-fade" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <p class="hero-kicker">EST. 1987 · LUDLOW ST · BASEMENT LEVEL B2</p>
+
+      <h1 class="sign" aria-label="Midnight Coin">
+        <span class="sign-line sign-magenta" aria-hidden="true">
+          <span class="lt" style="--d:.05s">M</span><span class="lt" style="--d:.30s">I</span><span class="lt" style="--d:.10s">D</span><span class="lt" style="--d:.42s">N</span><span class="lt lt-buzz" style="--d:.18s">I</span><span class="lt" style="--d:.55s">G</span><span class="lt" style="--d:.24s">H</span><span class="lt" style="--d:.65s">T</span>
+        </span>
+        <span class="sign-line sign-gold" aria-hidden="true">
+          <span class="lt" style="--d:.78s">C</span><span class="lt" style="--d:.98s">O</span><span class="lt" style="--d:.86s">I</span><span class="lt" style="--d:1.12s">N</span>
+        </span>
+      </h1>
+
+      <p class="hero-tagline">A basement arcade open only after dark.<br>
+      Doors at dusk. High scores at dawn. Sunlight voids all credits.</p>
+
+      <button class="insert-coin" id="insert-coin-hero" type="button">
+        <span class="blink">&#9654; INSERT COIN &#9664;</span>
+        <small>free play · no quarters harmed</small>
+      </button>
+    </div>
+
+    <p class="hero-scroll" aria-hidden="true">&#9660; SCROLL TO CONTINUE &#9660;</p>
+  </section>
+
+  <!-- ======================= 2 · THE FLOOR ======================= -->
+  <section class="section floor" id="floor" aria-labelledby="floor-title">
+    <header class="section-head">
+      <p class="section-eyebrow">&#9664;&#9664; ATTRACT MODE &#9654;&#9654;</p>
+      <h2 class="section-title" id="floor-title">THE FLOOR</h2>
+      <p class="section-sub">Six cabinets. Original boards, original burn-in. Winner stays on.</p>
+    </header>
+
+    <ul class="cab-grid">
+      <li class="cab" data-marquee="starfield">
+        <div class="cab-top"></div>
+        <div class="cab-marquee"><canvas width="120" height="60" aria-hidden="true"></canvas><span class="cab-name">VOID RUNNER</span></div>
+        <div class="cab-screen"><span class="cab-year">© 1984</span><p class="cab-blurb">Outrun the dark. The dark is faster.</p></div>
+        <div class="cab-panel"><span class="cab-stick" aria-hidden="true"></span><span class="cab-btns" aria-hidden="true"><i></i><i></i></span></div>
+        <div class="cab-body"><span class="cab-slot" aria-hidden="true"></span></div>
+      </li>
+      <li class="cab" data-marquee="maze">
+        <div class="cab-top"></div>
+        <div class="cab-marquee"><canvas width="120" height="60" aria-hidden="true"></canvas><span class="cab-name">MAZE FEVER</span></div>
+        <div class="cab-screen"><span class="cab-year">© 1981</span><p class="cab-blurb">Four walls, one exit, zero mercy.</p></div>
+        <div class="cab-panel"><span class="cab-stick" aria-hidden="true"></span><span class="cab-btns" aria-hidden="true"><i></i><i></i></span></div>
+        <div class="cab-body"><span class="cab-slot" aria-hidden="true"></span></div>
+      </li>
+      <li class="cab" data-marquee="paddle">
+        <div class="cab-top"></div>
+        <div class="cab-marquee"><canvas width="120" height="60" aria-hidden="true"></canvas><span class="cab-name">REBOUND</span></div>
+        <div class="cab-screen"><span class="cab-year">© 1977</span><p class="cab-blurb">Two paddles. One grudge.</p></div>
+        <div class="cab-panel"><span class="cab-stick" aria-hidden="true"></span><span class="cab-btns" aria-hidden="true"><i></i><i></i></span></div>
+        <div class="cab-body"><span class="cab-slot" aria-hidden="true"></span></div>
+      </li>
+      <li class="cab" data-marquee="invaders">
+        <div class="cab-top"></div>
+        <div class="cab-marquee"><canvas width="120" height="60" aria-hidden="true"></canvas><span class="cab-name">STATIC SIEGE</span></div>
+        <div class="cab-screen"><span class="cab-year">© 1979</span><p class="cab-blurb">They descend. You don&rsquo;t.</p></div>
+        <div class="cab-panel"><span class="cab-stick" aria-hidden="true"></span><span class="cab-btns" aria-hidden="true"><i></i><i></i></span></div>
+        <div class="cab-body"><span class="cab-slot" aria-hidden="true"></span></div>
+      </li>
+      <li class="cab" data-marquee="racing">
+        <div class="cab-top"></div>
+        <div class="cab-marquee"><canvas width="120" height="60" aria-hidden="true"></canvas><span class="cab-name">NEON DRIFT</span></div>
+        <div class="cab-screen"><span class="cab-year">© 1988</span><p class="cab-blurb">Second place is the first loser.</p></div>
+        <div class="cab-panel"><span class="cab-stick" aria-hidden="true"></span><span class="cab-btns" aria-hidden="true"><i></i><i></i></span></div>
+        <div class="cab-body"><span class="cab-slot" aria-hidden="true"></span></div>
+      </li>
+      <li class="cab" data-marquee="blocks">
+        <div class="cab-top"></div>
+        <div class="cab-marquee"><canvas width="120" height="60" aria-hidden="true"></canvas><span class="cab-name">BLOCKFALL</span></div>
+        <div class="cab-screen"><span class="cab-year">© 1990</span><p class="cab-blurb">Gravity always wins. Make it count.</p></div>
+        <div class="cab-panel"><span class="cab-stick" aria-hidden="true"></span><span class="cab-btns" aria-hidden="true"><i></i><i></i></span></div>
+        <div class="cab-body"><span class="cab-slot" aria-hidden="true"></span></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ======================= 3 · COIN DROP (playable) ======================= -->
+  <section class="section game" id="coin-drop" aria-labelledby="game-title">
+    <header class="section-head">
+      <p class="section-eyebrow">&#9664;&#9664; HOUSE CABINET &#9654;&#9654;</p>
+      <h2 class="section-title" id="game-title">COIN DROP</h2>
+      <p class="section-sub">Our own board, wired straight into the score table below.
+      Aim with your pointer or arrow keys, drop with a click, a tap, or <kbd>SPACE</kbd>.
+      One credit per coin. The pegs hold grudges.</p>
+    </header>
+
+    <div class="game-shell">
+      <div class="game-bezel">
+        <canvas id="game-canvas" tabindex="0" role="application"
+          aria-label="Coin Drop minigame. Move the coin with left and right arrow keys or your pointer, press space or enter to drop it through the pegs into a score slot."></canvas>
+      </div>
+      <div class="game-meta">
+        <p class="game-row"><span>YOUR SCORE</span><b id="game-score">0</b></p>
+        <p class="game-row"><span>COINS LEFT</span><b id="game-coins">3</b></p>
+        <p class="game-row"><span>BEST SLOT</span><b>1000</b></p>
+        <button class="game-refill" id="insert-coin-game" type="button"><span class="blink">INSERT COIN</span> +5</button>
+        <p class="game-hint" id="game-hint">The center slot pays 1000. Nobody hits the center slot on purpose.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= 4 · HIGH SCORES ======================= -->
+  <section class="section scores" id="scores" aria-labelledby="scores-title">
+    <header class="section-head">
+      <p class="section-eyebrow">&#9664;&#9664; HALL OF LEGENDS &#9654;&#9654;</p>
+      <h2 class="section-title" id="scores-title">HIGH SCORES</h2>
+      <p class="section-sub">Reset never. Contested nightly. The crown is not a metaphor.</p>
+    </header>
+
+    <table class="score-table" id="score-table">
+      <thead>
+        <tr><th scope="col">RANK</th><th scope="col">NAME</th><th scope="col" class="ta-r">SCORE</th></tr>
+      </thead>
+      <tbody><!-- rows built by app.js --></tbody>
+    </table>
+    <p class="score-note" id="score-note">&#9650; “YOU” is live — go drop a coin.</p>
+  </section>
+
+  <!-- ======================= 5 · HOUSE RULES ======================= -->
+  <section class="section rules" id="rules" aria-labelledby="rules-title">
+    <header class="section-head">
+      <p class="section-eyebrow">&#9664;&#9664; MIDNIGHT_OS v2.4 &#9654;&#9654;</p>
+      <h2 class="section-title" id="rules-title">HOUSE RULES</h2>
+    </header>
+    <div class="terminal" id="terminal" aria-live="off">
+      <pre id="terminal-out" class="terminal-out"></pre><span class="cursor" id="terminal-cursor" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <!-- ======================= 6 · SERVICE MODE ======================= -->
+  <section class="section service" id="service" aria-labelledby="service-title">
+    <header class="section-head">
+      <p class="section-eyebrow">&#9664;&#9664; OPERATOR ONLY &#9654;&#9654;</p>
+      <h2 class="section-title" id="service-title">SERVICE MODE</h2>
+      <p class="section-sub">Find us. After dark. Cash only, judgment free.</p>
+    </header>
+
+    <div class="service-card">
+      <p class="service-head">*** MIDNIGHT COIN — SERVICE MODE ***</p>
+      <dl class="service-list">
+        <div class="srow"><dt>CABINET ID</dt><span class="lead" aria-hidden="true"></span><dd>MC-113-B2</dd></div>
+        <div class="srow"><dt>LOCATION</dt><span class="lead" aria-hidden="true"></span><dd>113 Ludlow St, basement level B2 — knock twice</dd></div>
+        <div class="srow"><dt>DOORS</dt><span class="lead" aria-hidden="true"></span><dd>Dusk, whenever that feels true</dd></div>
+        <div class="srow"><dt>LAST CALL</dt><span class="lead" aria-hidden="true"></span><dd>Dawn — sunlight voids all credits</dd></div>
+        <div class="srow"><dt>TOKENS</dt><span class="lead" aria-hidden="true"></span><dd>4 per dollar · the change machine judges no one</dd></div>
+        <div class="srow"><dt>COIN MECH</dt><span class="lead" aria-hidden="true"></span><dd class="ok">OK</dd></div>
+        <div class="srow"><dt>MONITOR</dt><span class="lead" aria-hidden="true"></span><dd class="warn">BURN-IN (INTENTIONAL)</dd></div>
+        <div class="srow"><dt>FREEPLAY</dt><span class="lead" aria-hidden="true"></span><dd class="ok">FRIDAYS AFTER MIDNIGHT</dd></div>
+      </dl>
+      <div class="service-exit">
+        <p>EXIT SERVICE MODE?</p>
+        <button type="button" class="svc-btn" data-svc="a">[A] YES</button>
+        <button type="button" class="svc-btn" data-svc="b">[B] YES, LOUDLY</button>
+        <p class="svc-reply" id="svc-reply" role="status"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= FOOTER ======================= -->
+  <footer class="footer">
+    <p class="footer-over">GAME OVER?</p>
+    <p class="footer-continue"><span class="blink">CONTINUE?</span> 9…8…7… (we&rsquo;ll wait — we always wait)</p>
+    <p class="footer-legal">MIDNIGHT COIN © 1987–2026 MIDNIGHT AMUSEMENTS CO. · NO QUARTERS, NO MASTERS</p>
+    <p class="footer-credit">Designed &amp; built in code by Claude · <a href="/">Gallery</a> · <a href="/guide/">How this was made</a></p>
+  </footer>
+
+</main>
+
+<script src="app.js" defer></script>
+</body>
+</html>

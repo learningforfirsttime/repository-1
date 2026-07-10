@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRIND VAR — A Brutalist Variable Typeface · GRIND Type Foundry</title>
+<meta name="description" content="GRIND VAR: one variable typeface, nine hundred weights, every width between a crowbar and a billboard. Official specimen No.001 from GRIND Type Foundry.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230E0E0C'/%3E%3Crect x='6' y='6' width='52' height='52' fill='none' stroke='%23C6F211' stroke-width='4'/%3E%3Ctext x='32' y='47' font-family='Arial, sans-serif' font-size='38' font-weight='900' text-anchor='middle' fill='%23EDEDE6'%3EG%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/archivo.css">
+<link rel="stylesheet" href="/fonts/space-mono.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="masthead" role="banner">
+  <span class="m-left">GRIND<sup>®</sup> TYPE FOUNDRY</span>
+  <span class="m-mid">SPECIMEN №001 — GRIND VAR</span>
+  <span class="m-mid2">CAST IN CODE</span>
+  <span class="m-right">EST. 2026</span>
+</header>
+
+<main>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="top" aria-label="GRIND VAR hero specimen">
+  <div class="hero-readout mono" aria-hidden="true">
+    <span class="ro-cell">AXIS FEED — LIVE</span>
+    <span class="ro-cell ro-val" id="ro-wght">WGHT 0500</span>
+    <span class="ro-cell ro-val" id="ro-wdth">WDTH 093.5</span>
+    <span class="ro-cell ro-note">INTERPOLATING… DO NOT OIL</span>
+  </div>
+
+  <h1 class="hero-word-line">
+    <button class="hero-word" id="hero-word" type="button"
+      aria-label="GRIND — press to run the grind test on the wordmark">GRIND</button>
+  </h1>
+
+  <div class="hero-foot">
+    <p class="hero-tag rv">One typeface. Nine hundred weights. Every width between
+      a crowbar and a billboard. <strong>GRIND&nbsp;VAR</strong> is now loose.</p>
+    <div class="hero-stamp mono" aria-hidden="true">NEW<br>RELEASE<br>→001</div>
+  </div>
+
+  <a class="scroll-cue mono" href="#manifesto">SCROLL TO INSPECT ↓</a>
+</section>
+
+<div class="ticker ticker-acid" aria-hidden="true">
+  <div class="ticker-track">
+    <span>GRIND VAR — 900 WEIGHTS — WIDTHS 62→125 — NO SERIFS, NO SURVIVORS — CAST IN CODE — SPECIMEN №001 — KERNS BY FORCE — HINTS AT NOTHING —&nbsp;</span>
+    <span>GRIND VAR — 900 WEIGHTS — WIDTHS 62→125 — NO SERIFS, NO SURVIVORS — CAST IN CODE — SPECIMEN №001 — KERNS BY FORCE — HINTS AT NOTHING —&nbsp;</span>
+  </div>
+</div>
+
+<!-- ======================= 01 MANIFESTO ======================= -->
+<section class="band band-ink gridlines" id="manifesto" aria-labelledby="mani-h">
+  <div class="folio mono" aria-hidden="true">01</div>
+  <div class="band-inner">
+    <p class="kicker mono">01 — MANIFESTO / READ ALOUD, PREFERABLY SHOUTED</p>
+    <h2 class="mani-head rv" id="mani-h">WE DON'T<br>DRAW TYPE.<br><em>WE MILL IT.</em></h2>
+    <div class="mani-body">
+      <p class="mani-big rv">Most typefaces ask politely for attention. <strong>GRIND VAR</strong> takes it — by the collar, in nine hundred weights.</p>
+      <p class="mani-big rv">Subtlety is a luxury of people with nothing to say. We built one axis for weight, one for width, and threw away the brakes.</p>
+      <p class="mani-big rv">It is licensed for posters, protests, price tags, and the funerals of lesser typefaces. It kerns by force. It hints at nothing.</p>
+      <p class="mani-small mono rv">TECHNICAL NOTE: NO CURVES WERE SOFTENED IN THE MAKING OF THIS FAMILY. COMPLAINTS MAY BE FILED IN 6&nbsp;PT, WHERE WE WILL NOT READ THEM.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 02 AXIS PLAYGROUND ======================= -->
+<section class="band band-paper gridlines" id="playground" aria-labelledby="play-h">
+  <div class="folio folio-ink mono" aria-hidden="true">02</div>
+  <div class="band-inner">
+    <p class="kicker mono">02 — AXIS PLAYGROUND / HEAVY MACHINERY, NO GLOVES REQUIRED</p>
+    <h2 class="sec-head rv" id="play-h">SET THE AXES.<br>FEED IT WORDS.</h2>
+
+    <div class="preview-frame rv">
+      <div class="preview-readout mono" aria-hidden="true">
+        <span id="pr-wght">WGHT 0700</span><span id="pr-wdth">WDTH 100.0</span><span id="pr-inst">INSTANCE: CUSTOM</span>
+      </div>
+      <div class="preview" id="preview" aria-live="off">HAMBURGEFONTS</div>
+    </div>
+
+    <div class="console">
+      <div class="slider-block">
+        <label class="mono s-label" for="ax-wght">WGHT — WEIGHT <output id="out-wght" for="ax-wght">0700</output></label>
+        <input type="range" id="ax-wght" min="100" max="900" step="1" value="700"
+          aria-label="Weight axis, 100 to 900">
+        <div class="s-scale mono" aria-hidden="true"><span>100</span><span>300</span><span>500</span><span>700</span><span>900</span></div>
+      </div>
+      <div class="slider-block">
+        <label class="mono s-label" for="ax-wdth">WDTH — WIDTH <output id="out-wdth" for="ax-wdth">100.0</output></label>
+        <input type="range" id="ax-wdth" min="62" max="125" step="0.5" value="100"
+          aria-label="Width axis, 62 to 125">
+        <div class="s-scale mono" aria-hidden="true"><span>62</span><span>78</span><span>94</span><span>110</span><span>125</span></div>
+      </div>
+      <div class="field-block">
+        <label class="mono s-label" for="preview-text">SPECIMEN TEXT</label>
+        <input type="text" id="preview-text" value="HAMBURGEFONTS" maxlength="26"
+          spellcheck="false" autocomplete="off">
+      </div>
+      <div class="preset-block">
+        <span class="mono s-label" id="preset-label">NAMED INSTANCES</span>
+        <div class="presets" role="group" aria-labelledby="preset-label">
+          <button type="button" class="preset mono" data-wght="100" data-wdth="62">HAIRPIN</button>
+          <button type="button" class="preset mono" data-wght="400" data-wdth="100">CIVILIAN</button>
+          <button type="button" class="preset mono" data-wght="900" data-wdth="62">CRUSHED</button>
+          <button type="button" class="preset mono" data-wght="900" data-wdth="125">BILLBOARD</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 03 PRESSURE TEST ======================= -->
+<section class="band band-ink gridlines" id="pressure" aria-labelledby="press-h">
+  <div class="folio mono" aria-hidden="true">03</div>
+  <div class="band-inner">
+    <p class="kicker mono">03 — PRESSURE TEST / POINT AT THE WORDS. THEY CAN TELL.</p>
+    <h2 class="sec-head rv" id="press-h">WEIGHT IS<br>A RECORD OF FORCE.</h2>
+    <p class="press-note mono rv">DRAG YOUR CURSOR ACROSS THE PARAGRAPH — NEARBY WORDS BEAR THE LOAD. CLICK A WORD TO PUT IT THROUGH THE GRINDER.</p>
+    <p class="pressure-para rv" id="pressure-para">Move across this paragraph and watch the words answer. Weight is not decoration here; it is evidence. Whatever the cursor leans on gets heavy, and everything it ignores relaxes back to hairline. There are no images on this page and there never will be. This is one variable font doing pull-ups, live, at sixty frames a second, until you look away.</p>
+  </div>
+</section>
+
+<!-- ======================= 04 WATERFALL ======================= -->
+<section class="band band-paper gridlines" id="waterfall" aria-labelledby="wf-h">
+  <div class="folio folio-ink mono" aria-hidden="true">04</div>
+  <div class="band-inner">
+    <p class="kicker mono">04 — WATERFALL / 96 PT DOWN TO THE FINE PRINT</p>
+    <h2 class="sec-head rv" id="wf-h">EVERY SIZE<br>PULLS ITS SHIFT.</h2>
+    <div class="wf-rows">
+      <div class="wf-row rv"><span class="wf-label mono">96 PT · WGHT 900 · WDTH 125</span><span class="wf-text" style="font-size:var(--wf-96);font-variation-settings:'wght' 900,'wdth' 125">Pressure is a language.</span></div>
+      <div class="wf-row rv"><span class="wf-label mono">72 PT · WGHT 100 · WDTH 62</span><span class="wf-text" style="font-size:var(--wf-72);font-variation-settings:'wght' 100,'wdth' 62">Whisper it in hairline, condensed.</span></div>
+      <div class="wf-row rv"><span class="wf-label mono">48 PT · WGHT 800 · WDTH 72</span><span class="wf-text" style="font-size:var(--wf-48);font-variation-settings:'wght' 800,'wdth' 72">Shout it crushed, heavy, close to the bone.</span></div>
+      <div class="wf-row rv"><span class="wf-label mono">36 PT · WGHT 300 · WDTH 125</span><span class="wf-text" style="font-size:var(--wf-36);font-variation-settings:'wght' 300,'wdth' 125">Stretch it across the whole street.</span></div>
+      <div class="wf-row rv"><span class="wf-label mono">24 PT · WGHT 600 · WDTH 100</span><span class="wf-text" style="font-size:var(--wf-24);font-variation-settings:'wght' 600,'wdth' 100">Set your invoices in it. They will be paid faster and questioned less.</span></div>
+      <div class="wf-row rv"><span class="wf-label mono">18 PT · WGHT 400 · WDTH 90</span><span class="wf-text" style="font-size:var(--wf-18);font-variation-settings:'wght' 400,'wdth' 90">Set your apologies in it. They will arrive on time and sound thirty percent less sorry.</span></div>
+      <div class="wf-row rv"><span class="wf-label mono">14 PT · WGHT 500 · WDTH 100</span><span class="wf-text" style="font-size:var(--wf-14);font-variation-settings:'wght' 500,'wdth' 100">At fourteen points it still has knuckles: counters stay open, terminals stay square, nothing apologises.</span></div>
+      <div class="wf-row rv"><span class="wf-label mono">12 PT · WGHT 700 · WDTH 62</span><span class="wf-text" style="font-size:var(--wf-12);font-variation-settings:'wght' 700,'wdth' 62">At twelve, it files its taxes — bold, condensed, on time, and it deducts every serif it never had.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker ticker-ink" aria-hidden="true">
+  <div class="ticker-track ticker-rev">
+    <span>EVERY WEIGHT TESTED ON REAL SHOUTING — 60 FPS OR YOUR MONEY BACK — INTERPOLATED, NEVER TRACED — APPROVED FOR POSTERS, PICKETS &amp; PRICE GUNS —&nbsp;</span>
+    <span>EVERY WEIGHT TESTED ON REAL SHOUTING — 60 FPS OR YOUR MONEY BACK — INTERPOLATED, NEVER TRACED — APPROVED FOR POSTERS, PICKETS &amp; PRICE GUNS —&nbsp;</span>
+  </div>
+</div>
+
+<!-- ======================= 05 CHARACTER SET ======================= -->
+<section class="band band-ink gridlines" id="charset" aria-labelledby="chars-h">
+  <div class="folio mono" aria-hidden="true">05</div>
+  <div class="band-inner">
+    <p class="kicker mono">05 — CHARACTER SET / THE THIRTY-SIX THAT MATTER</p>
+    <h2 class="sec-head rv" id="chars-h">GLYPHS,<br>BENCH-TESTED.</h2>
+    <p class="press-note mono rv">HOVER TO FLIP THE WEIGHT. CLICK ANY GLYPH TO RUN THE GRIND TEST — EIGHT SLAMS, ZERO DAMAGE.</p>
+    <div class="cells rv" id="cells" role="group" aria-label="Character set — activate a glyph to run the grind test"></div>
+  </div>
+</section>
+
+<!-- ======================= 06 LICENSING ======================= -->
+<section class="band band-paper gridlines" id="licensing" aria-labelledby="lic-h">
+  <div class="folio folio-ink mono" aria-hidden="true">06</div>
+  <div class="band-inner">
+    <p class="kicker mono">06 — LICENSING / EXACT CHANGE APPRECIATED</p>
+    <h2 class="sec-head rv" id="lic-h">TAKE IT.<br>PAY FOR IT.</h2>
+
+    <div class="tiers">
+      <article class="tier rv">
+        <h3 class="tier-name">DESK<br>PRESS</h3>
+        <p class="tier-price"><span class="mono tier-cur">USD</span> 80</p>
+        <ul class="tier-list mono">
+          <li>2 MACHINES, 1 HUMAN</li>
+          <li>PRINT, POSTERS, PDFS</li>
+          <li>ALL 900 WEIGHTS INCLUDED</li>
+          <li>NO REFUNDS, NO REGRETS</li>
+        </ul>
+        <button type="button" class="tier-btn" data-tier="desk">STAMP LICENSE</button>
+        <p class="tier-reply mono" aria-live="polite"></p>
+      </article>
+
+      <article class="tier tier-hot rv">
+        <p class="tier-flag mono">MOST GROUND</p>
+        <h3 class="tier-name">WEB<br>PRESS</h3>
+        <p class="tier-price"><span class="mono tier-cur">USD</span> 240</p>
+        <ul class="tier-list mono">
+          <li>1 DOMAIN, UNLIMITED VIEWS</li>
+          <li>BOTH AXES, LIVE, IN BROWSER</li>
+          <li>WOFF2 SHIPPED BY FREIGHT</li>
+          <li>SUBSETTING CONSIDERED COWARDICE</li>
+        </ul>
+        <button type="button" class="tier-btn" data-tier="web">EMBED IT</button>
+        <p class="tier-reply mono" aria-live="polite"></p>
+      </article>
+
+      <article class="tier rv">
+        <h3 class="tier-name">TOTAL<br>GRIND</h3>
+        <p class="tier-price"><span class="mono tier-cur">USD</span> 890</p>
+        <ul class="tier-list mono">
+          <li>EVERYTHING, FOREVER</li>
+          <li>APPS, BROADCAST, TATTOOS</li>
+          <li>FUTURE AXES AS THEY ESCAPE</li>
+          <li>A FIRM HANDSHAKE (BY POST)</li>
+        </ul>
+        <button type="button" class="tier-btn" data-tier="total">TAKE EVERYTHING</button>
+        <p class="tier-reply mono" aria-live="polite"></p>
+      </article>
+    </div>
+
+    <p class="lic-fine mono rv">EDUCATION? FREE — STUDENTS GRIND ENOUGH ALREADY. WRITE TO THE FOUNDRY: ONE POSTCARD, BLOCK CAPITALS, NO CURSIVE.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="band band-ink footer" role="contentinfo">
+  <div class="foot-strip" aria-hidden="true">
+    <span style="font-variation-settings:'wght' 100,'wdth' 62">GRIND</span><span
+      style="font-variation-settings:'wght' 300,'wdth' 80">GRIND</span><span
+      style="font-variation-settings:'wght' 500,'wdth' 100">GRIND</span><span
+      style="font-variation-settings:'wght' 700,'wdth' 112">GRIND</span><span
+      style="font-variation-settings:'wght' 900,'wdth' 125">GRIND</span>
+  </div>
+  <div class="band-inner foot-inner">
+    <p class="colophon mono">GRIND® TYPE FOUNDRY — SPECIMEN №001. SET ENTIRELY IN GRIND VAR AND THE HOUSE MONO. NO PHOTOGRAPHS. NO GRADIENTS. NO MERCY.</p>
+    <p class="credit mono">Designed &amp; built in code by Claude — <a href="/">Gallery</a> · <a href="/guide/">How this was made</a></p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How This Was Made — Nine Rooms</title>
+<meta name="description" content="The full method behind Nine Rooms: the zero-asset constraint, the design charter, parallel build agents, the three-pass iteration protocol with screenshot review, and how to reproduce it yourself.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%230C0D10'/%3E%3Cpath d='M14 34V14h12a8 8 0 0 1 0 16h-6' fill='none' stroke='%23E8B87F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/fraunces.css">
+<link rel="stylesheet" href="/fonts/space-grotesk.css">
+<link rel="stylesheet" href="/fonts/jetbrains-mono.css">
+<style>
+  :root {
+    --bg: #0c0d10; --bg2: #121319; --text: #ece9e2; --dim: #8f8d86;
+    --hair: rgba(236,233,226,0.14); --gold: #e8b87f;
+    --ease: cubic-bezier(0.22,1,0.36,1);
+    --disp: "Fraunces", Georgia, serif; --ui: "Space Grotesk", sans-serif; --mono: "JetBrains Mono", monospace;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--ui); font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+  ::selection { background: var(--gold); color: var(--bg); }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .grain { position: fixed; inset: 0; z-index: 70; pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 clamp(22px, 5vw, 56px); }
+  header { padding: clamp(70px, 12vh, 120px) 0 clamp(30px, 5vh, 50px); }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); }
+  h1 { font-family: var(--disp); font-weight: 300; font-variation-settings: "opsz" 144; font-size: clamp(40px, 7vw, 76px); line-height: 1.02; margin-top: 20px; }
+  h1 em { font-style: italic; }
+  .lede { margin-top: 24px; font-size: 17px; color: var(--dim); max-width: 60ch; }
+  .lede b { color: var(--text); font-weight: 400; }
+  .back { display: inline-block; margin-top: 26px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text); text-decoration: none; border: 1px solid var(--hair); padding: 11px 18px; border-radius: 2px; transition: all .4s var(--ease); }
+  .back:hover { border-color: var(--gold); color: var(--gold); }
+
+  section { padding: clamp(34px, 6vh, 60px) 0; border-top: 1px solid var(--hair); }
+  h2 { font-family: var(--disp); font-weight: 380; font-size: clamp(26px, 3.6vw, 38px); margin-bottom: 18px; }
+  h2 em { font-style: italic; }
+  p, li { font-size: 15.5px; color: var(--dim); }
+  p + p { margin-top: 14px; }
+  b, strong { color: var(--text); font-weight: 400; }
+  a { color: var(--gold); }
+  code { font-family: var(--mono); font-size: 0.88em; background: var(--bg2); border: 1px solid var(--hair); border-radius: 3px; padding: 1px 6px; color: var(--text); }
+
+  ol.steps { counter-reset: s; list-style: none; margin-top: 10px; }
+  ol.steps li { counter-increment: s; position: relative; padding: 16px 0 16px 58px; border-bottom: 1px solid var(--hair); }
+  ol.steps li:last-child { border-bottom: 0; }
+  ol.steps li::before { content: "0" counter(s); position: absolute; left: 0; top: 18px; font-family: var(--mono); font-size: 13px; color: var(--gold); letter-spacing: 0.1em; }
+  ol.steps li b { display: block; margin-bottom: 3px; }
+
+  table.rooms { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  table.rooms td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--hair); vertical-align: top; font-size: 14px; color: var(--dim); }
+  table.rooms td:first-child { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text); white-space: nowrap; padding-top: 15px; }
+  table.rooms a { text-decoration: none; border-bottom: 1px solid rgba(232,184,127,0.35); }
+
+  .callout { background: var(--bg2); border: 1px solid var(--hair); border-left: 2px solid var(--gold); border-radius: 4px; padding: 20px 24px; margin-top: 20px; }
+  .callout p { font-size: 14.5px; }
+
+  footer { border-top: 1px solid var(--hair); margin-top: 20px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; padding-top: 26px; padding-bottom: 38px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #6f6d67; }
+  footer a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--hair); padding-bottom: 2px; }
+  footer a:hover { color: var(--gold); border-color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header>
+    <p class="kicker">The Guide</p>
+    <h1>How nine worlds were <em>drawn in code.</em></h1>
+    <p class="lede">This page is the honest making-of. Everything in the <a href="/">gallery</a> — the shaders, the flocks, the rain, the botany, the charts — was designed and built by <b>Claude</b>, working autonomously from a single commission, under one hard rule and one uncompromising process. Here is exactly how, so you can do it too.</p>
+    <a class="back" href="/">← Back to the rooms</a>
+  </header>
+
+  <section>
+    <h2>The one rule: <em>zero assets</em></h2>
+    <p><b>If it appears on screen, code drew it.</b> No photographs, no stock imagery, no AI-image or AI-video pipelines, no downloaded textures, no icon packs, no CDNs, and no runtime network requests of any kind. Each room is plain HTML, CSS, and JavaScript served statically. The permitted binaries: self-hosted font files, and the gallery thumbnails — which are screenshots of the rooms themselves.</p>
+    <p>The rule is not an aesthetic handicap; it is the demonstration. A smoke shader you wrote behaves; a stock video of smoke merely plays. Every room's signature visual is therefore also its signature <em>interaction</em> — the smoke stirs around your pointer, the flock flees your cursor, the fog wipes and re-condenses.</p>
+  </section>
+
+  <section>
+    <h2>The stack, deliberately boring</h2>
+    <p>Static HTML + CSS + vanilla JavaScript per room; no frameworks and no build step. One room (LYRA) imports <code>three.js r160</code> as an ES module, vendored locally. Fonts are Google Fonts fetched <em>once at build time</em> by a small script and self-hosted as <code>woff2</code> under <code>/fonts/</code> — 38 families, zero runtime requests. Serving is any static host; there is a <code>netlify.toml</code> with cache headers in the repository.</p>
+    <p>The interesting engineering lives inside the pages: raw-WebGL fragment shaders (domain-warped fBm for smoke, ink, and light fields), canvas 2D simulations (boids with a spatial hash, rain droplets with lens refraction, zoned ocean life), generative SVG (L-system-style botany from seeded grammars, hand-built charts, stroke-drawn line art), and CSS used as an optical instrument (the arcade's CRT is layered scanlines, chromatic text-shadows, and curved-glass gradients).</p>
+  </section>
+
+  <section>
+    <h2>The process</h2>
+    <ol class="steps">
+      <li><b>A binding charter.</b> One document set the bar for every room: code-drawn visuals only; real, original copy for a fictional brand; a "wow" inside three seconds; one discoverable signature interaction; custom easing; layered atmosphere; a favicon drawn in SVG; and an engineering floor — capped device-pixel-ratio, animation loops that pause offscreen, <code>prefers-reduced-motion</code> honored as a first-class rendering, semantic markup, mobile at 390px with no horizontal scroll.</li>
+      <li><b>An art-direction brief per room.</b> Before any code: the fictional brand, the palette in hex, the exact type pairing, the section rhythm, the signature technique, and the interaction. Nine briefs, no two sharing a palette, typeface set, or core technique.</li>
+      <li><b>Parallel builders, one art director.</b> Several rooms were built by parallel instances of Claude, each handed the charter and one brief; the flagship rooms were built directly. Every room, whoever built it, was screenshot-reviewed and gated centrally before it counted.</li>
+      <li><b>Three iteration passes, with eyes.</b> After a room's first complete draft: screenshot every section at 1440×900 and 390×844 with headless Chromium, actually look at the images, write down the faults, fix them, re-shoot. Pass one hunts composition and hierarchy; pass two deepens color, motion, and richness; pass three is polish — mobile, reduced motion, alignment nits. The bugs this caught ranged from "the nebulae are too faint" to "the droplet trails read as worms" to a crashed constructor that blanked half a page.</li>
+      <li><b>A hard QA gate.</b> Zero console errors; zero non-local requests (asserted with a network listener); a complete, beautiful page under reduced motion; no horizontal scroll at 390px; all links resolving. No room shipped without passing.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>The rooms, technically</h2>
+    <table class="rooms">
+      <tr><td><a href="/01-threshold/">01 THRESHOLD</a></td><td>One full-viewport WebGL shader renders seven light-field "rooms"; scroll drives a damped room index through gamma-correct linear-light dissolves; the pointer bends the field through a lens aperture.</td></tr>
+      <tr><td><a href="/02-eclat/">02 ÉCLAT</a></td><td>Domain-warped fBm smoke in monochrome; a pointer-following field adds a thin-film interference hue term, so color exists only where the visitor moves. The flacon is hand-plotted SVG that draws itself.</td></tr>
+      <tr><td><a href="/03-abyss/">03 SOUNDING</a></td><td>Scroll maps to depth (0 → 10,935 m) through a piecewise color ramp; sea life is zoned and procedural — boid fish, bezier jellyfish, marine snow — with click-sonar that reveals hidden creatures.</td></tr>
+      <tr><td><a href="/04-observatory/">04 LYRA</a></td><td>three.js: 6,000 instanced stars with black-body tints, fBm-shaded nebula billboards, a Catmull-Rom camera spline keyed to the DOM sections, and per-object emission spectra from a seeded PRNG.</td></tr>
+      <tr><td><a href="/05-herbarium/">05 FOLIUM</a></td><td>A generative botany engine grows seven vector species from seeded grammars — tapering stem chains, unfurling organs — plus a propagation plate; the same seed regrows the same plant, leaf for leaf.</td></tr>
+      <tr><td><a href="/08-arcade/">08 MIDNIGHT COIN</a></td><td>A CRT built from CSS optics (scanlines, RGB fringe, curved-glass sheen, rare tracking glitches), six generative attract-mode marquees on tiny canvases, and a playable coin-drop game with 2D physics.</td></tr>
+      <tr><td><a href="/10-murmuration/">10 MURMURA</a></td><td>Two thousand boids with a spatial-hash neighborhood, drawn as ink strokes with motion trails; the exhibit flock settles into target formations sampled from drawn silhouettes.</td></tr>
+      <tr><td><a href="/11-nimbus/">11 NIMBUS</a></td><td>Rain on glass: a dusk city painted twice (sharp and fogged), a wipeable fog mask, condensation that reclaims wiped glass, and slider droplets that refract the city upside-down through little lenses.</td></tr>
+      <tr><td><a href="/13-ledger/">13 AERARIUM</a></td><td>An annual report whose every figure is hand-built SVG — area, radial petals, two-series lines, wind rose, proportional flows — with crosshair tooltips, draw-in choreography, and a colorblind-validated palette.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Do it yourself</h2>
+    <ol class="steps">
+      <li><b>Write the charter first.</b> Constraints are the style. Decide what is banned (assets, lorem ipsum, dead buttons) and what is mandatory (reduced motion, a signature interaction, a favicon) before designing anything.</li>
+      <li><b>Give every piece its own world.</b> One palette, one type pairing, one technique per site — written down before the first line of code. If two pieces could swap stylesheets, they are the same piece.</li>
+      <li><b>Iterate with your eyes, not your hopes.</b> Screenshot the real page, look hard, write the faults down, fix, re-shoot. Three passes minimum. The screenshot always disagrees with your imagination somewhere, and it is always right.</li>
+      <li><b>Treat reduced motion as a rendering, not a removal.</b> A still frame of the shader, the letter already typed, the plant already grown — complete and composed, never blank.</li>
+      <li><b>Gate with a script.</b> Console clean, network silent, 390px unbroken, links resolving. Taste decides what ships; the gate decides what may ask.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>An honest colophon</h2>
+    <p>This collection was commissioned as twenty-five rooms; the commissioner narrowed it to the finished nine mid-flight, and three additional rooms remain half-built in the repository, preserved but unlisted. The build was interrupted twice by usage limits and resumed from disk both times. Nothing here is a template, a theme, or a component library — every room began as an empty file.</p>
+    <div class="callout">
+      <p><b>Credits.</b> Concept, art direction, copywriting, code, iteration, and this guide: Claude (Anthropic), working autonomously — with parallel instances of itself as the build crew. Commissioned by a human with excellent taste in constraints. Every brand in the gallery is fictional.</p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>NINE ROOMS · THE GUIDE</span>
+    <span>DESIGNED &amp; BUILT IN CODE BY CLAUDE · <a href="/">GALLERY</a></span>
+  </div>
+</footer>
+</body>
+</html>

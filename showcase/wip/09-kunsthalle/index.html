@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kunsthalle Nord — Programm 26/27</title>
+<meta name="description" content="Kunsthalle Nord announces its 26/27 season: six exhibitions, four halls, one grid. Swiss typography, a generative poster machine, and a programme worth the tram ride.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23FAFAF7'/%3E%3Ccircle cx='41' cy='25' r='15' fill='%23E2261F'/%3E%3Crect x='11' y='10' width='7' height='44' fill='%23141412'/%3E%3Crect x='24' y='48' width='30' height='6' fill='%23141412'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/inter-tight.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="guides" aria-hidden="true">
+  <i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i>
+  <i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i>
+  <i style="--i:8"></i><i style="--i:9"></i><i style="--i:10"></i><i style="--i:11"></i>
+</div>
+
+<header class="site-head wrap">
+  <a class="wordmark" href="#top" aria-label="Kunsthalle Nord — back to top">
+    <span class="sq" aria-hidden="true"></span>KUNSTHALLE&nbsp;NORD
+  </a>
+  <nav class="site-nav" aria-label="Sections">
+    <a href="#saison">Season</a>
+    <a href="#fokus">In&nbsp;focus</a>
+    <a href="#besuch">Visit</a>
+  </nav>
+  <button class="raster-btn" id="rasterBtn" type="button" aria-pressed="false" title="Toggle grid guides">
+    <span class="raster-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Raster
+  </button>
+</header>
+
+<main id="top">
+
+  <!-- ============ 1 · HERO + POSTER MACHINE ============ -->
+  <section class="hero wrap grid12" id="programm" aria-labelledby="heroTitle">
+    <div class="hero-meta rv" style="--d:0">
+      <span>Season programme</span>
+      <span class="tnum">12.09.2026&nbsp;—&nbsp;27.06.2027</span>
+      <span>Six exhibitions · Four halls</span>
+      <span class="hm-city">Basel, Nordquai&nbsp;12</span>
+    </div>
+
+    <h1 id="heroTitle">
+      <span class="h-line h-line-1 rv" style="--d:1">Programm</span>
+      <span class="h-line h-line-2 rv" style="--d:2">26/27<span class="sq h-sq" aria-hidden="true"></span></span>
+    </h1>
+
+    <figure class="poster-fig rv" style="--d:2">
+      <div class="poster-frame">
+        <svg id="posterHero" class="poster" viewBox="0 0 600 800" role="img"
+             aria-label="Generative Swiss poster composition for the 26/27 season. It rearranges itself into a new balanced layout every few seconds."></svg>
+        <button class="poster-hit" id="posterHit" type="button" aria-label="Generate a new poster composition"></button>
+      </div>
+      <figcaption class="poster-ctl">
+        <button class="regen" id="regenBtn" type="button" aria-label="Generate a new poster composition">
+          <span class="sq" aria-hidden="true"></span>
+        </button>
+        <span class="ctl-label">Regenerate</span>
+        <span class="ctl-seed tnum">Seed <output id="seedOut" for="regenBtn">000000</output></span>
+      </figcaption>
+    </figure>
+
+    <div class="hero-intro rv" style="--d:3">
+      <p class="lede">Kunsthalle Nord has no collection, no storage and no habit. Each season the
+      building is rehung wall by wall — six exhibitions across four halls, September to June,
+      each one a new argument about what an image owes its viewer.</p>
+      <p class="machine-note"><span class="red-word">The poster machine.</span> The season identity
+      is not a picture but a program: circles, bars and one diagonal redraw themselves into a new
+      balanced composition every few seconds, always on the same twelve-column grid as this page.
+      Click the poster — or the red square — to set it yourself.</p>
+    </div>
+  </section>
+
+  <!-- ============ 2 · SEASON LIST ============ -->
+  <section class="saison wrap" id="saison" aria-labelledby="saisonTitle">
+    <div class="sec-head grid12 rv">
+      <span class="sec-nr tnum">02</span>
+      <h2 class="sec-title" id="saisonTitle">Saison<span class="sec-sub">The season</span></h2>
+      <p class="sec-note">Hover an entry — the machine resets the poster in that
+      exhibition’s palette. Dates follow the Swiss habit: day, month, year.</p>
+    </div>
+
+    <div class="saison-grid grid12">
+      <div class="rows rv" id="rows">
+        <div class="row row-head" aria-hidden="true">
+          <span>Nr</span><span>Exhibition</span><span>Artist</span><span>Dates</span><span class="c-hall">Hall</span>
+        </div>
+        <ol class="row-list" id="rowList"></ol>
+        <span class="slide-rule" id="slideRule" aria-hidden="true"></span>
+      </div>
+
+      <aside class="mini rv" aria-label="Poster preview for the highlighted exhibition">
+        <div class="poster-frame mini-frame">
+          <svg id="posterMini" class="poster" viewBox="0 0 600 800" role="img"
+               aria-label="Poster composition for the highlighted exhibition"></svg>
+        </div>
+        <div class="mini-cap">
+          <span class="mini-nr tnum" id="miniNr">26/27</span>
+          <span class="mini-title" id="miniTitle">Season identity</span>
+          <span class="mini-meta tnum" id="miniMeta">Kunsthalle Nord — six variants</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 3 · IN FOCUS ============ -->
+  <section class="fokus wrap" id="fokus" aria-labelledby="fokusTitle">
+    <div class="sec-head grid12 rv">
+      <span class="sec-nr tnum">03</span>
+      <h2 class="sec-title" id="fokusTitle">Im Fokus<span class="sec-sub">Opening the season</span></h2>
+    </div>
+
+    <div class="fokus-grid grid12">
+      <div class="fokus-ed">
+        <p class="fokus-kicker rv tnum">Nº 01 · Halle 1 · 12.09.26 – 23.11.26</p>
+        <h3 class="fokus-name rv">Retina Studies — Mira Vogel</h3>
+        <blockquote class="pull rv">
+          <p>“The eye is not a camera. It is an archive with a&nbsp;temper.”</p>
+          <cite>— Mira Vogel, studio conversation, March 2026</cite>
+        </blockquote>
+        <div class="fokus-body rv">
+          <p>For nine years Vogel has painted in a room without windows. She stares at a lit form
+          until it is switched off, then paints only what the retina holds — the stain, the drift,
+          the slow negotiation between violet and green as the afterimage decays. The forty panels
+          in Halle 1 are hung in the order they were seen, at the exact height of the artist’s eye.</p>
+          <p>We show them in falling light. From opening hour to closing the hall dims by
+          imperceptible degrees, so that the last visitors of the day see the paintings roughly as
+          Vogel first did: barely, and therefore completely.</p>
+        </div>
+        <dl class="fokus-meta rv tnum">
+          <div><dt>Opening</dt><dd>Fri 11.09.26, 18:00 — the artist is present</dd></div>
+          <div><dt>Curator’s tour</dt><dd>Thursdays 18:30, included in admission</dd></div>
+          <div><dt>Catalogue</dt><dd>128 pp., Kunsthalle Nord Editions, CHF 38</dd></div>
+        </dl>
+      </div>
+
+      <aside class="fokus-detail rv" aria-label="Generative afterimage study">
+        <div class="study-frame">
+          <svg id="studySvg" viewBox="0 0 480 480" role="img"
+               aria-label="Generative afterimage plot: concentric arcs and tick marks drawn from a seed"></svg>
+        </div>
+        <div class="study-ctl">
+          <button class="regen" id="studyBtn" type="button" aria-label="Draw a new afterimage study">
+            <span class="sq" aria-hidden="true"></span>
+          </button>
+          <span class="ctl-label">New study</span>
+          <span class="ctl-seed tnum">Plot <output id="studyOut" for="studyBtn">017</output></span>
+        </div>
+        <p class="study-note">Afterimage plot, drawn in code from the exhibition’s seed —
+        one of 999 possible studies, none of them repeated on the wall.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ 4 · VISIT ============ -->
+  <section class="besuch wrap" id="besuch" aria-labelledby="besuchTitle">
+    <div class="sec-head grid12 rv">
+      <span class="sec-nr tnum">04</span>
+      <h2 class="sec-title" id="besuchTitle">Besuch<span class="sec-sub">Plan your visit</span></h2>
+    </div>
+
+    <div class="besuch-grid grid12">
+      <div class="v-col rv" style="--d:0">
+        <h3 class="v-h">Hours</h3>
+        <dl class="v-table tnum">
+          <div><dt>Monday</dt><dd>closed</dd></div>
+          <div><dt>Tue – Wed</dt><dd>10:00 – 18:00</dd></div>
+          <div><dt>Thursday</dt><dd>10:00 – 21:00</dd></div>
+          <div><dt>Friday</dt><dd>10:00 – 18:00</dd></div>
+          <div><dt>Sat – Sun</dt><dd>10:00 – 19:00</dd></div>
+        </dl>
+        <p class="v-note">Thursday evenings 18:00 – 21:00 admission is free.
+        The building empties slowly; we like it that way.</p>
+      </div>
+
+      <div class="v-col rv" style="--d:1">
+        <h3 class="v-h">Admission</h3>
+        <dl class="v-table tnum">
+          <div><dt>Adults</dt><dd>CHF 14</dd></div>
+          <div><dt>Reduced</dt><dd>CHF 9</dd></div>
+          <div><dt>Under 26</dt><dd>CHF 6</dd></div>
+          <div><dt>Under 16</dt><dd>free</dd></div>
+          <div><dt>Season pass</dt><dd>CHF 90</dd></div>
+        </dl>
+        <button class="booklet-btn" id="bookletBtn" type="button">
+          <span class="sq" aria-hidden="true"></span>Printed programme (PDF)
+        </button>
+        <p class="v-note booklet-note" id="bookletNote" aria-live="polite"></p>
+      </div>
+
+      <div class="v-plan rv" style="--d:2">
+        <h3 class="v-h">Plan — ground floor</h3>
+        <svg id="planSvg" viewBox="0 0 640 420" role="img"
+             aria-label="Floor plan of Kunsthalle Nord: four numbered halls around a foyer, entrance from Nordquai, a red dot marks your position at the front desk.">
+          <!-- outer walls, entrance gap at bottom left -->
+          <path class="pl-wall" d="M220 396 H612 V24 H28 V396 H140" />
+          <!-- interior walls -->
+          <path class="pl-wall" d="M352 24 V150 M352 190 V396" />
+          <path class="pl-wall" d="M352 208 H480 M520 208 H612" />
+          <path class="pl-wall" d="M28 300 H120 M160 300 H352" />
+          <path class="pl-wall" d="M232 300 V396" />
+          <!-- hall numerals -->
+          <text class="pl-nr" id="plnr-1" x="182" y="176">1</text>
+          <text class="pl-nr" id="plnr-2" x="478" y="128">2</text>
+          <text class="pl-nr" id="plnr-3" x="478" y="316">3</text>
+          <text class="pl-nr" id="plnr-4" x="288" y="360">4</text>
+          <!-- labels -->
+          <text class="pl-label" x="44" y="330">Foyer / Kasse</text>
+          <text class="pl-label" x="44" y="346">Buchhandlung</text>
+          <text class="pl-label" x="140" y="414">Entrance — Nordquai</text>
+          <!-- you are here -->
+          <circle class="pl-dot" cx="180" cy="356" r="6"/>
+          <text class="pl-you" x="112" y="378">You are here</text>
+          <!-- hover targets -->
+          <rect class="pl-hit" data-hall="1" x="30" y="26" width="320" height="272"><title>Halle 1</title></rect>
+          <rect class="pl-hit" data-hall="2" x="354" y="26" width="256" height="180"><title>Halle 2</title></rect>
+          <rect class="pl-hit" data-hall="3" x="354" y="210" width="256" height="184"><title>Halle 3</title></rect>
+          <rect class="pl-hit" data-hall="4" x="234" y="302" width="116" height="92"><title>Halle 4</title></rect>
+        </svg>
+        <p class="plan-status tnum" id="planStatus" aria-live="polite">Point at a hall to see what’s on.</p>
+        <p class="v-note">Tram 8 or 11 to «Nordquai», two stops from the station.
+        All halls step-free; the quiet hour is Tuesday before noon.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ 5 · FOOTER ============ -->
+<footer class="site-foot">
+  <div class="wrap grid12 foot-grid">
+    <div class="f-brand">
+      <span class="wordmark f-mark"><span class="sq" aria-hidden="true"></span>KUNSTHALLE&nbsp;NORD</span>
+      <p class="f-line">Programm 26/27 — six exhibitions, four halls, one grid.</p>
+    </div>
+    <address class="f-col tnum">
+      Nordquai 12<br>4058 Basel<br>Switzerland
+    </address>
+    <div class="f-col tnum">
+      +41 61 201 26 27<br>
+      <a href="#top" class="f-link">post@kunsthalle-nord.ch</a><br>
+      <a href="#saison" class="f-link">Season 26/27</a>
+    </div>
+    <div class="f-credit">
+      <p>Designed &amp; built in code by Claude</p>
+      <p class="f-links"><a class="f-link" href="/">Gallery</a> · <a class="f-link" href="/guide/">How this was made</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

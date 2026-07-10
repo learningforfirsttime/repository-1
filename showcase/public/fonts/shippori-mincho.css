@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'Shippori Mincho';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/files/6645e82015a3) format('woff2');
+  unicode-range: U+4e00, U+4f1a, U+4f98, U+5149, U+51ac, U+548c, U+590f, U+5b63, U+5ba4, U+5bc2, U+5ead, U+5f71, U+656c, U+6625, U+6708, U+671f, U+6c34, U+6e05, U+77f3, U+79cb, U+7bc0, U+82b1, U+8336, U+9053, U+9593, U+96ea, U+9759, U+98a8, U+9999;
+}
+@font-face {
+  font-family: 'Shippori Mincho';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/fonts/files/56229fd10c4a) format('woff2');
+  unicode-range: U+4e00, U+4f1a, U+4f98, U+5149, U+51ac, U+548c, U+590f, U+5b63, U+5ba4, U+5bc2, U+5ead, U+5f71, U+656c, U+6625, U+6708, U+671f, U+6c34, U+6e05, U+77f3, U+79cb, U+7bc0, U+82b1, U+8336, U+9053, U+9593, U+96ea, U+9759, U+98a8, U+9999;
+}

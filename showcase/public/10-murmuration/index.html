@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MURMURA — A Gallery of Living Sculptures</title>
+<meta name="description" content="A gallery whose only medium is behavior: two thousand autonomous agents flock, scatter, and settle into sculpture. Drawn live in canvas — no video, no images, only rules.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='10' fill='%23ECEAE3'/%3E%3Cg fill='%231B1B1E'%3E%3Cellipse cx='16' cy='22' rx='2.2' ry='1' transform='rotate(-20 16 22)'/%3E%3Cellipse cx='26' cy='17' rx='2.2' ry='1' transform='rotate(-8 26 17)'/%3E%3Cellipse cx='33' cy='24' rx='2.2' ry='1' transform='rotate(14 33 24)'/%3E%3Cellipse cx='22' cy='29' rx='2.2' ry='1' transform='rotate(6 22 29)'/%3E%3Cellipse cx='30' cy='33' rx='2.2' ry='1' transform='rotate(-16 30 33)'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/fonts/fraunces.css">
+<link rel="stylesheet" href="/fonts/ibm-plex-mono.css">
+<style>
+  :root {
+    --wall: #eceae3;
+    --wall-2: #e3e0d6;
+    --ink: #1b1b1e;
+    --soft: #6c6a63;
+    --copper: #b4592a;
+    --hairline: rgba(27, 27, 30, 0.22);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --disp: "Fraunces", Georgia, serif;
+    --mono: "IBM Plex Mono", monospace;
+  }
+  * { margin: 0; box-sizing: border-box; }
+  body {
+    background: var(--wall);
+    color: var(--ink);
+    font-family: var(--disp);
+    font-weight: 340;
+    font-variation-settings: "opsz" 18;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--ink); color: var(--wall); }
+  :focus-visible { outline: 2px solid var(--copper); outline-offset: 3px; }
+
+  .grain {
+    position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  .mono { font-family: var(--mono); }
+
+  /* ——— hero ——— */
+  .hero { position: relative; min-height: 100svh; overflow: hidden; }
+  #flock {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+    background: radial-gradient(120% 90% at 50% 8%, #f2f0ea 0%, var(--wall) 55%, var(--wall-2) 100%);
+  }
+  .hero-copy {
+    position: relative; z-index: 5; min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: clamp(20px, 3vw, 40px) clamp(20px, 4vw, 56px);
+    pointer-events: none;
+  }
+  .hero-top { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 11px; letter-spacing: 0.22em; color: var(--soft); }
+  .hero-top .mark { color: var(--ink); font-weight: 600; }
+  .hero-mid { text-align: center; }
+  .hero-mid h1 {
+    font-size: clamp(58px, 11vw, 150px);
+    font-weight: 300; font-style: italic;
+    font-variation-settings: "opsz" 144;
+    letter-spacing: 0.02em; line-height: 0.95;
+  }
+  .hero-mid .tag { margin-top: 20px; font-size: clamp(16px, 1.6vw, 20px); color: var(--soft); font-style: italic; }
+  .hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em; color: var(--soft); }
+  .hero-bottom .hint { text-transform: uppercase; }
+  .hero-bottom .hint b { color: var(--copper); font-weight: 600; }
+
+  /* ——— shared section chrome ——— */
+  section { padding: clamp(70px, 11vh, 130px) clamp(20px, 4vw, 56px); }
+  .measure { max-width: 1140px; margin: 0 auto; }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase; color: var(--copper); }
+  h2 { font-size: clamp(34px, 4.6vw, 58px); font-weight: 320; line-height: 1.08; margin-top: 18px; font-variation-settings: "opsz" 100; }
+  h2 em { font-style: italic; font-weight: 380; }
+  .rule { height: 1px; background: linear-gradient(to right, var(--hairline), transparent); margin-top: 34px; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ——— exhibit ——— */
+  .exhibit-frame {
+    margin-top: 44px;
+    border: 1px solid var(--hairline);
+    background: linear-gradient(180deg, #f4f2ec, #edebe4);
+    box-shadow: 0 30px 70px -46px rgba(27,27,30,0.55), 0 1px 0 #fff inset;
+    padding: clamp(10px, 1.6vw, 22px);
+  }
+  #exhibit { width: 100%; height: min(66vh, 640px); display: block; cursor: pointer; }
+  .plaque {
+    display: flex; flex-wrap: wrap; gap: 18px 40px; justify-content: space-between; align-items: baseline;
+    margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--hairline);
+  }
+  .plaque .title { font-size: 22px; font-style: italic; }
+  .plaque .meta { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; color: var(--soft); text-transform: uppercase; }
+  .plaque button {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    background: none; border: 1px solid var(--hairline); color: var(--ink);
+    padding: 10px 18px; cursor: pointer; transition: all 0.4s var(--ease);
+  }
+  .plaque button:hover { border-color: var(--copper); color: var(--copper); }
+
+  /* ——— rules of the flock ——— */
+  .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: clamp(24px, 3vw, 44px); margin-top: 48px; }
+  .rule-card { border-top: 2px solid var(--ink); padding-top: 20px; }
+  .rule-card canvas { width: 100%; height: 150px; display: block; background: #f2f0ea; border: 1px solid var(--hairline); }
+  .rule-card h3 { font-size: 21px; font-style: italic; font-weight: 380; margin: 16px 0 8px; }
+  .rule-card .n { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; color: var(--copper); }
+  .rule-card p { font-size: 14.5px; color: var(--soft); }
+
+  /* ——— keeper's note ——— */
+  .note { background: var(--ink); color: #efeee8; }
+  .note blockquote { font-size: clamp(24px, 3.4vw, 40px); font-weight: 300; font-style: italic; line-height: 1.35; max-width: 26ch; }
+  .note figcaption { margin-top: 26px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.26em; text-transform: uppercase; color: #9a988f; }
+  .note .measure { display: flex; flex-direction: column; align-items: center; text-align: center; }
+
+  /* ——— visit ——— */
+  .visit .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; margin-top: 40px; }
+  .visit h3 { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.3em; text-transform: uppercase; color: var(--copper); margin-bottom: 12px; }
+  .visit p { font-size: 15px; color: var(--soft); }
+  .visit p b { color: var(--ink); font-weight: 500; }
+
+  footer {
+    border-top: 1px solid var(--hairline);
+    padding: 26px clamp(20px, 4vw, 56px) 36px;
+    display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; color: var(--soft);
+  }
+  footer a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--hairline); transition: all 0.35s var(--ease); }
+  footer a:hover { color: var(--copper); border-color: var(--copper); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  }
+  @media (max-width: 700px) {
+    .hero-top span:nth-child(2) { display: none; }
+    #exhibit { height: 54vh; }
+  }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="hero" id="top">
+  <canvas id="flock" aria-hidden="true"></canvas>
+  <div class="hero-copy">
+    <div class="hero-top">
+      <span class="mark">MURMURA</span>
+      <span>KINETIC WING · HALL B</span>
+      <span>EST. MMXXVI</span>
+    </div>
+    <div class="hero-mid">
+      <h1>a gallery of<br>living sculptures</h1>
+      <p class="tag">Two thousand autonomous agents. No footage. Only rules.</p>
+    </div>
+    <div class="hero-bottom">
+      <span class="hint">Your cursor is a <b>falcon</b> — move it through the flock</span>
+      <span>SCROLL FOR THE ROOMS ↓</span>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section aria-labelledby="room-h">
+    <div class="measure">
+      <div class="reveal">
+        <p class="kicker">Room I · Behavior as Medium</p>
+        <h2 id="room-h">The flock takes <em>whatever shape</em><br>you have patience for.</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="exhibit-frame reveal" style="--d:.15s">
+        <canvas id="exhibit" aria-label="Interactive flocking sculpture. Click or use the next-formation button to change its shape."></canvas>
+        <div class="plaque">
+          <div>
+            <p class="title" id="pl-title">Murmuration No. 1 (free)</p>
+            <p class="meta" id="pl-meta">2,000 AGENTS · SEPARATION, ALIGNMENT, COHESION · CONTINUOUS</p>
+          </div>
+          <button id="next-form" type="button">Next formation →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="rules-h">
+    <div class="measure">
+      <div class="reveal">
+        <p class="kicker">Catalogue Note</p>
+        <h2 id="rules-h">Three rules, no conductor.</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="rules-grid">
+        <div class="rule-card reveal" style="--d:.05s">
+          <p class="n">RULE 01</p>
+          <canvas data-demo="separation" aria-hidden="true"></canvas>
+          <h3>Separation</h3>
+          <p>Keep a wing's width from your neighbor. Every collision the flock never has is decided here, a dozen times a second, by no one in particular.</p>
+        </div>
+        <div class="rule-card reveal" style="--d:.15s">
+          <p class="n">RULE 02</p>
+          <canvas data-demo="alignment" aria-hidden="true"></canvas>
+          <h3>Alignment</h3>
+          <p>Fly roughly the way your neighbors fly. Consensus, it turns out, is not agreement — it is an average taken quickly and revised without grief.</p>
+        </div>
+        <div class="rule-card reveal" style="--d:.25s">
+          <p class="n">RULE 03</p>
+          <canvas data-demo="cohesion" aria-hidden="true"></canvas>
+          <h3>Cohesion</h3>
+          <p>Drift toward the middle of those you can see. The flock has no center; there is only everyone's guess at one, which amounts to the same thing.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="note">
+    <figure class="measure">
+      <blockquote>&ldquo;We do not train the birds. We write three sentences and hang the consequences on the wall.&rdquo;</blockquote>
+      <figcaption>— The Keeper of Hall B</figcaption>
+    </figure>
+  </section>
+
+  <section class="visit" aria-labelledby="visit-h">
+    <div class="measure">
+      <div class="reveal">
+        <p class="kicker">Visit</p>
+        <h2 id="visit-h">The gallery never closes;<br>the flock never repeats.</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="cols reveal" style="--d:.1s">
+        <div>
+          <h3>Hours</h3>
+          <p><b>Continuous.</b> The agents do not sleep, though between 3 and 4 in the morning they fly noticeably slower. We have chosen not to investigate.</p>
+        </div>
+        <div>
+          <h3>Admission</h3>
+          <p><b>Free, forever.</b> The only ticket is attention. Guided disturbances (you, moving your cursor with intent) are permitted and encouraged.</p>
+        </div>
+        <div>
+          <h3>Provenance</h3>
+          <p><b>Boids, 1986 lineage.</b> This flock descends from three rules published before most of its visitors were born. It has never seen a photograph of a bird.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>MURMURA · A FICTIONAL GALLERY, GENUINELY ALIVE</span>
+  <span>DESIGNED &amp; BUILT IN CODE BY CLAUDE · <a href="/">GALLERY</a> · <a href="/guide/">HOW THIS WAS MADE</a></span>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

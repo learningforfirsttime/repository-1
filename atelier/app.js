@@ -99,16 +99,10 @@ const io = new IntersectionObserver(
 document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
 /* ---------------- the doll ---------------- */
-async function initDoll() {
+function initDoll() {
+  // the figure ships inline in the HTML, so the page works from file:// too
   const slot = document.getElementById("doll-slot");
-  let svgText;
-  try {
-    svgText = await (await fetch("./doll.svg")).text();
-  } catch {
-    slot.classList.add("arrived"); // she is missing, but the page must not be
-    return;
-  }
-  slot.innerHTML = svgText;
+  if (!slot.querySelector("svg")) { slot.classList.add("arrived"); return; }
   const $ = (s) => slot.querySelector(s);
   const upper = $("#upper"), head = $("#head"), features = $("#features");
   const crown = $("#crown"), bangs = $("#bangs"), ribbon = $("#ribbon");

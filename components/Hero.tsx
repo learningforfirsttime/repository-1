@@ -1,121 +1,139 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
-import InkVeil from "./InkVeil";
-import Motes from "./Motes";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import TypeLine from "./effects/TypeLine";
 
-/** The headline settles onto the page one glyph at a time, like ink drying. */
-function InkTitle({ text, startDelay = 0 }: { text: string; startDelay?: number }) {
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const t = window.setTimeout(() => setOn(true), 60);
-    return () => window.clearTimeout(t);
-  }, []);
+/**
+ * The hero: the atelier at night, with the doll standing in it.
+ *
+ * One hero-grade moment, composed of two halves that belong together — the
+ * shader field is the room's air, and she is the person in the room. Her
+ * greeting types itself beside her; the headline lands once she has spoken.
+ * Scrolling the first screen bows her.
+ *
+ * Both heavy pieces are mounted with ssr: false and have their space reserved
+ * in the layout, so nothing shifts when they arrive.
+ */
 
-  const words = text.split(" ");
-  let i = 0;
-  return (
-    <span className={on ? "is-in" : ""} aria-label={text} role="text">
-      {words.map((word, wi) => (
-        <span key={wi} className="inline-block whitespace-nowrap" aria-hidden="true">
-          {Array.from(word).map((ch, ci) => {
-            const delay = startDelay + i++ * 0.045;
-            return (
-              <span
-                key={ci}
-                className="glyph"
-                style={{ "--glyph-delay": `${delay}s` } as CSSProperties}
-              >
-                {ch}
-              </span>
-            );
-          })}
-          {wi < words.length - 1 ? " " : ""}
-        </span>
-      ))}
-    </span>
-  );
-}
-
-function Rise({
-  children,
-  delay,
-  className = "",
-}: {
-  children: React.ReactNode;
-  delay: number;
-  className?: string;
-}) {
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const t = window.setTimeout(() => setOn(true), 60);
-    return () => window.clearTimeout(t);
-  }, []);
-  return (
+const ShaderField = dynamic(() => import("./effects/ShaderField"), {
+  ssr: false,
+  loading: () => (
     <div
-      className={`reveal ${on ? "is-in" : ""} ${className}`}
-      style={{ "--reveal-delay": `${delay}s` } as CSSProperties}
-    >
-      {children}
-    </div>
-  );
-}
+      aria-hidden="true"
+      className="absolute inset-0"
+      style={{
+        background:
+          "radial-gradient(128% 96% at 62% 4%, #1b2540 0%, #121a30 46%, #0e1526 78%)",
+      }}
+    />
+  ),
+});
+
+const Doll = dynamic(() => import("./effects/Doll"), {
+  ssr: false,
+  loading: () => <div aria-hidden="true" className="h-full w-full" />,
+});
+
+const GREETING = [
+  "Good evening. I am Wren — your Auto Memory Doll.",
+];
 
 export default function Hero() {
   return (
-    <section id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden">
-      <InkVeil />
-      <Motes />
-      <div className="hero-fade pointer-events-none absolute inset-0" />
+    <section
+      id="hero"
+      className="relative min-h-[190svh] md:min-h-[215svh]"
+      aria-labelledby="hero-heading"
+    >
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <ShaderField />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-content flex-1 flex-col items-center justify-center px-6 pb-24 pt-32 text-center md:px-10">
-        <Rise delay={0.2}>
-          <p className="kicker">An Auto Memory Doll · At Your Service</p>
-        </Rise>
+        {/* the room's floor shadow, so she is standing on something */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-midnight to-transparent"
+        />
 
-        <Rise delay={0.55} className="mt-8 max-w-2xl">
-          <p className="font-display text-lg italic leading-relaxed text-faded md:text-xl">
-            “Good evening — I am <span className="text-gold-bright">Liselle</span>,
-            your Auto&nbsp;Memory&nbsp;Doll. If something has waited too long to be
-            said, you may leave it with me.”
-          </p>
-        </Rise>
+        <div className="relative mx-auto grid h-full max-w-content grid-rows-[auto_minmax(0,1fr)] items-center gap-2 px-5 pb-8 pt-24 md:px-10 lg:pb-0 lg:pt-0 lg:grid-cols-[1.06fr_0.94fr] lg:grid-rows-1 lg:gap-10">
+          {/* — her voice, and the headline — */}
+          <div className="relative z-10 lg:pb-[6vh]">
+            <p className="kicker">A letter-writing atelier · open after dark</p>
 
-        <h1 className="text-balance mt-10 max-w-4xl font-display text-5xl font-light leading-[1.08] text-cream md:text-7xl">
-          <InkTitle text="For the words you never" startDelay={1.1} />
-          <br />
-          <em className="font-normal italic text-gold-bright">
-            <InkTitle text="managed to say." startDelay={2.2} />
-          </em>
-        </h1>
+            <TypeLine
+              lines={GREETING}
+              className="mt-6"
+              lineClassName="voice text-[1.0625rem] leading-relaxed sm:text-xl"
+              startDelay={400}
+              speed={22}
+            />
 
-        <Rise delay={2.9} className="mt-10 max-w-xl">
-          <p className="prose-quiet text-balance">
-            A brief, gentle conversation. She listens for what you truly mean —
-            then writes it in your voice, only steadier. Everything stays on your
-            machine; your words never leave it.
-          </p>
-        </Rise>
+            <h1
+              id="hero-heading"
+              className="display-xl mt-7 max-w-[13ch] text-moonpaper"
+            >
+              <span className="hero-word" style={{ animationDelay: "2.4s" }}>
+                For the words
+              </span>{" "}
+              <span className="hero-word" style={{ animationDelay: "2.56s" }}>
+                you never
+              </span>{" "}
+              <span
+                className="hero-word italic text-candlelight"
+                style={{ animationDelay: "2.72s" }}
+              >
+                managed to say.
+              </span>
+            </h1>
 
-        <Rise delay={3.3} className="mt-12 flex flex-wrap items-center justify-center gap-5">
-          <a href="#begin" className="btn btn-gold">
-            Begin a session
-          </a>
-          <a href="#specimen" className="btn btn-ghost">
-            Read a specimen
-          </a>
-        </Rise>
-      </div>
+            <div
+              className="hero-late mt-9 flex flex-wrap items-center gap-x-7 gap-y-4"
+              style={{ animationDelay: "3.1s" }}
+            >
+              <Link href="/services" className="btn-foil">
+                Meet the letters
+              </Link>
+              <Link href="/begin" className="btn-quiet">
+                Request a letter
+              </Link>
+            </div>
 
-      <div className="relative z-10 flex justify-center pb-10">
-        <a
-          href="#doll"
-          aria-label="Scroll to learn what an Auto Memory Doll does"
-          className="flex flex-col items-center gap-3 opacity-80 transition-opacity duration-500 hover:opacity-100"
-        >
-          <span className="kicker !tracking-[0.5em]">Listen</span>
-          <span className="scroll-cue" />
-        </a>
+            {/* the cue belongs with the copy, where the eye already is —
+                under the doll it was sitting in dead space at the fold */}
+            <p
+              className="hero-late mt-14 hidden items-center gap-3 font-mono text-[0.625rem] uppercase tracking-[0.28em] text-brass/80 lg:flex"
+              style={{ animationDelay: "3.6s" }}
+            >
+              <span aria-hidden="true" className="text-candlelight">
+                ↓
+              </span>
+              Scroll — she will greet you properly
+            </p>
+          </div>
+
+          {/* — the doll —
+              She fills the row the grid leaves her rather than claiming a
+              fixed height: at 375px the copy is tall, and a fixed height sent
+              her up into the buttons. */}
+          <div className="relative flex h-full min-h-0 items-start justify-center self-stretch overflow-hidden lg:items-end lg:justify-end lg:overflow-visible">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-[6%] left-1/2 h-[62%] w-[86%] -translate-x-1/2 rounded-full lg:left-[56%]"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(232,177,92,0.13), rgba(124,134,216,0.06) 52%, transparent 72%)",
+              }}
+            />
+            {/* On a phone she is close: drawn large and cropped at the hem,
+                rather than standing across the room at figurine scale. */}
+            <div className="relative w-[74%] max-w-[270px] sm:w-[58%] sm:max-w-[320px] lg:h-[82vh] lg:max-h-[760px] lg:w-auto lg:max-w-none">
+              <Doll
+                heroId="hero"
+                className="h-auto w-full lg:h-full lg:w-auto"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

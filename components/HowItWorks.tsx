@@ -1,106 +1,147 @@
 "use client";
 
-import { useInView } from "@/lib/useInView";
-import Reveal from "./Reveal";
 import type { CSSProperties } from "react";
+import Link from "next/link";
+import { useInView } from "@/lib/useInView";
 
-const stroke = (delay: number, dur = 1.2) =>
+/**
+ * How it works — a true sequence, so the numbers are earned.
+ *
+ * A single hand-plotted line inks itself through the three steps as the
+ * section arrives: horizontal on desktop, vertical on narrow screens. The
+ * markers fade in behind the line as it reaches them, so the order reads as
+ * a route rather than a list.
+ */
+
+const STEPS = [
+  {
+    n: "01",
+    title: "Choose your letter",
+    body: "Gratitude, reconciliation, farewell — or the one you cannot say out loud. The kind you pick decides what she will ask.",
+  },
+  {
+    n: "02",
+    title: "Converse with the doll",
+    body: "Fifteen or twenty unhurried minutes. She asks; you answer in whatever order it comes out. Contradicting yourself is allowed, and useful.",
+  },
+  {
+    n: "03",
+    title: "Receive your letter",
+    body: "She writes it in your voice, and hands it back for you to change. Whether it is ever sent is entirely your own business.",
+  },
+];
+
+const draw = (delay: number, dur = 1.6): CSSProperties =>
   ({
     "--path-len": 100,
     "--draw-dur": `${dur}s`,
     "--draw-delay": `${delay}s`,
   }) as CSSProperties;
 
-function IconSpeak({ delay }: { delay: number }) {
-  return (
-    <svg viewBox="0 0 56 56" className="h-12 w-12 text-gold" fill="none" strokeLinecap="round" aria-hidden="true">
-      <circle cx="20" cy="28" r="3" stroke="currentColor" strokeWidth="1.5" pathLength={100} className="draw-path" style={stroke(delay)} />
-      <path d="M 28 18 A 14 14 0 0 1 28 38" stroke="currentColor" strokeWidth="1.5" pathLength={100} className="draw-path" style={stroke(delay + 0.25)} />
-      <path d="M 34 12 A 22 22 0 0 1 34 44" stroke="currentColor" strokeWidth="1.5" opacity="0.7" pathLength={100} className="draw-path" style={stroke(delay + 0.5)} />
-      <path d="M 40 6 A 30 30 0 0 1 40 50" stroke="currentColor" strokeWidth="1.5" opacity="0.4" pathLength={100} className="draw-path" style={stroke(delay + 0.75)} />
-    </svg>
-  );
-}
-
-function IconAsk({ delay }: { delay: number }) {
-  return (
-    <svg viewBox="0 0 56 56" className="h-12 w-12 text-gold" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path
-        d="M 10 14 Q 10 10 14 10 L 42 10 Q 46 10 46 14 L 46 32 Q 46 36 42 36 L 26 36 L 16 45 L 18 36 L 14 36 Q 10 36 10 32 Z"
-        stroke="currentColor" strokeWidth="1.5" pathLength={100} className="draw-path" style={stroke(delay)}
-      />
-      <path
-        d="M 23 20 Q 23 15.5 28 15.5 Q 33 15.5 33 19.5 Q 33 23 28.5 24.5 L 28.5 27"
-        stroke="currentColor" strokeWidth="1.5" pathLength={100} className="draw-path" style={stroke(delay + 0.45)}
-      />
-      <circle cx="28.5" cy="31.5" r="0.9" fill="currentColor" className="fade-in-late" style={{ "--fade-delay": `${delay + 1.2}s` } as CSSProperties} />
-    </svg>
-  );
-}
-
-function IconReceive({ delay }: { delay: number }) {
-  return (
-    <svg viewBox="0 0 56 56" className="h-12 w-12 text-gold" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M 8 18 L 48 18 L 48 42 L 8 42 Z" stroke="currentColor" strokeWidth="1.5" pathLength={100} className="draw-path" style={stroke(delay)} />
-      <path d="M 8 18 L 28 32 L 48 18" stroke="currentColor" strokeWidth="1.5" pathLength={100} className="draw-path" style={stroke(delay + 0.4)} />
-      <path d="M 22 10 Q 28 5 34 10" stroke="currentColor" strokeWidth="1.3" opacity="0.6" pathLength={100} className="draw-path" style={stroke(delay + 0.8)} />
-    </svg>
-  );
-}
-
-const STEPS = [
-  {
-    Icon: IconSpeak,
-    title: "You speak",
-    body: "Ten or twenty minutes, plainly. There is no wrong way to begin — most people start with “I don’t know how to say this.”",
-  },
-  {
-    Icon: IconAsk,
-    title: "She asks",
-    body: "Small, careful questions: the name they called you, the last ordinary day, what you would want read aloud. She listens for the sentence hiding under the others.",
-  },
-  {
-    Icon: IconReceive,
-    title: "You receive",
-    body: "A letter in your voice, on your desk moments after the last question. Change a word, or send it as it stands — it was always yours.",
-  },
-];
-
 export default function HowItWorks() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.25);
+  const { ref, inView } = useInView<HTMLDivElement>(0.3);
 
   return (
-    <section className="section-pad relative" aria-labelledby="how-heading">
-      <div className="mx-auto max-w-content px-6 md:px-10">
-        <Reveal>
-          <p className="kicker text-center">How a letter comes to be</p>
+    <section
+      id="how"
+      className="section-pad relative scroll-mt-24"
+      aria-labelledby="how-heading"
+    >
+      <div
+        ref={ref}
+        className={`mx-auto max-w-content px-5 md:px-10 ${inView ? "is-in" : ""}`}
+      >
+        <div className="max-w-2xl">
+          <p className="kicker fade-in-late" style={{ "--fade-delay": "0s" } as CSSProperties}>
+            How it works
+          </p>
           <h2
             id="how-heading"
-            className="text-balance mt-5 text-center font-display text-4xl font-light text-cream md:text-5xl"
+            className="display-lg fade-in-late mt-5 text-balance text-moonpaper"
+            style={{ "--fade-delay": "0.1s" } as CSSProperties}
           >
-            Three quiet steps.
+            Three steps, and none of them is a form.
           </h2>
-        </Reveal>
+        </div>
 
-        <div ref={ref} className={`relative mt-20 ${inView ? "is-in" : ""}`}>
-          {/* the thread that connects the steps */}
-          <div
+        {/* the line, inking itself — desktop */}
+        <div className="relative mt-16 hidden lg:block">
+          <svg
             aria-hidden="true"
-            className="absolute left-[16.66%] right-[16.66%] top-10 hidden h-px origin-left bg-gradient-to-r from-gold/50 via-gold/25 to-gold/50 transition-transform duration-[2400ms] ease-soft md:block"
-            style={{ transform: inView ? "scaleX(1)" : "scaleX(0)" }}
-          />
-          <ol className="grid gap-14 md:grid-cols-3 md:gap-10">
-            {STEPS.map((s, i) => (
-              <Reveal as="li" key={s.title} delay={0.2 + i * 0.25} className="relative text-center">
-                <div className="relative z-10 mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-gold/20 bg-night">
-                  <s.Icon delay={0.4 + i * 0.5} />
-                </div>
-                <p className="kicker mt-8 !tracking-[0.3em] text-faded">Step {["one", "two", "three"][i]}</p>
-                <h3 className="mt-3 font-display text-2xl font-normal text-cream">{s.title}</h3>
-                <p className="prose-quiet mx-auto mt-4 max-w-xs text-[0.98rem]">{s.body}</p>
-              </Reveal>
+            viewBox="0 0 1000 90"
+            preserveAspectRatio="none"
+            className="h-[90px] w-full text-brass"
+            fill="none"
+          >
+            <path
+              d="M 9 62 C 120 24, 250 82, 352 50 C 470 14, 600 78, 695 48 C 800 20, 910 56, 985 42"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              pathLength={100}
+              className="draw-path"
+              style={draw(0.2, 2.2)}
+              opacity="0.85"
+            />
+            {[
+              { cx: 9, cy: 62, d: 0.45 },
+              { cx: 352, cy: 50, d: 0.95 },
+              { cx: 695, cy: 48, d: 1.45 },
+            ].map((p) => (
+              <g
+                key={p.cx}
+                className="fade-in-late"
+                style={{ "--fade-delay": `${p.d}s` } as CSSProperties}
+              >
+                <circle cx={p.cx} cy={p.cy} r="9" fill="#0E1526" />
+                <circle
+                  cx={p.cx}
+                  cy={p.cy}
+                  r="5"
+                  fill="#E8B15C"
+                  stroke="#0E1526"
+                  strokeWidth="1.4"
+                />
+              </g>
             ))}
-          </ol>
+          </svg>
+        </div>
+
+        <ol className="mt-6 grid gap-10 lg:mt-2 lg:grid-cols-3 lg:gap-8">
+          {STEPS.map((s, i) => (
+            <li
+              key={s.n}
+              className="fade-in-late relative pl-10 lg:pl-0"
+              style={{ "--fade-delay": `${0.35 + i * 0.45}s` } as CSSProperties}
+            >
+              {/* the vertical thread, for narrow screens */}
+              <span
+                aria-hidden="true"
+                className="absolute left-[7px] top-2 h-full w-px bg-gradient-to-b from-brass/60 to-transparent lg:hidden"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute left-0 top-1.5 grid h-3.5 w-3.5 place-items-center rounded-full bg-candlelight ring-4 ring-midnight lg:hidden"
+              />
+
+              <p className="font-mono text-[0.6875rem] tracking-[0.28em] text-candlelight">
+                {s.n}
+              </p>
+              <h3 className="display-md mt-3 text-moonpaper">{s.title}</h3>
+              <p className="mt-3 max-w-sm text-[0.975rem] leading-relaxed text-ash">
+                {s.body}
+              </p>
+            </li>
+          ))}
+        </ol>
+
+        <div
+          className="fade-in-late mt-14"
+          style={{ "--fade-delay": "1.9s" } as CSSProperties}
+        >
+          <Link href="/services" className="btn-quiet">
+            See the letters she writes
+          </Link>
         </div>
       </div>
     </section>

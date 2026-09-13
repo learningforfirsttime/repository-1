@@ -1,67 +1,75 @@
-import Emblem from "./Emblem";
+import Link from "next/link";
+
+const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
+  {
+    title: "The Letters",
+    links: [
+      { href: "/services", label: "All letters" },
+      { href: "/services/gratitude", label: "Gratitude" },
+      { href: "/services/reconciliation", label: "Reconciliation" },
+      { href: "/services/future", label: "To the future" },
+    ],
+  },
+  {
+    title: "The Atelier",
+    links: [
+      { href: "/guide", label: "How this was made" },
+      { href: "/begin", label: "My request" },
+      { href: "/#how", label: "How it works" },
+    ],
+  },
+];
 
 export default function Footer() {
   return (
-    <footer className="relative mt-8" role="contentinfo">
-      <div className="hairline" />
-      <div className="mx-auto max-w-content px-6 py-16 md:px-10">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1.2fr]">
+    <footer className="relative mt-auto border-t border-brass/22 bg-midnight/70">
+      <div className="mx-auto max-w-content px-5 py-14 md:px-10">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
           <div>
-            <div className="flex items-center gap-3 text-gold">
-              <Emblem size={32} />
-              <span className="font-display text-sm tracking-[0.3em] text-cream">
-                AUTO&thinsp;MEMORY&thinsp;DOLL
-              </span>
-            </div>
-            <p className="prose-quiet mt-5 max-w-xs text-[0.95rem]">
-              An AI letter-writing companion. She listens before she writes —
-              and what she writes was always yours.
+            <p className="voice text-2xl leading-snug text-moonpaper/90">
+              “Sincerely yours —<br />
+              at last.”
+            </p>
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-ash/85">
+              A letter-writing atelier. The doll listens first, and writes only
+              what you meant.
             </p>
           </div>
 
-          <nav aria-label="Footer">
-            <p className="kicker !tracking-[0.3em]">Contents</p>
-            <ul className="mt-5 space-y-3">
-              {[
-                ["#doll", "The Doll"],
-                ["#letters", "Letters"],
-                ["#specimen", "Specimen"],
-                ["#promise", "The Promise"],
-                ["#begin", "Begin"],
-              ].map(([href, label]) => (
-                <li key={href}>
-                  <a href={href} className="nav-link">
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div>
-            <p className="kicker !tracking-[0.3em]">Colophon</p>
-            <p className="prose-quiet mt-5 text-[0.9rem] leading-relaxed">
-              Every visual on this page is drawn in code: the sky is a shader,
-              the dust is canvas, the seal and the still life are SVG, the paper
-              is CSS. No photographs, no image files, no assets of any kind.
-            </p>
-            <p className="prose-quiet mt-4 text-[0.9rem]">
-              Set in Cormorant Garamond, Newsreader &amp; Special Elite. Built
-              with Next.js.
-            </p>
-          </div>
+          {COLUMNS.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <p className="kicker">{col.title}</p>
+              <ul className="mt-5 space-y-3">
+                {col.links.map((l) => (
+                  <li key={l.href + l.label}>
+                    <Link
+                      href={l.href}
+                      className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-ash transition-colors duration-240 ease-ink hover:text-candlelight"
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
         </div>
 
-        <div className="hairline-left mt-14" />
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 text-[0.75rem] text-faded/80">
-          <p>
-            A fictional service, presented as a demonstration of code-drawn
-            design.
+        <div className="hairline my-10" />
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-brass/85">
+            A fictional atelier · nothing is for sale · every visual drawn in
+            code
           </p>
-          <p>
-            Designed &amp; built in a single pass by{" "}
-            <span className="text-gold">Claude</span> — an AI, much like the
-            doll.
+          <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-brass/70">
+            Designed &amp; built by Claude ·{" "}
+            <Link
+              href="/guide"
+              className="text-candlelight/80 transition-colors duration-240 ease-ink hover:text-candlelight"
+            >
+              How this was made
+            </Link>
           </p>
         </div>
       </div>

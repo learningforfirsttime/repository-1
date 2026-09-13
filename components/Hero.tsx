@@ -30,7 +30,7 @@ const ShaderField = dynamic(() => import("./effects/ShaderField"), {
   ),
 });
 
-const Doll = dynamic(() => import("./effects/Doll"), {
+const Doll = dynamic(() => import("./effects/DollFrames"), {
   ssr: false,
   loading: () => <div aria-hidden="true" className="h-full w-full" />,
 });
@@ -39,7 +39,7 @@ const GREETING = [
   "Good evening. I am Wren — your Auto Memory Doll.",
 ];
 
-export default function Hero() {
+export default function Hero({ hasFrames = false }: { hasFrames?: boolean }) {
   return (
     <section
       id="hero"
@@ -129,6 +129,7 @@ export default function Hero() {
             <div className="relative w-[74%] max-w-[270px] sm:w-[58%] sm:max-w-[320px] lg:h-[82vh] lg:max-h-[760px] lg:w-auto lg:max-w-none">
               <Doll
                 heroId="hero"
+                hasFrames={hasFrames}
                 className="h-auto w-full lg:h-full lg:w-auto"
               />
             </div>

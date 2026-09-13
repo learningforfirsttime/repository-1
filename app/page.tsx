@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import Link from "next/link";
 import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
@@ -6,10 +8,19 @@ import ValueCards from "@/components/ValueCards";
 import HowItWorks from "@/components/HowItWorks";
 import Vignettes from "@/components/Vignettes";
 
+/**
+ * Is the drawn artwork present? Checked once, here, while the page is being
+ * prerendered — so a missing frame costs nothing at runtime and the hero
+ * silently falls back to the vector doll.
+ */
+const hasDollFrames = ["greeting.png", "bow-mid.png", "bow-full.png"].every(
+  (f) => existsSync(path.join(process.cwd(), "public", "doll", f))
+);
+
 export default function Page() {
   return (
     <main id="main" className="flex-1">
-      <Hero />
+      <Hero hasFrames={hasDollFrames} />
 
       {/* ── what an Auto Memory Doll is ── */}
       <section

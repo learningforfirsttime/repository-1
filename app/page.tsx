@@ -13,7 +13,7 @@ import Vignettes from "@/components/Vignettes";
  * prerendered — so a missing frame costs nothing at runtime and the hero
  * silently falls back to the vector doll.
  */
-const hasDollFrames = ["greeting.png", "bow-mid.png", "bow-full.png"].every(
+const hasDollFrames = ["greeting.webp", "bow-mid.webp", "bow-full.webp"].every(
   (f) => existsSync(path.join(process.cwd(), "public", "doll", f))
 );
 

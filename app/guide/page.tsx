@@ -5,7 +5,7 @@ import Reveal from "@/components/Reveal";
 export const metadata: Metadata = {
   title: "The Atelier",
   description:
-    "How this site was made: the zero-asset rule, a hand-written WebGL hero and its fallback, SVG filter seals and ink bleeds, CSS-3D envelopes, the typing engine, the font strategy, and the pinned build.",
+    "How this site was made: a hand-written WebGL hero and its fallback, an articulated doll and the three drawn frames that replaced her, SVG filter seals and ink bleeds, CSS-3D envelopes, the typing engine, the font strategy, and the pinned build.",
 };
 
 /**
@@ -41,15 +41,24 @@ const LOG: { pass: string; lines: string[] }[] = [
       "Under reduced motion the page renders complete and still — her greeting fully written, the headline landed, one considered frame of the field — and no loop anywhere survives a hidden tab or a scroll out of view.",
     ],
   },
+  {
+    pass: "Pass IV — the drawn doll replaces the drawn-in-code one",
+    lines: [
+      "Commissioned artwork arrived to stand in for the vector figure, which meant admitting an image file to a site whose whole argument had been that it shipped none. The copy above was rewritten rather than quietly left standing.",
+      "Neither delivered set was actually transparent, which only measurement caught: the first reported an alpha channel that was 100% opaque, with the checkerboard painted in as pixels. Both were cut programmatically rather than sent back.",
+      "The second set came on three different canvas sizes with her boots 68px apart between frames, so they were re-composited onto a shared canvas aligned by the centre of her feet. Overlaying the three afterwards shows one sharp boot silhouette and movement confined to the head and shoulders, which is what a bow should be.",
+    ],
+  },
 ];
 
 const SECTIONS = [
   {
     kicker: "The rule",
-    title: "Everything here was drawn in code",
+    title: "Nearly everything here was drawn in code",
     body: [
-      "No photographs, no stock, no generated imagery, no icon packs, no CDNs, and no network requests at runtime. The site ships zero image files: the favicon is a hand-written SVG, the grain is an inline SVG-noise data URI, the seals and line art are paths, and the hero is arithmetic.",
-      "The constraint is the point. A shader you wrote behaves — it responds to a pointer, it settles, it can be told to hold still for someone who asked for less motion. A picture of ink in water can only be played.",
+      "The interface is drawn in code. No stock photography, no icon packs, no CDNs, and no network requests at runtime: the favicon is a hand-written SVG, the grain is an inline SVG-noise data URI, the seals and line art are paths, and the room behind the hero is arithmetic — one fragment shader over a single full-screen triangle.",
+      "There is one exception, and it is the doll. She is commissioned artwork: three drawn frames, the only image files the site ships. Everything else you can see is still generated.",
+      "The constraint is the point everywhere it still applies. A shader you wrote behaves — it responds to a pointer, it settles, it can be told to hold still for someone who asked for less motion. A picture of ink in water can only be played.",
     ],
   },
   {
@@ -63,11 +72,11 @@ const SECTIONS = [
   },
   {
     kicker: "The doll",
-    title: "An articulated figure, not three pictures",
+    title: "Three frames, and the rig beneath them",
     body: [
-      "She is a single SVG with a rig: a squash pivot at the hips, a second at the neck, and sub-pivots for her features, crown, bangs, ribbon and each earring. One scroll-linked value drives all of them through a shared easing curve, which is why the bow is continuous at any scroll speed instead of a crossfade between poses.",
-      "Depth comes from foreshortening — the crown scales up as the head drops and squashes — rather than from sliding her head down between her shoulders, which reads as a shrug. Her eyelids travel far enough to meet the lower lash line at the bottom of the bow, and the static lashes fade as they arrive so a closed eye is one graceful line rather than two.",
-      "Her earrings hang on damped pendulums that are kicked by the bow's own velocity, so they swing because she moved. None of this re-renders: the rig writes transforms straight onto the nodes inside one animation frame.",
+      "What ships is three drawn frames — greeting, half bow, full bow — crossfaded against the scroll. The middle frame is what makes it work: with only two, the midpoint of the scroll shows both figures at half opacity and reads as a double exposure rather than as movement. With three, every point in the gesture rests on or near a real drawing, and the blend is paired with a small downward drift so the eye reads motion instead of a dissolve.",
+      "Neither delivered set had usable transparency. The first arrived with a checkerboard painted in as opaque pixels — an alpha channel that was present and entirely unused — so its grid period and phase were solved from the border, those pixels seeded a flood fill bounded by colour neutrality, and the fringe was decontaminated against the two checker tones. The second had no alpha channel at all and came on three different canvas sizes, so each frame was cut against its background colour and re-composited onto a shared canvas, aligned by the centre of her boots. Both sets were re-encoded to WebP; the first went from 5.1 MB to 538 KB.",
+      "Underneath sits the earlier answer to the same problem: a single SVG figure, rigged with a squash pivot at the hips, a second at the neck, and sub-pivots for features, crown, bangs, ribbon and each earring, with earrings on damped pendulums kicked by the bow's own velocity. It is genuinely the better mechanism — continuous rather than blended, and weightless to ship — and it remains in the source as the fallback, rendered whenever the frames are absent. Which artwork is right for a page is not the same question as which technique is.",
     ],
   },
   {

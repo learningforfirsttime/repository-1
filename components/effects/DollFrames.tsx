@@ -17,12 +17,12 @@ import Doll from "./Doll";
  * page is never blank and never waits on a file.
  *
  * Drop the artwork at these exact paths (Next serves `public/` from the site
- * root, so `public/doll/greeting.png` is `/doll/greeting.png`):
+ * root, so `public/doll/greeting.webp` is `/doll/greeting.webp`):
  */
 const FRAMES = [
-  "/doll/greeting.png", // upright, meeting the visitor's eyes
-  "/doll/bow-mid.png", // head beginning to lower, eyes softening
-  "/doll/bow-full.png", // head down, eyes closed
+  "/doll/greeting.webp", // upright, meeting the visitor's eyes
+  "/doll/bow-mid.webp", // head beginning to lower, eyes softening
+  "/doll/bow-full.webp", // head down, eyes closed
 ] as const;
 
 const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);

@@ -59,8 +59,8 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-brass/85">
-            A fictional atelier · nothing is for sale · every visual drawn in
-            code
+            A fictional atelier · nothing is for sale · every visual but the
+            doll drawn in code
           </p>
           <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-brass/70">
             Designed &amp; built by Claude ·{" "}
